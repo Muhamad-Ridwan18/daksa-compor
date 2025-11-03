@@ -63,7 +63,7 @@
                             @endif
                         </div>
                         <!-- Left: Content -->
-                        <div class="hero-slide-content hero-content text-center lg:text-left order-1 active" data-stagger data-stagger-base="0" data-stagger-step="120">
+                        <div class="hero-slide-content hero-content text-center order-1 active" data-stagger data-stagger-base="0" data-stagger-step="120">
                             <h3 class="hero-slide-title" data-animate="fadeInUp" data-delay="0ms">{{ $settings['hero_title'] ?? 'Selamat Datang di Daksa' }}</h3>
                             <p class="hero-slide-description" data-animate="fadeInUp" data-delay="160ms">{{ $settings['hero_description'] ?? 'Kami menyediakan solusi terbaik untuk kebutuhan bisnis Anda dengan layanan berkualitas tinggi dan tim profesional.' }}</p>
                             <div class="hero-slide-buttons" data-animate="fadeInUp" data-delay="280ms">
@@ -118,7 +118,7 @@
                             @endif
                         </div>
                         <!-- Left: Content -->
-                        <div class="hero-slide-content hero-content text-center lg:text-left order-1" data-stagger data-stagger-base="0" data-stagger-step="120">
+                        <div class="hero-slide-content hero-content text-center order-1" data-stagger data-stagger-base="0" data-stagger-step="120">
                             <h3 class="hero-slide-title" data-animate="fadeInUp" data-delay="0ms">Solusi Profesional untuk Bisnis Anda</h3>
                             <p class="hero-slide-description" data-animate="fadeInUp" data-delay="160ms">Dengan pengalaman bertahun-tahun, kami siap membantu mengembangkan bisnis Anda dengan layanan terpercaya dan berkualitas tinggi.</p>
                             <div class="hero-slide-buttons" data-animate="fadeInUp" data-delay="280ms">
@@ -168,7 +168,7 @@
                             @endif
                         </div>
                         <!-- Left: Content -->
-                        <div class="hero-slide-content hero-content text-center lg:text-left order-1" data-stagger data-stagger-base="0" data-stagger-step="120">
+                        <div class="hero-slide-content hero-content text-center order-1" data-stagger data-stagger-base="0" data-stagger-step="120">
                             <h3 class="hero-slide-title" data-animate="fadeInUp" data-delay="0ms">Kepercayaan dan Kualitas adalah Prioritas</h3>
                             <p class="hero-slide-description" data-animate="fadeInUp" data-delay="160ms">Ratusan klien telah mempercayai kami. Bergabunglah dengan mereka dan rasakan layanan terbaik untuk mencapai kesuksesan bisnis Anda.</p>
                             <div class="hero-slide-buttons" data-animate="fadeInUp" data-delay="280ms">

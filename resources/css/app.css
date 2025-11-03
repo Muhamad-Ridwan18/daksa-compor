@@ -1100,11 +1100,28 @@
     
     /* Different animations for buttons removed to avoid conflicts with animate.css */
     
-    @media (min-width: 1024px) {
-        .hero-slide-buttons {
-            justify-content: flex-start;
-        }
+@media (min-width: 1024px) {
+    .hero-slide-buttons {
+        justify-content: center;
     }
+}
+
+/* Avoid overlapping the hero image: move next button onto text side on desktop */
+@media (min-width: 1024px) {
+    .hero-full-carousel-prev,
+    .hero-full-carousel-next {
+        top: 55%;
+        width: 48px;
+        height: 48px;
+    }
+    .hero-full-carousel-prev { left: 1rem; }
+    /* Place next button just left of the grid midpoint so it doesn't sit on the image */
+    .hero-full-carousel-next { right: calc(50% + 16px); }
+}
+
+/* Hide hero navigation buttons entirely */
+.hero-full-carousel-prev,
+.hero-full-carousel-next { display: none !important; }
     
     .hero-btn-primary {
         background: white;
@@ -1902,6 +1919,16 @@
     --anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --anim-duration: 800ms;
     --anim-stagger-step: 80ms;
+}
+
+/* Laptop/Desktop: bring hero image inward to reduce text-image gap */
+@media (min-width: 1024px) {
+    :root {
+        --hero-img-right: 2vw;
+        --hero-img-bottom: 0vh;
+    }
+    /* Ensure hero image shows above background overlays on desktop */
+    .hero-image-float { display: flex !important; z-index: 3; }
 }
 
 /* Generic end state */
