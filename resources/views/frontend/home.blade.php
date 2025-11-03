@@ -45,7 +45,7 @@
                         @endif
                     </div>
                 <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center hero-overlap">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 items-center w-full">
                         <!-- Right: Image floats and overlaps -->
                         <div class="hero-slide-image-wrapper hero-image-float order-2 h-full">
                             @if(isset($settings['hero_image_1']) && $settings['hero_image_1'])
