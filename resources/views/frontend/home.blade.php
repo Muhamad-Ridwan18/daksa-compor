@@ -569,13 +569,13 @@
                 <div class="client-marquee-content">
                     @foreach($clients as $client)
                     <div class="client-logo-item">
-                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="h-40 w-auto object-contain opacity-80 hover:opacity-100">
+                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" loading="lazy" class="w-auto object-contain opacity-80 hover:opacity-100 client-logo-img h-24 md:h-28 lg:h-32 xl:h-40">
                     </div>
                     @endforeach
                     <!-- Duplicate for seamless loop -->
                     @foreach($clients as $client)
                     <div class="client-logo-item">
-                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="h-40 w-auto object-contain opacity-80 hover:opacity-100">
+                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" loading="lazy" class="w-auto object-contain opacity-80 hover:opacity-100 client-logo-img h-24 md:h-28 lg:h-32 xl:h-40">
                     </div>
                     @endforeach
                 </div>
@@ -586,13 +586,13 @@
                 <div class="client-marquee-content">
                     @foreach($clients->reverse() as $client)
                     <div class="client-logo-item">
-                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="h-40 w-auto object-contain opacity-80 hover:opacity-100">
+                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" loading="lazy" class="w-auto object-contain opacity-80 hover:opacity-100 client-logo-img h-24 md:h-28 lg:h-32 xl:h-40">
                     </div>
                     @endforeach
                     <!-- Duplicate for seamless loop -->
                     @foreach($clients->reverse() as $client)
                     <div class="client-logo-item">
-                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="h-40 w-auto object-contain opacity-80 hover:opacity-100">
+                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" loading="lazy" class="w-auto object-contain opacity-80 hover:opacity-100 client-logo-img h-24 md:h-28 lg:h-32 xl:h-40">
                     </div>
                     @endforeach
                 </div>
