@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\JobApplicationController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
@@ -35,6 +36,9 @@ Route::post('/blog/{article}/comment', [BlogController::class, 'storeComment'])-
 Route::get('/careers', [CareerController::class, 'index'])->name('careers.index');
 Route::get('/careers/{slug}', [CareerController::class, 'show'])->name('careers.show');
 Route::post('/careers/{job}/apply', [CareerController::class, 'apply'])->name('careers.apply');
+
+// Gallery Routes (Frontend)
+Route::get('/gallery', [App\Http\Controllers\Frontend\GalleryController::class, 'index'])->name('gallery.index');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->group(function () {
@@ -91,6 +95,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     Route::get('job-applications/{application}', [JobApplicationController::class, 'show'])->name('job-applications.show');
     Route::patch('job-applications/{application}/status', [JobApplicationController::class, 'updateStatus'])->name('job-applications.update-status');
     Route::get('job-applications/{application}/download-cv', [JobApplicationController::class, 'downloadCv'])->name('job-applications.download-cv');
+    
+    // Gallery Management
+    Route::resource('galleries', GalleryController::class);
 });
 
 // Profile Routes

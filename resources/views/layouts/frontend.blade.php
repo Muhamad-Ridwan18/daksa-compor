@@ -78,6 +78,10 @@
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('blog.*') ? 'text-primary bg-primary/10' : '' }}">
                         Blog
                     </a>
+                    <a href="{{ route('gallery.index') }}" 
+                       class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
+                        Gallery
+                    </a>
                     <a href="{{ route('careers.index') }}" 
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('careers.*') ? 'text-primary bg-primary/10' : '' }}">
                         Karier
@@ -121,6 +125,10 @@
                 <a href="{{ route('blog.index') }}" 
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('blog.*') ? 'text-primary bg-primary/10' : '' }}">
                     Blog
+                </a>
+                <a href="{{ route('gallery.index') }}" 
+                   class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
+                    Gallery
                 </a>
                 <a href="{{ route('careers.index') }}" 
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('careers.*') ? 'text-primary bg-primary/10' : '' }}">
