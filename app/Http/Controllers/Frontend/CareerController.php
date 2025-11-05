@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,15 +13,17 @@ class CareerController extends Controller
 {
     public function index()
     {
+        $settings = Setting::getAllAsArray();
         $jobs = Job::active()->orderBy('sort_order')->get();
-        return view('frontend.careers.index', compact('jobs'));
+        return view('frontend.careers.index', compact('jobs', 'settings'));
     }
 
     public function show(string $slug)
     {
+        $settings = Setting::getAllAsArray();
         $job = Job::where('slug', $slug)->firstOrFail();
         abort_unless($job->is_active, 404);
-        return view('frontend.careers.show', compact('job'));
+        return view('frontend.careers.show', compact('job', 'settings'));
     }
 
     public function apply(Request $request, Job $job)
