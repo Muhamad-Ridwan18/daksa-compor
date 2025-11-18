@@ -1876,6 +1876,7 @@
         font-size: 0.9rem;
         margin-bottom: 1.25rem;
         line-height: 1.6;
+        text-align: justify;
     }
     
     .pricing-features {
