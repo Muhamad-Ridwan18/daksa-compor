@@ -363,7 +363,7 @@
                                     <span class="product-badge">{{ $service->products->count() }} Produk</span>
                                 @endif
                             </div>
-                            <p class="accordion-description">{{ Str::limit($service->description, 150) }}</p>
+                            <p class="accordion-description">{{ $service->description }}</p>
                         </div>
                     </div>
                     @if($service->products->count() > 0)
@@ -430,6 +430,25 @@
                                 @endforeach
                             </div>
                         </div>
+                        
+                        <!-- Desktop Carousel Navigation - Small buttons below carousel, only when accordion is open -->
+                        @if($service->products->count() > 1)
+                        <div class="desktop-carousel-nav" id="desktop-carousel-nav-{{ $service->id }}">
+                            <button class="carousel-nav-btn carousel-nav-prev" onclick="scrollProducts('{{ $service->id }}', 'left')" aria-label="Sebelumnya">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                                <span>Sebelumnya</span>
+                            </button>
+                            <button class="carousel-nav-btn carousel-nav-next" onclick="scrollProducts('{{ $service->id }}', 'right')" aria-label="Selanjutnya">
+                                <span>Selanjutnya</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                        @endif
+                        
                         @if($service->products->count() > 1)
                         <div class="products-dots" data-service-id="{{ $service->id }}">
                             @for($i = 0; $i < $service->products->count(); $i++)
@@ -871,20 +890,99 @@ function toggleAccordion(serviceId) {
         accordionItem.classList.remove('active');
         if (icon) icon.style.transform = 'rotate(0deg)';
         if (buttonText) buttonText.textContent = 'Lihat';
+        // Hide carousel navigation when accordion closes
+        const carouselNav = document.getElementById(`desktop-carousel-nav-${serviceId}`);
+        if (carouselNav) {
+            carouselNav.style.opacity = '0';
+            setTimeout(() => {
+                carouselNav.style.display = 'none';
+            }, 300);
+        }
     } else {
         accordionContent.classList.add('active');
         accordionItem.classList.add('active');
         if (icon) icon.style.transform = 'rotate(180deg)';
         if (buttonText) buttonText.textContent = 'Tutup';
-        setTimeout(() => { accordionItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 300);
+        setTimeout(() => { 
+            accordionItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            // Update carousel navigation buttons after accordion opens
+            setTimeout(() => updateCarouselNav(serviceId), 400);
+        }, 300);
     }
 }
+
+// Function to update carousel navigation buttons based on scroll state
+function updateCarouselNav(serviceId) {
+    const productsWrapper = document.querySelector(`#accordion-${serviceId} .products-scroll-wrapper`);
+    const carouselNav = document.getElementById(`desktop-carousel-nav-${serviceId}`);
+    const accordionContent = document.getElementById(`accordion-${serviceId}`);
+    
+    if (!productsWrapper || !carouselNav || !accordionContent) return;
+    
+    // Only check on desktop and when accordion is active
+    if (window.innerWidth < 769 || !accordionContent.classList.contains('active')) {
+        carouselNav.style.display = 'none';
+        carouselNav.style.opacity = '0';
+        return;
+    }
+    
+    // Check if scrolling is needed
+    const isScrollable = productsWrapper.scrollWidth > productsWrapper.clientWidth;
+    const scrollLeft = productsWrapper.scrollLeft;
+    const maxScroll = productsWrapper.scrollWidth - productsWrapper.clientWidth;
+    const isAtStart = scrollLeft <= 10;
+    const isAtEnd = scrollLeft >= maxScroll - 10;
+    
+    // Show navigation buttons on desktop if scrollable
+    if (isScrollable) {
+        carouselNav.style.display = 'flex';
+        carouselNav.style.opacity = '1';
+        
+        // Enable/disable buttons based on scroll position
+        const prevBtn = carouselNav.querySelector('.carousel-nav-prev');
+        const nextBtn = carouselNav.querySelector('.carousel-nav-next');
+        
+        if (prevBtn) {
+            prevBtn.disabled = isAtStart;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = isAtEnd;
+        }
+    } else {
+        carouselNav.style.opacity = '0';
+        setTimeout(() => {
+            if (carouselNav.style.opacity === '0') {
+                carouselNav.style.display = 'none';
+            }
+        }, 300);
+    }
+}
+
 function scrollProducts(serviceId, direction) {
     const productsWrapper = document.querySelector(`#accordion-${serviceId} .products-scroll-wrapper`);
     const scrollAmount = 350;
     if (!productsWrapper) return;
     productsWrapper.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    
+    // Update carousel navigation buttons after scrolling
+    setTimeout(() => updateCarouselNav(serviceId), 300);
 }
+
+// Add scroll event listeners to all product wrappers when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.products-scroll-wrapper').forEach(wrapper => {
+        const serviceId = wrapper.id.replace('products-', '');
+        wrapper.addEventListener('scroll', () => updateCarouselNav(serviceId));
+        
+        // Also check on resize
+        window.addEventListener('resize', () => {
+            const accordionContent = wrapper.closest('.accordion-content');
+            if (accordionContent && accordionContent.classList.contains('active')) {
+                updateCarouselNav(serviceId);
+            }
+        });
+    });
+});
 
 // Testimonial carousel functions (global scope)
 let testimonialCurrent = 0;
