@@ -1680,6 +1680,12 @@
         display: flex;
         gap: 1.5rem;
         min-width: max-content;
+        align-items: stretch;
+    }
+    
+    .products-grid .pricing-card {
+        align-self: stretch;
+        flex: 0 0 auto;
     }
 
     /* Desktop Carousel Navigation - Small buttons below carousel */
@@ -1777,11 +1783,15 @@
         border: none;
         min-width: 320px;
         max-width: 360px;
+        width: 100%;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
         flex-shrink: 0;
         position: relative;
         scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
     }
     
     .pricing-card::before {
@@ -1811,18 +1821,41 @@
         text-align: center;
         background: linear-gradient(135deg, var(--primary-color), rgba(216, 155, 48, 0.8));
         color: white;
+        height: 160px;
+        max-height: 160px;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        box-sizing: border-box;
     }
     
     .pricing-card-title {
         font-size: 1.375rem;
         font-weight: 600;
         margin-bottom: 0.75rem;
-        line-height: 1.3;
+        line-height: 1.4;
+        min-height: 3.5rem;
+        max-height: 3.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+        word-break: break-word;
     }
     
     .pricing-card-price {
         font-size: 2.25rem;
         font-weight: 700;
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
     
     .price-amount {
@@ -1831,6 +1864,11 @@
     
     .pricing-card-body {
         padding: 2rem;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
     }
     
     .pricing-card-description {
@@ -1842,6 +1880,8 @@
     
     .pricing-features {
         space-y: 1rem;
+        flex: 1 1 auto;
+        min-height: 0;
     }
     
     .feature-item {
@@ -1855,7 +1895,9 @@
     }
     
     .pricing-card-footer {
-        padding: 0 2rem 2rem;
+        padding: 1rem 2rem 2rem;
+        margin-top: auto;
+        flex-shrink: 0;
     }
     
     .pricing-card-button {

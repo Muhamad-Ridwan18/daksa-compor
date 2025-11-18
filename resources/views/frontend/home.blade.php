@@ -394,11 +394,13 @@
                                         @php
                                             $showPrice = isset($settings['show_price']) ? $settings['show_price'] : '1';
                                         @endphp
-                                        @if($showPrice == '1')
                                         <div class="pricing-card-price">
+                                            @if($showPrice == '1')
                                             <span class="price-amount">{{ $product->formatted_price }}</span>
+                                            @else
+                                            <span class="price-amount" style="visibility: hidden;">&nbsp;</span>
+                                            @endif
                                         </div>
-                                        @endif
                                     </div>
                                     
                                     <div class="pricing-card-body">
@@ -911,7 +913,10 @@ function toggleAccordion(serviceId) {
         setTimeout(() => { 
             accordionItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
             // Update carousel navigation buttons after accordion opens
-            setTimeout(() => updateCarouselNav(serviceId), 400);
+            setTimeout(() => {
+                updateCarouselNav(serviceId);
+                equalizeCardHeights();
+            }, 400);
         }, 300);
     }
 }
@@ -973,8 +978,50 @@ function scrollProducts(serviceId, direction) {
     setTimeout(() => updateCarouselNav(serviceId), 300);
 }
 
+// Function to equalize card heights
+function equalizeCardHeights() {
+    document.querySelectorAll('.products-grid').forEach(grid => {
+        const cards = grid.querySelectorAll('.pricing-card');
+        if (cards.length === 0) return;
+        
+        // Reset heights first
+        cards.forEach(card => {
+            card.style.height = 'auto';
+        });
+        
+        // Find the tallest card
+        let maxHeight = 0;
+        cards.forEach(card => {
+            const height = card.offsetHeight;
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        });
+        
+        // Set all cards to the same height
+        cards.forEach(card => {
+            card.style.height = maxHeight + 'px';
+        });
+    });
+}
+
 // Add scroll event listeners to all product wrappers when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Equalize card heights
+    equalizeCardHeights();
+    
+    // Re-equalize when accordions open
+    const observer = new MutationObserver(() => {
+        setTimeout(equalizeCardHeights, 100);
+    });
+    
+    document.querySelectorAll('.accordion-content').forEach(content => {
+        observer.observe(content, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    });
+    
     document.querySelectorAll('.products-scroll-wrapper').forEach(wrapper => {
         const serviceId = wrapper.id.replace('products-', '');
         wrapper.addEventListener('scroll', () => updateCarouselNav(serviceId));
@@ -984,6 +1031,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const accordionContent = wrapper.closest('.accordion-content');
             if (accordionContent && accordionContent.classList.contains('active')) {
                 updateCarouselNav(serviceId);
+                equalizeCardHeights();
             }
         });
     });
