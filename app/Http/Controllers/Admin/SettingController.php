@@ -58,9 +58,16 @@ class SettingController extends Controller
 
         foreach ($request->settings as $key => $setting) {
             if (isset($setting['value'])) {
+                // Handle boolean/checkbox values - checkbox sends '1' if checked, hidden input sends '0' if unchecked
+                $value = $setting['value'];
+                if (isset($setting['type']) && $setting['type'] === 'boolean') {
+                    // If checkbox is checked, value will be '1', otherwise hidden input value '0' will be used
+                    $value = ($value === '1' || $value === 1) ? '1' : '0';
+                }
+                
                 Setting::setValue(
                     $key,
-                    $setting['value'],
+                    $value,
                     $setting['type'] ?? 'text'
                 );
             }

@@ -46,6 +46,9 @@ class SettingSeeder extends Seeder
             ['key' => 'linkedin_url', 'value' => '', 'type' => 'url', 'description' => 'URL LinkedIn'],
             ['key' => 'twitter_url', 'value' => '', 'type' => 'url', 'description' => 'URL Twitter'],
             
+            // Product Settings
+            ['key' => 'show_price', 'value' => '1', 'type' => 'boolean', 'description' => 'Tampilkan harga produk di halaman depan'],
+            
             // Logo
             ['key' => 'logo', 'value' => '', 'type' => 'image', 'description' => 'Logo perusahaan'],
             ['key' => 'favicon', 'value' => '', 'type' => 'image', 'description' => 'Favicon website'],

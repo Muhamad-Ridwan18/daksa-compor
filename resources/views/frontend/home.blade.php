@@ -391,9 +391,14 @@
                                 <div class="pricing-card" data-service-id="{{ $service->id }}" data-product-idx="{{ $productIndex }}" @if(isset($product->image) && $product->image) data-image="{{ Storage::url($product->image) }}" @endif>
                                     <div class="pricing-card-header">
                                         <h4 class="pricing-card-title">{{ $product->name }}</h4>
+                                        @php
+                                            $showPrice = isset($settings['show_price']) ? $settings['show_price'] : '1';
+                                        @endphp
+                                        @if($showPrice == '1')
                                         <div class="pricing-card-price">
                                             <span class="price-amount">{{ $product->formatted_price }}</span>
                                         </div>
+                                        @endif
                                     </div>
                                     
                                     <div class="pricing-card-body">
