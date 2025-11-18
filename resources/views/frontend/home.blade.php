@@ -276,7 +276,7 @@
                     {{ $settings['about_title'] ?? 'Mengapa Memilih Kami?' }}
                 </h3>
                 <div class="prose prose-lg text-gray-600 mb-8">
-                    <p class="leading-relaxed">
+                    <p class="leading-relaxed text-justify">
                         {{ $settings['about_content'] ?? 'Dengan pengalaman lebih dari 10 tahun di industri, kami telah membantu ratusan klien mencapai tujuan bisnis mereka. Tim profesional kami berkomitmen untuk memberikan solusi terbaik yang disesuaikan dengan kebutuhan unik setiap klien.' }}
                     </p>
                 </div>
