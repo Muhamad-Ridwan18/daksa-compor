@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Testimonial;
 use App\Models\TeamMember;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -20,6 +21,16 @@ class HomeController extends Controller
         $teamMembers = TeamMember::active()->orderBy('sort_order')->get();
         $settings = Setting::getAllAsArray();
 
-        return view('frontend.home', compact('services', 'testimonials', 'clients', 'teamMembers', 'settings'));
+        // Generate SEO data
+        $seoData = SeoService::getSeoData(null, 'home', [
+            'meta_title' => ($settings['site_title'] ?? 'Daksa Company Profile') . ' - ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => $settings['site_description'] ?? 'Website Company Profile Daksa',
+            'og_image' => $settings['logo'] ?? null,
+        ]);
+
+        // Add Website schema
+        $seoData['schema_json'] = SeoService::getWebsiteSchema($settings);
+
+        return view('frontend.home', compact('services', 'testimonials', 'clients', 'teamMembers', 'settings', 'seoData'));
     }
 }

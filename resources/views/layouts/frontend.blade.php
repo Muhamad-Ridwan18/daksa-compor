@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $settings['site_title'] ?? 'Daksa Company Profile' }}</title>
-    <meta name="description" content="{{ $settings['site_description'] ?? 'Website Company Profile Daksa' }}">
+    {{-- SEO Tags Component --}}
+    @php
+        $seoData = $seoData ?? [];
+        // Add Organization schema for homepage if not already set
+        if (empty($seoData['schema_json']) && request()->routeIs('home')) {
+            $seoData['schema_json'] = \App\Services\SeoService::getOrganizationSchema($settings);
+        }
+    @endphp
+    <x-seo-tags :seoData="$seoData" />
     
     <!-- Favicon -->
     @if(isset($settings['favicon']) && $settings['favicon'])

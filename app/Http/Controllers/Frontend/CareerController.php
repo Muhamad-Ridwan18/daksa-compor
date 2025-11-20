@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Models\Setting;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +16,14 @@ class CareerController extends Controller
     {
         $settings = Setting::getAllAsArray();
         $jobs = Job::active()->orderBy('sort_order')->get();
-        return view('frontend.careers.index', compact('jobs', 'settings'));
+        
+        // Generate SEO data
+        $seoData = SeoService::getSeoData(null, 'careers.index', [
+            'meta_title' => 'Karier - ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => 'Lihat lowongan kerja terbaru di ' . ($settings['company_name'] ?? 'Daksa'),
+        ]);
+        
+        return view('frontend.careers.index', compact('jobs', 'settings', 'seoData'));
     }
 
     public function show(string $slug)
@@ -23,7 +31,11 @@ class CareerController extends Controller
         $settings = Setting::getAllAsArray();
         $job = Job::where('slug', $slug)->firstOrFail();
         abort_unless($job->is_active, 404);
-        return view('frontend.careers.show', compact('job', 'settings'));
+        
+        // Generate SEO data for job
+        $seoData = SeoService::getJobSeo($job, $settings);
+        
+        return view('frontend.careers.show', compact('job', 'settings', 'seoData'));
     }
 
     public function apply(Request $request, Job $job)

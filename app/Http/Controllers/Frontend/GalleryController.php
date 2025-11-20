@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use App\Models\Setting;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 
 class GalleryController extends Controller
@@ -23,6 +24,12 @@ class GalleryController extends Controller
         
         $settings = Setting::getAllAsArray();
         
-        return view('frontend.gallery.index', compact('galleries', 'categories', 'settings'));
+        // Generate SEO data
+        $seoData = SeoService::getSeoData(null, 'gallery.index', [
+            'meta_title' => 'Gallery - ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => 'Lihat galeri foto dan dokumentasi dari ' . ($settings['company_name'] ?? 'Daksa'),
+        ]);
+        
+        return view('frontend.gallery.index', compact('galleries', 'categories', 'settings', 'seoData'));
     }
 }

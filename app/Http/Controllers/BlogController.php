@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Setting;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -33,7 +34,13 @@ class BlogController extends Controller
         $articles = $query->paginate(3)->withQueryString();
         $settings = Setting::getAllAsArray();
         
-        return view('frontend.blog.index', compact('articles', 'settings'));
+        // Generate SEO data
+        $seoData = SeoService::getSeoData(null, 'blog.index', [
+            'meta_title' => 'Blog - ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => 'Baca artikel terbaru dari ' . ($settings['company_name'] ?? 'Daksa'),
+        ]);
+        
+        return view('frontend.blog.index', compact('articles', 'settings', 'seoData'));
     }
 
     public function show($slug)
@@ -55,7 +62,10 @@ class BlogController extends Controller
         
         $settings = Setting::getAllAsArray();
         
-        return view('frontend.blog.show', compact('article', 'relatedArticles', 'settings'));
+        // Generate SEO data for article
+        $seoData = SeoService::getArticleSeo($article, $settings);
+        
+        return view('frontend.blog.show', compact('article', 'relatedArticles', 'settings', 'seoData'));
     }
 
     public function storeComment(Request $request, Article $article)
