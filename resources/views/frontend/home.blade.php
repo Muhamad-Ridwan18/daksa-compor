@@ -659,16 +659,24 @@
         <div class="gallery-marquee-container">
             <!-- First row - moving left -->
             <div class="gallery-marquee-row marquee-left">
-                <div class="gallery-marquee-content">
+                <div class="gallery-marquee-content" style="animation: marqueeLeft 30s linear infinite;">
                     @foreach($galleries as $gallery)
                     <div class="gallery-image-item">
-                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                        <img src="{{ Storage::url($gallery->image) }}" 
+                             alt="{{ $gallery->title }}" 
+                             loading="lazy" 
+                             class="gallery-marquee-img"
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                     </div>
                     @endforeach
                     <!-- Duplicate for seamless loop -->
                     @foreach($galleries as $gallery)
                     <div class="gallery-image-item">
-                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                        <img src="{{ Storage::url($gallery->image) }}" 
+                             alt="{{ $gallery->title }}" 
+                             loading="lazy" 
+                             class="gallery-marquee-img"
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                     </div>
                     @endforeach
                 </div>
@@ -676,16 +684,24 @@
             
             <!-- Second row - moving right -->
             <div class="gallery-marquee-row marquee-right">
-                <div class="gallery-marquee-content">
+                <div class="gallery-marquee-content" style="animation: marqueeRight 30s linear infinite;">
                     @foreach($galleries->reverse() as $gallery)
                     <div class="gallery-image-item">
-                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                        <img src="{{ Storage::url($gallery->image) }}" 
+                             alt="{{ $gallery->title }}" 
+                             loading="lazy" 
+                             class="gallery-marquee-img"
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                     </div>
                     @endforeach
                     <!-- Duplicate for seamless loop -->
                     @foreach($galleries->reverse() as $gallery)
                     <div class="gallery-image-item">
-                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                        <img src="{{ Storage::url($gallery->image) }}" 
+                             alt="{{ $gallery->title }}" 
+                             loading="lazy" 
+                             class="gallery-marquee-img"
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                     </div>
                     @endforeach
                 </div>

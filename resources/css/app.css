@@ -1258,14 +1258,23 @@
         animation-name: marqueeRight;
     }
     
-    /* Keyframes for marquee movement (restored) */
+    /* Keyframes for marquee movement */
     @keyframes marqueeLeft {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
     }
+    
     @keyframes marqueeRight {
-        0% { transform: translateX(-50%); }
-        100% { transform: translateX(0); }
+        from {
+            transform: translateX(-50%);
+        }
+        to {
+            transform: translateX(0);
+        }
     }
     
     .client-logo-item {
@@ -1282,43 +1291,46 @@
         overflow: hidden;
         position: relative;
         margin: 2rem 0;
+        width: 100%;
     }
     
     .gallery-marquee-row {
         display: flex;
         width: 100%;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
     }
     
     .gallery-marquee-content {
         display: flex;
-        animation-duration: 40s;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-        animation-fill-mode: both;
+        will-change: transform;
     }
-    .gallery-marquee-content:hover { animation-play-state: paused; }
+    
+    .gallery-marquee-content:hover { 
+        animation-play-state: paused !important; 
+    }
     
     .marquee-left .gallery-marquee-content {
-        animation-name: marqueeLeft;
+        animation: marqueeLeft 30s linear infinite;
     }
     
     .marquee-right .gallery-marquee-content {
-        animation-name: marqueeRight;
+        animation: marqueeRight 30s linear infinite;
     }
     
     .gallery-image-item {
         flex-shrink: 0;
-        margin-right: 1rem;
+        margin-right: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 280px;
+        width: 300px;
         height: 200px;
         overflow: hidden;
         border-radius: 0.75rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #f3f4f6;
     }
     
     .gallery-image-item:hover {
@@ -1333,20 +1345,42 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
+        display: block;
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 640px) {
         .gallery-image-item {
-            width: 200px;
+            width: 220px;
             height: 150px;
-            margin-right: 0.75rem;
+            margin-right: 1rem;
+        }
+        .marquee-left .gallery-marquee-content {
+            animation: marqueeLeft 25s linear infinite;
+        }
+        .marquee-right .gallery-marquee-content {
+            animation: marqueeRight 25s linear infinite;
+        }
+    }
+    
+    @media (min-width: 641px) and (max-width: 1023px) {
+        .gallery-image-item {
+            width: 280px;
+            height: 180px;
+            margin-right: 1.25rem;
         }
     }
     
     @media (min-width: 1024px) {
         .gallery-image-item {
             width: 320px;
-            height: 240px;
+            height: 220px;
+            margin-right: 1.5rem;
+        }
+        .marquee-left .gallery-marquee-content {
+            animation: marqueeLeft 35s linear infinite;
+        }
+        .marquee-right .gallery-marquee-content {
+            animation: marqueeRight 35s linear infinite;
         }
     }
     
@@ -2057,6 +2091,10 @@
     .service-bg-shape,
     .hero-slide-image { animation: none !important; }
     .client-marquee-content { animation: none !important; }
+    /* Keep gallery marquee animation for better UX */
+    .gallery-marquee-content { 
+        animation-duration: 20s !important;
+    }
 }
 
 /* keyframes removed */
