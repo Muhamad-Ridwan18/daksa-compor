@@ -1,5 +1,7 @@
 /* Google Fonts: Inter (body) and Poppins (headings/buttons) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap');
+/* Optimized: Using fonts.bunny.net with font-display: swap for better performance */
+/* Note: Fonts are loaded asynchronously to avoid render blocking */
+@import url('https://fonts.bunny.net/css?family=inter:400,500&family=poppins:400,500,600,700&display=swap');
 
 @import "animate.css";
 

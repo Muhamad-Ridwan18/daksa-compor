@@ -52,6 +52,10 @@
                                 <div class="hero-slide-image h-full min-h-[70vh] md:min-h-[65vh] lg:min-h-[60vh]">
                                     <img src="{{ Storage::url($settings['hero_image_1']) }}" 
                                          alt="Hero Slide 1" 
+                                         loading="eager"
+                                         fetchpriority="high"
+                                         width="800"
+                                         height="600"
                                          class="object-contain">
                                 </div>
                             @else
@@ -107,6 +111,9 @@
                                 <div class="hero-slide-image h-full min-h-[70vh] md:min-h-[65vh] lg:min-h-[60vh]">
                                     <img src="{{ Storage::url($settings['hero_image_2']) }}" 
                                          alt="Hero Slide 2" 
+                                         loading="lazy"
+                                         width="800"
+                                         height="600"
                                          class="object-contain">
                                 </div>
                             @else
@@ -157,6 +164,9 @@
                                 <div class="hero-slide-image h-full min-h-[70vh] md:min-h-[65vh] lg:min-h-[60vh]">
                                     <img src="{{ Storage::url($settings['hero_image_3']) }}" 
                                          alt="Hero Slide 3" 
+                                         loading="lazy"
+                                         width="800"
+                                         height="600"
                                          class="object-contain">
                                 </div>
                             @else

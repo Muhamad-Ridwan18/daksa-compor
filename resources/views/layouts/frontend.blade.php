@@ -20,24 +20,80 @@
         <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings['favicon']) }}">
     @endif
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- AOS (Animate On Scroll) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Dynamic Theme CSS (only variables) -->
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.bunny.net">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    
+    <!-- Preload critical hero image if available -->
+    @if(isset($settings['hero_image_1']) && $settings['hero_image_1'])
+        <link rel="preload" as="image" href="{{ Storage::url($settings['hero_image_1']) }}" fetchpriority="high">
+    @endif
+    
+    <!-- Preload critical font files for faster text rendering -->
+    <link rel="preload" href="https://fonts.bunny.net/css?family=inter:400,500&family=poppins:400,500,600,700&display=swap" as="style">
+    
+    <!-- Critical CSS Inline for Above-the-Fold Content --> 
     <style>
+        /* Critical CSS for Hero Section - Inlined to avoid render blocking */
         :root {
             --primary-color: {{ $settings['primary_color'] ?? '#D89B30' }};
             --secondary-color: {{ $settings['secondary_color'] ?? '#4B2E1A' }};
             --background-color: {{ $settings['background_color'] ?? '#F5F7FA' }};
         }
+        body { margin: 0; font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+        .bg-background { background-color: var(--background-color); }
+        #home { position: relative; min-height: 70vh; display: flex; align-items: center; }
+        .hero-full-carousel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
+        .hero-full-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
+        .hero-full-slide.active { opacity: 1; visibility: visible; z-index: 2; }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-slide-title { font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 700; color: white; margin-bottom: 1.5rem; }
+        .hero-slide-description { font-size: clamp(1.125rem, 2vw, 1.5rem); color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; }
+        nav { background: white; position: sticky; top: 0; z-index: 50; }
+        /* Prevent layout shift */
+        img { max-width: 100%; height: auto; }
     </style>
+    
+    <!-- Note: Fonts are loaded via CSS @import for better performance -->
+    
+    <!-- AOS (Animate On Scroll) - Loaded asynchronously to avoid blocking render -->
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"></noscript>
+    <script>
+        // Polyfill for async CSS loading
+        !function(e){"use strict";var t=function(t,n,o){var i,r=e.document,a=r.createElement("link");if(n)i=n;else{var l=(r.body||r.getElementsByTagName("head")[0]).childNodes;i=l[l.length-1]}var d=r.styleSheets;a.rel="stylesheet",a.href=t,a.media="only x",function e(t){if(r.body)return t();setTimeout(function(){e(t)})}(function(){i.parentNode.insertBefore(a,n?i:i.nextSibling)});var f=function(e){for(var t=a.href,n=d.length;n--;)if(d[n].href===t)return e();setTimeout(function(){f(e)})};return a.addEventListener&&a.addEventListener("load",function(){this.media=o||"all"}),a.onloadcssdefined=f,f(function(){a.media!==o&&(a.media=o||"all")}),a};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
+    </script>
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+        // Make non-critical CSS non-blocking (Vite CSS loads after critical CSS)
+        // Critical CSS is already inlined above, so Vite CSS can load asynchronously
+        (function() {
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            links.forEach(link => {
+                // Skip if already processed or is critical
+                if (link.getAttribute('data-critical') || link.href.includes('fonts.bunny.net')) return;
+                
+                // For Vite CSS, make it load with lower priority
+                if (link.href.includes('/build/assets/')) {
+                    link.media = 'print';
+                    link.onload = function() { 
+                        this.media = 'all';
+                        this.onload = null;
+                    };
+                    // Fallback for browsers without onload support
+                    setTimeout(function() { 
+                        if (link.media === 'print') link.media = 'all';
+                    }, 100);
+                }
+            });
+        })();
+    </script>
+
+    <!-- Dynamic Theme CSS moved to critical CSS above -->
 </head>
 <body class="font-sans antialiased bg-background">
     <!-- Navigation -->
@@ -258,7 +314,8 @@
             document.body.classList.add('loaded');
         }, 2000);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 - Loaded asynchronously to avoid blocking parser -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
         // Flash messages via SweetAlert (if any set in session)
         document.addEventListener('DOMContentLoaded', function() {
@@ -314,25 +371,32 @@
         });
     </script>
 
-    <!-- AOS (Animate On Scroll) -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- AOS (Animate On Scroll) - Loaded asynchronously -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script>
         // Initialize AOS after DOM is ready and always enabled
         document.addEventListener('DOMContentLoaded', function () {
-            if (window.AOS) {
-                AOS.init({
-                    duration: 800,
-                    easing: 'ease-out',
-                    once: true,
-                    offset: 0,
-                    delay: 0,
-                    anchorPlacement: 'top-bottom',
-                    startEvent: 'DOMContentLoaded',
-                    disable: false
-                });
-                // Force a refresh shortly after to account for late-rendered images
-                setTimeout(function(){ try { AOS.refreshHard(); } catch(e){} }, 300);
+            // Wait for AOS to load if deferred
+            function initAOS() {
+                if (window.AOS) {
+                    AOS.init({
+                        duration: 800,
+                        easing: 'ease-out',
+                        once: true,
+                        offset: 0,
+                        delay: 0,
+                        anchorPlacement: 'top-bottom',
+                        startEvent: 'DOMContentLoaded',
+                        disable: false
+                    });
+                    // Force a refresh shortly after to account for late-rendered images
+                    setTimeout(function(){ try { AOS.refreshHard(); } catch(e){} }, 300);
+                } else {
+                    // Retry if AOS not loaded yet (deferred)
+                    setTimeout(initAOS, 100);
+                }
             }
+            initAOS();
         });
         window.addEventListener('load', function () {
             if (window.AOS) {

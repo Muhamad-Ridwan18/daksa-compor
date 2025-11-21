@@ -8,4 +8,17 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor': ['alpinejs'],
+                    'animate': ['animate.css'],
+                },
+            },
+        },
+        cssCodeSplit: true,
+        minify: 'esbuild', // Using esbuild (default) - faster than terser
+        chunkSizeWarningLimit: 1000,
+    },
 });
