@@ -31,7 +31,7 @@ class BlogController extends Controller
             $query->orderBy('published_at', 'desc');
         }
         
-        $articles = $query->paginate(3)->withQueryString();
+        $articles = $query->paginate(9)->withQueryString();
         $settings = Setting::getAllAsArray();
         
         // Generate SEO data
