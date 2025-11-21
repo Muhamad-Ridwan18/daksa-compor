@@ -23,8 +23,9 @@ class HomeController extends Controller
 
         // Generate SEO data
         $seoData = SeoService::getSeoData(null, 'home', [
-            'meta_title' => ($settings['site_title'] ?? 'Daksa Company Profile') . ' - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => $settings['site_description'] ?? 'Website Company Profile Daksa',
+            'meta_title' => 'Konsultan Pajak Bandung - Konsultan Murah Bandung | ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => 'Jasa konsultan pajak Bandung terpercaya dengan harga murah. Layanan konsultasi pajak profesional di Bandung untuk individu dan perusahaan. Hubungi kami sekarang!',
+            'meta_keywords' => 'konsultan pajak bandung, konsultan murah bandung, jasa konsultan pajak bandung, konsultan pajak murah bandung, konsultan pajak terbaik bandung, layanan konsultan pajak bandung',
             'og_image' => $settings['logo'] ?? null,
         ]);
 

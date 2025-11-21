@@ -196,18 +196,31 @@ class SeoService
      */
     public static function getOrganizationSchema($settings = [])
     {
-        return [
+        $address = [
+            '@type' => 'PostalAddress',
+            'addressLocality' => 'Bandung',
+            'addressRegion' => 'Jawa Barat',
+            'addressCountry' => 'ID',
+        ];
+        
+        if (!empty($settings['company_address'])) {
+            $address['streetAddress'] = $settings['company_address'];
+        }
+        
+        $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => $settings['company_name'] ?? 'Daksa',
             'url' => config('app.url'),
             'logo' => $settings['logo'] ? URL::to($settings['logo']) : null,
             'description' => $settings['company_description'] ?? $settings['site_description'] ?? null,
+            'address' => $address,
             'contactPoint' => [
                 '@type' => 'ContactPoint',
                 'telephone' => $settings['company_phone'] ?? null,
                 'contactType' => 'customer service',
                 'email' => $settings['company_email'] ?? null,
+                'areaServed' => 'Bandung',
             ],
             'sameAs' => array_filter([
                 $settings['facebook_url'] ?? null,
@@ -215,6 +228,8 @@ class SeoService
                 $settings['linkedin_url'] ?? null,
             ]),
         ];
+        
+        return $schema;
     }
 
     /**
