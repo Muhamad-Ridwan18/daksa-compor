@@ -8,7 +8,40 @@
     @csrf
     @method('PATCH')
     
+    <!-- Tab Navigation -->
+    <div class="mb-6 border-b border-gray-200">
+        <nav class="flex space-x-8" aria-label="Tabs">
+            <button type="button" 
+                    onclick="switchTab('general')"
+                    id="tab-general"
+                    class="tab-button py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-primary text-primary"
+                    data-tab="general">
+                <span class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Umum
+                </span>
+            </button>
+            <button type="button" 
+                    onclick="switchTab('seo')"
+                    id="tab-seo"
+                    class="tab-button py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    data-tab="seo">
+                <span class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    SEO
+                </span>
+            </button>
+        </nav>
+    </div>
+    
     <div class="space-y-8">
+        <!-- General Tab Content -->
+        <div id="tab-content-general" class="tab-content">
         <!-- Site Information -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Website</h3>
@@ -527,6 +560,313 @@
                 </div>
             </div>
         </div>
+        </div>
+        
+        <!-- SEO Tab Content -->
+        <div id="tab-content-seo" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow p-6 space-y-8">
+                <!-- SEO Umum Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Pengaturan SEO Umum</h3>
+                    <div class="space-y-6">
+                    
+                    <!-- Meta Title -->
+                    <div>
+                        <label for="seo_meta_title" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Title <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" 
+                               id="seo_meta_title" 
+                               name="seo_settings[meta_title]" 
+                               value="{{ $defaultSeo->meta_title ?? '' }}"
+                               maxlength="60"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Judul halaman untuk SEO (maks 60 karakter)">
+                        <p class="text-xs text-gray-500 mt-1">
+                            <span id="meta_title_count">0</span>/60 karakter
+                        </p>
+                    </div>
+                    
+                    <!-- Meta Description -->
+                    <div>
+                        <label for="seo_meta_description" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Description <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="seo_meta_description" 
+                                  name="seo_settings[meta_description]" 
+                                  rows="3"
+                                  maxlength="160"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                  placeholder="Deskripsi halaman untuk SEO (maks 160 karakter)">{{ $defaultSeo->meta_description ?? '' }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">
+                            <span id="meta_description_count">0</span>/160 karakter
+                        </p>
+                    </div>
+                    
+                    <!-- Meta Keywords -->
+                    <div>
+                        <label for="seo_meta_keywords" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Keywords
+                        </label>
+                        <input type="text" 
+                               id="seo_meta_keywords" 
+                               name="seo_settings[meta_keywords]" 
+                               value="{{ $defaultSeo->meta_keywords ?? '' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Kata kunci dipisahkan dengan koma (contoh: perusahaan, jasa, layanan)">
+                        <p class="text-xs text-gray-500 mt-1">Pisahkan dengan koma. Catatan: Google tidak lagi menggunakan meta keywords, tetapi beberapa mesin pencari lain masih menggunakannya.</p>
+                    </div>
+                    
+                    <!-- Meta Robots -->
+                    <div>
+                        <label for="seo_meta_robots" class="block text-sm font-medium text-gray-700 mb-2">
+                            Meta Robots
+                        </label>
+                        <select id="seo_meta_robots" 
+                                name="seo_settings[meta_robots]" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                            <option value="index,follow" {{ ($defaultSeo->meta_robots ?? 'index,follow') == 'index,follow' ? 'selected' : '' }}>Index, Follow</option>
+                            <option value="index,nofollow" {{ ($defaultSeo->meta_robots ?? '') == 'index,nofollow' ? 'selected' : '' }}>Index, No Follow</option>
+                            <option value="noindex,follow" {{ ($defaultSeo->meta_robots ?? '') == 'noindex,follow' ? 'selected' : '' }}>No Index, Follow</option>
+                            <option value="noindex,nofollow" {{ ($defaultSeo->meta_robots ?? '') == 'noindex,nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Instruksi untuk mesin pencari tentang cara mengindeks halaman ini.</p>
+                    </div>
+                    
+                    <!-- Canonical URL -->
+                    <div>
+                        <label for="seo_canonical_url" class="block text-sm font-medium text-gray-700 mb-2">
+                            Canonical URL
+                        </label>
+                        <input type="url" 
+                               id="seo_canonical_url" 
+                               name="seo_settings[canonical_url]" 
+                               value="{{ $defaultSeo->canonical_url ?? '' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="https://example.com/page">
+                        <p class="text-xs text-gray-500 mt-1">URL kanonik untuk menghindari konten duplikat. Biarkan kosong untuk menggunakan URL halaman saat ini.</p>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Media Sosial Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Pengaturan Media Sosial (Open Graph & Twitter Card)</h3>
+                    <div class="space-y-6">
+                    
+                    <!-- Open Graph Section -->
+                    <div class="border-b border-gray-200 pb-6">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Open Graph (Facebook, LinkedIn, dll)
+                        </h4>
+                        
+                        <div class="space-y-4">
+                            <!-- OG Title -->
+                            <div>
+                                <label for="seo_og_title" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG Title
+                                </label>
+                                <input type="text" 
+                                       id="seo_og_title" 
+                                       name="seo_settings[og_title]" 
+                                       value="{{ $defaultSeo->og_title ?? '' }}"
+                                       maxlength="60"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="Judul untuk share di media sosial">
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan Meta Title</p>
+                            </div>
+                            
+                            <!-- OG Description -->
+                            <div>
+                                <label for="seo_og_description" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG Description
+                                </label>
+                                <textarea id="seo_og_description" 
+                                          name="seo_settings[og_description]" 
+                                          rows="3"
+                                          maxlength="200"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                          placeholder="Deskripsi untuk share di media sosial">{{ $defaultSeo->og_description ?? '' }}</textarea>
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan Meta Description</p>
+                            </div>
+                            
+                            <!-- OG Image -->
+                            <div>
+                                <label for="seo_og_image" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG Image
+                                </label>
+                                @if(isset($defaultSeo) && $defaultSeo->og_image)
+                                    <div class="mb-3 p-4 bg-gray-50 rounded-lg inline-block">
+                                        <img src="{{ Storage::url($defaultSeo->og_image) }}" alt="OG Image" class="h-32 w-auto rounded">
+                                    </div>
+                                @endif
+                                <input type="file" 
+                                       id="seo_og_image_upload" 
+                                       name="seo_settings[og_image_upload]" 
+                                       accept="image/*"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       onchange="previewImage(this, 'og_image_preview')">
+                                <input type="hidden" name="seo_settings[og_image]" value="{{ $defaultSeo->og_image ?? '' }}">
+                                <p class="text-xs text-gray-500 mt-1">Ukuran ideal: 1200x630px (rasio 1.91:1). Format: JPG atau PNG. Max: 5MB</p>
+                                <div id="og_image_preview" class="mt-3 hidden p-4 bg-gray-50 rounded-lg inline-block">
+                                    <img src="" alt="Preview" class="h-32 w-auto rounded">
+                                </div>
+                            </div>
+                            
+                            <!-- OG Type -->
+                            <div>
+                                <label for="seo_og_type" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG Type
+                                </label>
+                                <select id="seo_og_type" 
+                                        name="seo_settings[og_type]" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                    <option value="website" {{ ($defaultSeo->og_type ?? 'website') == 'website' ? 'selected' : '' }}>Website</option>
+                                    <option value="article" {{ ($defaultSeo->og_type ?? '') == 'article' ? 'selected' : '' }}>Article</option>
+                                    <option value="product" {{ ($defaultSeo->og_type ?? '') == 'product' ? 'selected' : '' }}>Product</option>
+                                </select>
+                            </div>
+                            
+                            <!-- OG Site Name -->
+                            <div>
+                                <label for="seo_og_site_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG Site Name
+                                </label>
+                                <input type="text" 
+                                       id="seo_og_site_name" 
+                                       name="seo_settings[og_site_name]" 
+                                       value="{{ $defaultSeo->og_site_name ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="Nama website">
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan nama perusahaan dari pengaturan umum</p>
+                            </div>
+                            
+                            <!-- OG URL -->
+                            <div>
+                                <label for="seo_og_url" class="block text-sm font-medium text-gray-700 mb-2">
+                                    OG URL
+                                </label>
+                                <input type="url" 
+                                       id="seo_og_url" 
+                                       name="seo_settings[og_url]" 
+                                       value="{{ $defaultSeo->og_url ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="https://example.com">
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan URL halaman saat ini</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Twitter Card Section -->
+                    <div class="pt-6">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                            Twitter Card
+                        </h4>
+                        
+                        <div class="space-y-4">
+                            <!-- Twitter Card Type -->
+                            <div>
+                                <label for="seo_twitter_card" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Card Type
+                                </label>
+                                <select id="seo_twitter_card" 
+                                        name="seo_settings[twitter_card]" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                    <option value="summary_large_image" {{ ($defaultSeo->twitter_card ?? 'summary_large_image') == 'summary_large_image' ? 'selected' : '' }}>Summary Large Image</option>
+                                    <option value="summary" {{ ($defaultSeo->twitter_card ?? '') == 'summary' ? 'selected' : '' }}>Summary</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Twitter Title -->
+                            <div>
+                                <label for="seo_twitter_title" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Title
+                                </label>
+                                <input type="text" 
+                                       id="seo_twitter_title" 
+                                       name="seo_settings[twitter_title]" 
+                                       value="{{ $defaultSeo->twitter_title ?? '' }}"
+                                       maxlength="70"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="Judul untuk Twitter Card">
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan Meta Title</p>
+                            </div>
+                            
+                            <!-- Twitter Description -->
+                            <div>
+                                <label for="seo_twitter_description" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Description
+                                </label>
+                                <textarea id="seo_twitter_description" 
+                                          name="seo_settings[twitter_description]" 
+                                          rows="3"
+                                          maxlength="200"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                          placeholder="Deskripsi untuk Twitter Card">{{ $defaultSeo->twitter_description ?? '' }}</textarea>
+                                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menggunakan Meta Description</p>
+                            </div>
+                            
+                            <!-- Twitter Image -->
+                            <div>
+                                <label for="seo_twitter_image" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Image
+                                </label>
+                                @if(isset($defaultSeo) && $defaultSeo->twitter_image)
+                                    <div class="mb-3 p-4 bg-gray-50 rounded-lg inline-block">
+                                        <img src="{{ Storage::url($defaultSeo->twitter_image) }}" alt="Twitter Image" class="h-32 w-auto rounded">
+                                    </div>
+                                @endif
+                                <input type="file" 
+                                       id="seo_twitter_image_upload" 
+                                       name="seo_settings[twitter_image_upload]" 
+                                       accept="image/*"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       onchange="previewImage(this, 'twitter_image_preview')">
+                                <input type="hidden" name="seo_settings[twitter_image]" value="{{ $defaultSeo->twitter_image ?? '' }}">
+                                <p class="text-xs text-gray-500 mt-1">Ukuran ideal: 1200x600px untuk Summary Large Image atau 120x120px untuk Summary. Format: JPG atau PNG. Max: 5MB</p>
+                                <div id="twitter_image_preview" class="mt-3 hidden p-4 bg-gray-50 rounded-lg inline-block">
+                                    <img src="" alt="Preview" class="h-32 w-auto rounded">
+                                </div>
+                            </div>
+                            
+                            <!-- Twitter Site -->
+                            <div>
+                                <label for="seo_twitter_site" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Site (@username)
+                                </label>
+                                <input type="text" 
+                                       id="seo_twitter_site" 
+                                       name="seo_settings[twitter_site]" 
+                                       value="{{ $defaultSeo->twitter_site ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="@username">
+                                <p class="text-xs text-gray-500 mt-1">Username Twitter website (tanpa @)</p>
+                            </div>
+                            
+                            <!-- Twitter Creator -->
+                            <div>
+                                <label for="seo_twitter_creator" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twitter Creator (@username)
+                                </label>
+                                <input type="text" 
+                                       id="seo_twitter_creator" 
+                                       name="seo_settings[twitter_creator]" 
+                                       value="{{ $defaultSeo->twitter_creator ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                       placeholder="@username">
+                                <p class="text-xs text-gray-500 mt-1">Username Twitter penulis/kreator konten (tanpa @)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="flex justify-end mt-8">
@@ -538,6 +878,85 @@
 </form>
 
 <script>
+// Tab switching - make sure it's in global scope
+window.switchTab = function(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    
+    // Remove active state from all tabs
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('border-primary', 'text-primary');
+        button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+    });
+    
+    // Show selected tab content
+    const selectedContent = document.getElementById(`tab-content-${tabName}`);
+    if (selectedContent) {
+        selectedContent.classList.remove('hidden');
+    }
+    
+    // Activate selected tab
+    const selectedTab = document.getElementById(`tab-${tabName}`);
+    if (selectedTab) {
+        selectedTab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        selectedTab.classList.add('border-primary', 'text-primary');
+    }
+};
+
+// Character counters
+document.addEventListener('DOMContentLoaded', function() {
+    // Meta Title counter
+    const metaTitleInput = document.getElementById('seo_meta_title');
+    const metaTitleCount = document.getElementById('meta_title_count');
+    if (metaTitleInput && metaTitleCount) {
+        metaTitleCount.textContent = metaTitleInput.value.length;
+        metaTitleInput.addEventListener('input', function() {
+            metaTitleCount.textContent = this.value.length;
+            if (this.value.length > 60) {
+                metaTitleCount.classList.add('text-red-500');
+            } else {
+                metaTitleCount.classList.remove('text-red-500');
+            }
+        });
+    }
+    
+    // Meta Description counter
+    const metaDescInput = document.getElementById('seo_meta_description');
+    const metaDescCount = document.getElementById('meta_description_count');
+    if (metaDescInput && metaDescCount) {
+        metaDescCount.textContent = metaDescInput.value.length;
+        metaDescInput.addEventListener('input', function() {
+            metaDescCount.textContent = this.value.length;
+            if (this.value.length > 160) {
+                metaDescCount.classList.add('text-red-500');
+            } else {
+                metaDescCount.classList.remove('text-red-500');
+            }
+        });
+    }
+    
+    // Initialize first tab as active
+    // Check if we're on SEO tab (from URL hash or default)
+    const urlHash = window.location.hash;
+    if (urlHash === '#seo') {
+        switchTab('seo');
+    } else {
+        // Make sure general tab is visible
+        const generalTab = document.getElementById('tab-content-general');
+        if (generalTab) {
+            generalTab.classList.remove('hidden');
+        }
+        // Set active state for general tab button
+        const generalTabButton = document.getElementById('tab-general');
+        if (generalTabButton) {
+            generalTabButton.classList.add('border-primary', 'text-primary');
+            generalTabButton.classList.remove('border-transparent', 'text-gray-500');
+        }
+    }
+});
+
 // Sync color inputs
 document.querySelectorAll('input[type="color"]').forEach(colorInput => {
     const textInput = colorInput.parentElement.querySelector('input[type="text"]');
@@ -568,7 +987,12 @@ function previewImage(input, previewId) {
     if (!previewImg) {
         previewImg = document.createElement('img');
         previewImg.alt = 'Preview';
-        previewImg.className = 'h-16 w-auto';
+        // Use appropriate class based on preview container
+        if (previewId.includes('og_image') || previewId.includes('twitter_image')) {
+            previewImg.className = 'h-32 w-auto rounded';
+        } else {
+            previewImg.className = 'h-16 w-auto';
+        }
         preview.appendChild(previewImg);
     }
 
