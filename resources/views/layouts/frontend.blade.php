@@ -157,8 +157,12 @@
                 
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary p-2 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-button" 
+                            class="text-gray-700 hover:text-primary p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                            aria-label="Toggle mobile menu"
+                            aria-expanded="false"
+                            aria-controls="mobile-menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                     </button>
@@ -167,7 +171,7 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100" role="menu" aria-label="Mobile navigation menu">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 <a href="{{ route('home') }}" 
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('home') ? 'text-primary bg-primary/10' : '' }}">
@@ -267,7 +271,10 @@
         // Mobile menu toggle
         document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
+            const button = this;
+            const isHidden = mobileMenu.classList.contains('hidden');
             mobileMenu.classList.toggle('hidden');
+            button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
         });
         
         // Close mobile menu when clicking a link

@@ -282,9 +282,9 @@
             
             <!-- Content Section -->
             <div class="lg:pl-8" data-animate="fadeInUp" data-delay="160ms">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
                     {{ $settings['about_title'] ?? 'Mengapa Memilih Kami?' }}
-                </h3>
+                </h2>
                 <div class="prose prose-lg text-gray-600 mb-8">
                     <p class="leading-relaxed text-justify">
                         {{ $settings['about_content'] ?? 'Dengan pengalaman lebih dari 10 tahun di industri, kami telah membantu ratusan klien mencapai tujuan bisnis mereka. Tim profesional kami berkomitmen untuk memberikan solusi terbaik yang disesuaikan dengan kebutuhan unik setiap klien.' }}
@@ -301,7 +301,7 @@
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Berpengalaman & Teruji</h3>
+                <h4 class="text-xl font-semibold mb-2">Berpengalaman & Teruji</h4>
                 <p class="text-gray-600">Menghadapi berbagai kasus dan sektor industri sejak 2016</p>
             </div>
             <div class="text-center feature-card" data-animate="fadeInUp" data-delay="120ms">
@@ -310,7 +310,7 @@
                         <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Legalitas Terjamin</h3>
+                <h4 class="text-xl font-semibold mb-2">Legalitas Terjamin</h4>
                 <p class="text-gray-600">Memberikan Keamanan dan kepastian hukum dalam setiap layanan</p>
             </div>
             <div class="text-center feature-card" data-animate="fadeInUp" data-delay="240ms">
@@ -319,7 +319,7 @@
                         <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Solusi Terbaik untuk Bisnis Anda</h3>
+                <h4 class="text-xl font-semibold mb-2">Solusi Terbaik untuk Bisnis Anda</h4>
                 <p class="text-gray-600">Pendekatan yang disesuaikan dengan karakter dan kebutuhan perusahaan</p>
             </div>
             <div class="text-center feature-card" data-animate="fadeInUp" data-delay="360ms">
@@ -329,7 +329,7 @@
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Harga Kompetitif & Fleksibel</h3>
+                <h4 class="text-xl font-semibold mb-2">Harga Kompetitif & Fleksibel</h4>
                 <p class="text-gray-600">Menyesuaikan dengan kualifikasi usaha dan kebutuhan klien</p>
             </div>
         </div>
@@ -368,7 +368,7 @@
                         @endif
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
-                                <h3 class="accordion-title">{{ $service->name }}</h3>
+                                <h3 class="accordion-title" id="service-{{ $service->id }}-title">{{ $service->name }}</h3>
                                 @if($service->products->count() > 0)
                                     <span class="product-badge">{{ $service->products->count() }} Produk</span>
                                 @endif
@@ -377,9 +377,14 @@
                         </div>
                     </div>
                     @if($service->products->count() > 0)
-                    <button onclick="toggleAccordion('{{ $service->id }}')" class="accordion-button">
+                    <button onclick="toggleAccordion('{{ $service->id }}')" 
+                            class="accordion-button min-w-[44px] min-h-[44px]"
+                            aria-expanded="false"
+                            aria-controls="accordion-{{ $service->id }}"
+                            aria-labelledby="service-{{ $service->id }}-title"
+                            type="button">
                         <span class="accordion-button-text">Lihat</span>
-                        <div class="accordion-icon">
+                        <div class="accordion-icon" aria-hidden="true">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
@@ -444,13 +449,19 @@
                                                             @if($isLong)
                                                                 <p id="{{ $featureId }}-short" class="text-sm text-gray-600">
                                                                     {{ Str::limit($featureDesc, $maxLength) }}
-                                                                    <button type="button" onclick="toggleFeatureDesc('{{ $featureId }}')" class="text-primary hover:underline ml-1 font-medium">
+                                                                    <button type="button" 
+                                                                            onclick="toggleFeatureDesc('{{ $featureId }}')" 
+                                                                            class="text-primary hover:underline ml-1 font-medium"
+                                                                            aria-label="Baca selengkapnya tentang {{ $featureName ?? 'fitur' }}">
                                                                         Baca selengkapnya
                                                                     </button>
                                                                 </p>
                                                                 <p id="{{ $featureId }}-full" class="text-sm text-gray-600 hidden">
                                                                     {{ $featureDesc }}
-                                                                    <button type="button" onclick="toggleFeatureDesc('{{ $featureId }}')" class="text-primary hover:underline ml-1 font-medium">
+                                                                    <button type="button" 
+                                                                            onclick="toggleFeatureDesc('{{ $featureId }}')" 
+                                                                            class="text-primary hover:underline ml-1 font-medium"
+                                                                            aria-label="Tampilkan lebih sedikit tentang {{ $featureName ?? 'fitur' }}">
                                                                         Tampilkan lebih sedikit
                                                                     </button>
                                                                 </p>
@@ -587,22 +598,27 @@
             
             <!-- Carousel Controls -->
             <div class="testimonial-controls">
-                <button class="testimonial-prev-btn" onclick="prevTestimonial()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="testimonial-prev-btn" onclick="prevTestimonial()" aria-label="Testimonial sebelumnya" type="button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </button>
-                <button class="testimonial-next-btn" onclick="nextTestimonial()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="testimonial-next-btn" onclick="nextTestimonial()" aria-label="Testimonial berikutnya" type="button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </button>
             </div>
             
             <!-- Carousel Indicators -->
-            <div class="testimonial-indicators">
+            <div class="testimonial-indicators" role="tablist" aria-label="Navigasi testimonial">
                 @for($i = 0; $i < max(1, $testimonials->count() - 2); $i++)
-                <button class="testimonial-indicator {{ $i === 0 ? 'active' : '' }}" onclick="goToTestimonial({{ $i }})"></button>
+                <button class="testimonial-indicator {{ $i === 0 ? 'active' : '' }}" 
+                        onclick="goToTestimonial({{ $i }})" 
+                        aria-label="Testimonial {{ $i + 1 }}"
+                        role="tab"
+                        aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+                        type="button"></button>
                 @endfor
             </div>
         </div>
@@ -799,18 +815,28 @@
                     @endif
                     <div class="flex items-center justify-center gap-3 mt-4">
                         @if($member->linkedin)
-                        <a href="{{ $member->linkedin }}" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.763 0 5-2.239 5-5v-14c0-2.761-2.237-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 11.268h-3v-5.604c0-1.336-.027-3.055-1.861-3.055-1.861 0-2.146 1.452-2.146 2.954v5.705h-3v-10h2.881v1.367h.041c.401-.759 1.379-1.559 2.838-1.559 3.037 0 3.6 2.001 3.6 4.604v5.588z"/></svg>
+                        <a href="{{ $member->linkedin }}" 
+                           target="_blank" 
+                           rel="noopener" 
+                           class="text-gray-500 hover:text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                           aria-label="LinkedIn {{ $member->name }}">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.763 0 5-2.239 5-5v-14c0-2.761-2.237-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 11.268h-3v-5.604c0-1.336-.027-3.055-1.861-3.055-1.861 0-2.146 1.452-2.146 2.954v5.705h-3v-10h2.881v1.367h.041c.401-.759 1.379-1.559 2.838-1.559 3.037 0 3.6 2.001 3.6 4.604v5.588z"/></svg>
                         </a>
                         @endif
                         @if($member->twitter)
-                        <a href="{{ $member->twitter }}" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.487 11.24h-6.644l-5.196-6.79-5.95 6.79h-3.31l7.73-8.82-8.28-10.88h6.8l4.7 6.18 5.582-6.18zm-1.158 19.5h1.833l-11.79-15.68h-1.97l11.927 15.68z"/></svg>
+                        <a href="{{ $member->twitter }}" 
+                           target="_blank" 
+                           rel="noopener" 
+                           class="text-gray-500 hover:text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                           aria-label="Twitter {{ $member->name }}">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.487 11.24h-6.644l-5.196-6.79-5.95 6.79h-3.31l7.73-8.82-8.28-10.88h6.8l4.7 6.18 5.582-6.18zm-1.158 19.5h1.833l-11.79-15.68h-1.97l11.927 15.68z"/></svg>
                         </a>
                         @endif
                         @if($member->email)
-                        <a href="mailto:{{ $member->email }}" class="text-gray-500 hover:text-primary">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        <a href="mailto:{{ $member->email }}" 
+                           class="text-gray-500 hover:text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                           aria-label="Email {{ $member->name }}">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                         </a>
                         @endif
                     </div>
@@ -841,7 +867,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12" data-stagger data-stagger-base="0" data-stagger-step="160">
             <div data-animate="fadeInUp" data-delay="0ms">
-                <h3 class="text-2xl font-semibold mb-6">Informasi Kontak</h3>
+                <h2 class="text-2xl font-semibold mb-6">Informasi Kontak</h2>
                 <div class="space-y-4">
                     <div class="flex items-center contact-info-item">
                         <div class="bg-primary/20 p-3 rounded-full mr-4">
@@ -911,7 +937,7 @@
         
         @if(($settings['gmaps_embed_url'] ?? null) || (($settings['gmaps_latitude'] ?? null) && ($settings['gmaps_longitude'] ?? null)) || ($settings['company_address'] ?? null))
         <div class="mt-16">
-            <h3 class="text-2xl font-semibold mb-6 text-center lg:text-left">Lokasi Kami</h3>
+            <h2 class="text-2xl font-semibold mb-6 text-center lg:text-left">Lokasi Kami</h2>
             <div class="rounded-xl overflow-hidden border border-white/20 shadow-lg">
                 @php
                     $lat = $settings['gmaps_latitude'] ?? null;
@@ -945,8 +971,11 @@
             <div class="bg-white rounded-lg max-w-md w-full p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">Pesan Layanan</h3>
-                    <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button onclick="closeOrderModal()" 
+                            class="text-gray-400 hover:text-gray-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                            aria-label="Tutup modal pesan layanan"
+                            type="button">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
