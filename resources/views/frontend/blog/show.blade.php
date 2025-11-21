@@ -107,7 +107,7 @@
                 <div class="lg:col-span-8 order-2 lg:order-1 min-w-0">
                     <!-- Featured Image -->
                     @if($article->featured_image)
-                        <div class="mb-6 sm:mb-8 lg:mb-10 rounded-lg overflow-hidden shadow-2xl">
+                        <div class="mb-6 sm:mb-8 lg:mb-10 rounded-lg overflow-hidden">
                             <img src="{{ asset('storage/' . $article->featured_image) }}" 
                                  alt="{{ $article->title }}"
                                  class="w-full h-auto">
