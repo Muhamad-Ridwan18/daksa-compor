@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Models\Gallery;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Testimonial;
@@ -19,6 +20,7 @@ class HomeController extends Controller
         $testimonials = Testimonial::active()->orderBy('sort_order')->get();
         $clients = Client::active()->orderBy('sort_order')->get();
         $teamMembers = TeamMember::active()->orderBy('sort_order')->get();
+        $galleries = Gallery::active()->orderBy('sort_order')->orderBy('created_at', 'desc')->limit(20)->get();
         $settings = Setting::getAllAsArray();
 
         // Generate SEO data
@@ -32,6 +34,6 @@ class HomeController extends Controller
         // Add Website schema
         $seoData['schema_json'] = SeoService::getWebsiteSchema($settings);
 
-        return view('frontend.home', compact('services', 'testimonials', 'clients', 'teamMembers', 'settings', 'seoData'));
+        return view('frontend.home', compact('services', 'testimonials', 'clients', 'teamMembers', 'galleries', 'settings', 'seoData'));
     }
 }

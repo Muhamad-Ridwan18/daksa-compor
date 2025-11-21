@@ -90,6 +90,98 @@
 
 <script>
     $(document).ready(function() {
+        let isCleaning = false;
+        let changeTimeout = null;
+        
+        // Clean improper nested list structure and remove unnecessary wrappers/styles
+        function cleanNestedLists() {
+            if (isCleaning) return;
+            isCleaning = true;
+            
+            let content = $('#content').summernote('code');
+            if (!content) {
+                isCleaning = false;
+                return;
+            }
+            
+            let originalContent = content;
+            
+            // Remove pagelayer divs and unnecessary wrappers
+            content = content.replace(/<div[^>]*pagelayer[^>]*>/gi, '');
+            content = content.replace(/<\/div>\s*(<\/div>\s*)?(<\/div>\s*)?$/gi, '');
+            content = content.replace(/<div[^>]*>\s*(<div[^>]*>\s*)?(<div[^>]*>)/gi, '');
+            
+            // Remove pagelayer classes and IDs
+            content = content.replace(/\s*class="[^"]*pagelayer[^"]*"/gi, '');
+            content = content.replace(/\s*pagelayer-id="[^"]*"/gi, '');
+            
+            // Remove all inline styles that contain Tailwind CSS variables or unnecessary styles
+            content = content.replace(/style="[^"]*"/gi, function(match) {
+                let styleContent = match.replace(/style="([^"]*)"/i, '$1');
+                // Remove Tailwind CSS variables
+                styleContent = styleContent.replace(/--tw-[^;"]*;?/gi, '');
+                // Remove transition
+                styleContent = styleContent.replace(/transition:\s*[^;"]*;?/gi, '');
+                // Remove other unnecessary styles (keep only essential ones like font-family, font-size, text-align, etc.)
+                styleContent = styleContent.replace(/width:\s*[^;"]*;?/gi, '');
+                styleContent = styleContent.replace(/--[^;"]*;?/gi, '');
+                // Clean up
+                styleContent = styleContent.replace(/;\s*;/g, ';').trim();
+                styleContent = styleContent.replace(/^;|;$/g, '');
+                
+                // If style is empty or only contains whitespace, remove the attribute
+                if (!styleContent || styleContent.trim() === '') {
+                    return '';
+                }
+                return 'style="' + styleContent + '"';
+            });
+            
+            // Clean up empty style attributes
+            content = content.replace(/\s*style="\s*"/gi, '');
+            
+            // Remove unnecessary div wrappers
+            content = content.replace(/^<div[^>]*>\s*(<div[^>]*>\s*)?/gi, '');
+            content = content.replace(/\s*<\/div>\s*(<\/div>\s*)?$/gi, '');
+            
+            // Remove <ol><li> at the beginning of content - unwrap the content
+            // Pattern: <ol><li>content</li></ol> at start -> just content
+            content = content.replace(/^<ol[^>]*>\s*<li[^>]*>(.*?)<\/li>\s*<\/ol>/is, '$1');
+            
+            // Also handle multiple <li> in <ol> at the beginning - unwrap all content
+            if (/^<ol[^>]*>/i.test(content)) {
+                const liMatches = content.match(/<li[^>]*>([\s\S]*?)<\/li>/gi);
+                if (liMatches) {
+                    let unwrappedContent = '';
+                    liMatches.forEach(function(liTag) {
+                        const liContent = liTag.replace(/<li[^>]*>|<\/li>/gi, '');
+                        unwrappedContent += liContent.trim();
+                    });
+                    // Remove the <ol> wrapper and replace with unwrapped content
+                    content = content.replace(/^<ol[^>]*>[\s\S]*?<\/ol>/i, unwrappedContent);
+                }
+            }
+            
+            // Remove ul > li > ol structure and replace with ol
+            content = content.replace(/<ul[^>]*>\s*<li[^>]*>\s*(<ol[^>]*>[\s\S]*?<\/ol>)\s*<\/li>\s*<\/ul>/gi, '$1');
+            
+            // Also handle cases where ol is wrapped in ul > li with other content
+            content = content.replace(/<ul[^>]*>\s*<li[^>]*>([^<]*)(<ol[^>]*>[\s\S]*?<\/ol>)\s*<\/li>\s*<\/ul>/gi, '$2');
+            
+            // Remove empty ul > li structures
+            content = content.replace(/<ul[^>]*>\s*<li[^>]*>\s*<\/li>\s*<\/ul>/gi, '');
+            
+            // Clean up multiple consecutive divs
+            content = content.replace(/<div[^>]*>\s*<div[^>]*>/gi, '');
+            content = content.replace(/<\/div>\s*<\/div>/gi, '');
+            
+            // Only update if content changed
+            if (content !== originalContent) {
+                $('#content').summernote('code', content);
+            }
+            
+            isCleaning = false;
+        }
+        
         $('#content').summernote({
             height: 400,
             minHeight: 300,
@@ -110,6 +202,28 @@
             callbacks: {
                 onImageUpload: function(files) {
                     uploadImage(files[0]);
+                },
+                onInit: function() {
+                    // Clean improper nested lists on init
+                    setTimeout(function() {
+                        cleanNestedLists();
+                    }, 500);
+                },
+                onChange: function(contents, $editable) {
+                    // Debounce cleaning to avoid interfering with toolbar
+                    if (changeTimeout) {
+                        clearTimeout(changeTimeout);
+                    }
+                    changeTimeout = setTimeout(function() {
+                        cleanNestedLists();
+                    }, 500);
+                },
+                onBlur: function() {
+                    // Clean when editor loses focus
+                    if (changeTimeout) {
+                        clearTimeout(changeTimeout);
+                    }
+                    cleanNestedLists();
                 }
             }
         });
@@ -136,6 +250,16 @@
                 }
             });
         }
+        
+        // Clean before form submit
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            cleanNestedLists();
+            // Small delay to ensure cleaning is done
+            setTimeout(function() {
+                this.submit();
+            }.bind(this), 100);
+        });
     });
 </script>
 @endsection

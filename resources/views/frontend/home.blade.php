@@ -662,6 +662,63 @@
 </section>
 @endif
 
+<!-- Gallery Section -->
+@if(isset($galleries) && $galleries->count() > 0)
+<section class="py-16 bg-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-stagger data-stagger-base="0" data-stagger-step="140">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4" data-animate="fadeInUp" data-delay="0ms">Galeri Kami</h2>
+            <p class="text-lg text-gray-600" data-animate="fadeInUp" data-delay="160ms">Momen-momen terbaik dari aktivitas kami</p>
+        </div>
+        
+        <div class="gallery-marquee-container">
+            <!-- First row - moving left -->
+            <div class="gallery-marquee-row marquee-left">
+                <div class="gallery-marquee-content">
+                    @foreach($galleries as $gallery)
+                    <div class="gallery-image-item">
+                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                    </div>
+                    @endforeach
+                    <!-- Duplicate for seamless loop -->
+                    @foreach($galleries as $gallery)
+                    <div class="gallery-image-item">
+                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            <!-- Second row - moving right -->
+            <div class="gallery-marquee-row marquee-right">
+                <div class="gallery-marquee-content">
+                    @foreach($galleries->reverse() as $gallery)
+                    <div class="gallery-image-item">
+                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                    </div>
+                    @endforeach
+                    <!-- Duplicate for seamless loop -->
+                    @foreach($galleries->reverse() as $gallery)
+                    <div class="gallery-image-item">
+                        <img src="{{ Storage::url($gallery->image) }}" alt="{{ $gallery->title }}" loading="lazy" class="gallery-marquee-img">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-8">
+            <a href="{{ route('gallery.index') }}" class="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-semibold transition">
+                <span>Lihat Semua Galeri</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Our Team Section -->
 @if(isset($teamMembers) && $teamMembers->count() > 0)
 <section id="team" class="py-20 bg-background relative overflow-hidden">
