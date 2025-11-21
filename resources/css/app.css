@@ -1999,12 +1999,12 @@
         box-shadow: 0 6px 20px rgba(216, 155, 48, 0.4);
     }
     
-    /* Scroll Indicators */
+    /* Scroll Indicators - Hidden */
     .scroll-indicators {
+        display: none !important;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        display: flex;
         justify-content: space-between;
         width: 100%;
         pointer-events: none;
@@ -2012,12 +2012,12 @@
     }
     
     .scroll-btn {
+        display: none !important;
         background: rgba(255, 255, 255, 0.95);
         border: none;
         border-radius: 50%;
         width: 48px;
         height: 48px;
-        display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;

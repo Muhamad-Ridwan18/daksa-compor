@@ -498,21 +498,6 @@
                         </div>
                         @endif
                         
-                        <!-- Scroll Indicators - Only show if more than 3 products -->
-                        @if($service->products->count() > 3)
-                        <div class="scroll-indicators">
-                            <button class="scroll-btn scroll-left" onclick="scrollProducts('{{ $service->id }}', 'left')">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                </svg>
-                            </button>
-                            <button class="scroll-btn scroll-right" onclick="scrollProducts('{{ $service->id }}', 'right')">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                        @endif
                     </div>
                 </div>
                 @endif
