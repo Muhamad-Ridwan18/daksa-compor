@@ -63,13 +63,25 @@
                 <!-- Fitur Produk -->
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Fitur Produk</label>
-                    <div id="featuresWrapper" class="space-y-2">
-                        @php $oldFeatures = old('features', ['']); @endphp
+                    <div id="featuresWrapper" class="space-y-4">
+                        @php 
+                            $oldFeatures = old('features', []);
+                            if (empty($oldFeatures)) {
+                                $oldFeatures = [['name' => '', 'description' => '']];
+                            }
+                        @endphp
                         @foreach($oldFeatures as $i => $feature)
-                        <div class="flex gap-2">
-                            <input type="text" name="features[]" value="{{ $feature }}" placeholder="Contoh: Harga Terjangkau" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <button type="button" class="px-3 py-2 bg-gray-200 rounded remove-feature" onclick="this.parentElement.remove()">-
-                            </button>
+                        <div class="feature-item border border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Fitur {{ $i + 1 }}</span>
+                                <button type="button" class="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm" onclick="this.closest('.feature-item').remove()">Hapus</button>
+                            </div>
+                            <div class="space-y-2">
+                                <input type="text" name="features[{{ $i }}][name]" value="{{ is_array($feature) ? ($feature['name'] ?? '') : $feature }}" placeholder="Nama Fitur (Contoh: Harga Terjangkau)" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <textarea name="features[{{ $i }}][description]" rows="2" placeholder="Deskripsi Fitur (Contoh: Harga yang terjangkau untuk semua kalangan)" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">{{ is_array($feature) ? ($feature['description'] ?? '') : '' }}</textarea>
+                            </div>
                         </div>
                         @endforeach
                     </div>
@@ -110,13 +122,23 @@
 
                 <!-- Status -->
                 <div class="md:col-span-2">
-                    <div class="flex items-center">
-                        <input type="checkbox" name="is_active" id="is_active" value="1" 
-                               {{ old('is_active', true) ? 'checked' : '' }}
-                               class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                        <label for="is_active" class="ml-2 block text-sm text-gray-700">
-                            Aktif
-                        </label>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" 
+                                   {{ old('is_active', true) ? 'checked' : '' }}
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <label for="is_active" class="ml-2 block text-sm text-gray-700">
+                                Aktif
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" name="show_price" id="show_price" value="1" 
+                                   {{ old('show_price', true) ? 'checked' : '' }}
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <label for="show_price" class="ml-2 block text-sm text-gray-700">
+                                Tampilkan Harga
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,9 +159,21 @@
 <script>
 function addFeatureRow() {
     const wrapper = document.getElementById('featuresWrapper');
+    const index = wrapper.children.length;
     const div = document.createElement('div');
-    div.className = 'flex gap-2';
-    div.innerHTML = `<input type="text" name="features[]" placeholder="Contoh: Support 24/7" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"><button type="button" class="px-3 py-2 bg-gray-200 rounded remove-feature" onclick="this.parentElement.remove()">-</button>`;
+    div.className = 'feature-item border border-gray-200 rounded-lg p-4 bg-gray-50';
+    div.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">Fitur ${index + 1}</span>
+            <button type="button" class="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm" onclick="this.closest('.feature-item').remove()">Hapus</button>
+        </div>
+        <div class="space-y-2">
+            <input type="text" name="features[${index}][name]" placeholder="Nama Fitur (Contoh: Support 24/7)" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            <textarea name="features[${index}][description]" rows="2" placeholder="Deskripsi Fitur (Contoh: Dukungan pelanggan 24 jam)" 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+        </div>
+    `;
     wrapper.appendChild(div);
 }
 </script>

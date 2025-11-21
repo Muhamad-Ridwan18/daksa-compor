@@ -53,11 +53,21 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {{ $product->formatted_price }}
+                        @if(!($product->show_price ?? true))
+                            <span class="ml-2 text-xs text-gray-500 italic">(Tersembunyi)</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $product->is_active ? 'Aktif' : 'Tidak Aktif' }}
-                        </span>
+                        <div class="space-y-1">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $product->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                            </span>
+                            @if(!($product->show_price ?? true))
+                                <span class="block inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Harga Disembunyikan
+                                </span>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {{ $product->sort_order }}

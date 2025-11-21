@@ -33,15 +33,40 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'features' => 'nullable|array',
-            'features.*' => 'nullable|string|max:255',
+            'features.*.name' => 'nullable|string|max:255',
+            'features.*.description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'show_price' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['service_id', 'name', 'description', 'price', 'is_active', 'sort_order']);
-        $data['features'] = array_values(array_filter($request->input('features', []), fn($f) => filled($f)));
+        $data = $request->only(['service_id', 'name', 'description', 'price', 'sort_order']);
+        $data['show_price'] = $request->has('show_price') ? (bool)$request->show_price : false;
+        $data['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
+        
+        // Process features: filter empty and ensure proper structure
+        $features = [];
+        foreach ($request->input('features', []) as $feature) {
+            if (is_array($feature)) {
+                $name = trim($feature['name'] ?? '');
+                $description = trim($feature['description'] ?? '');
+                if (!empty($name)) {
+                    $features[] = [
+                        'name' => $name,
+                        'description' => $description
+                    ];
+                }
+            } elseif (!empty(trim($feature))) {
+                // Backward compatibility: if it's a string, convert to new format
+                $features[] = [
+                    'name' => trim($feature),
+                    'description' => ''
+                ];
+            }
+        }
+        $data['features'] = $features;
         
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
@@ -69,15 +94,40 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'features' => 'nullable|array',
-            'features.*' => 'nullable|string|max:255',
+            'features.*.name' => 'nullable|string|max:255',
+            'features.*.description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'show_price' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['service_id', 'name', 'description', 'price', 'is_active', 'sort_order']);
-        $data['features'] = array_values(array_filter($request->input('features', []), fn($f) => filled($f)));
+        $data = $request->only(['service_id', 'name', 'description', 'price', 'sort_order']);
+        $data['show_price'] = $request->has('show_price') ? (bool)$request->show_price : false;
+        $data['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
+        
+        // Process features: filter empty and ensure proper structure
+        $features = [];
+        foreach ($request->input('features', []) as $feature) {
+            if (is_array($feature)) {
+                $name = trim($feature['name'] ?? '');
+                $description = trim($feature['description'] ?? '');
+                if (!empty($name)) {
+                    $features[] = [
+                        'name' => $name,
+                        'description' => $description
+                    ];
+                }
+            } elseif (!empty(trim($feature))) {
+                // Backward compatibility: if it's a string, convert to new format
+                $features[] = [
+                    'name' => trim($feature),
+                    'description' => ''
+                ];
+            }
+        }
+        $data['features'] = $features;
         
         if ($request->hasFile('image')) {
             if ($product->image) {

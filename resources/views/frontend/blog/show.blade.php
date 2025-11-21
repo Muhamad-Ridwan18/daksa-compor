@@ -104,7 +104,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
                 <!-- Main Content -->
-                <div class="lg:col-span-8 order-2 lg:order-1">
+                <div class="lg:col-span-8 order-2 lg:order-1 min-w-0">
                     <!-- Featured Image -->
                     @if($article->featured_image)
                         <div class="mb-6 sm:mb-8 lg:mb-10 rounded-lg overflow-hidden shadow-2xl">
@@ -115,7 +115,7 @@
                     @endif
                     
                     <!-- Article Body -->
-                    <div id="article-content" class="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                    <div id="article-content" class="prose prose-sm sm:prose-base lg:prose-lg max-w-none break-words">
                         {!! $article->content !!}
                     </div>
                     
@@ -461,6 +461,16 @@
     .prose {
         color: #374151;
         line-height: 1.75;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    .prose * {
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     .prose h2 {

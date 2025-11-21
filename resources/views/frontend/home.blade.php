@@ -391,15 +391,8 @@
                                 <div class="pricing-card" data-service-id="{{ $service->id }}" data-product-idx="{{ $productIndex }}" @if(isset($product->image) && $product->image) data-image="{{ Storage::url($product->image) }}" @endif>
                                     <div class="pricing-card-header">
                                         <h4 class="pricing-card-title">{{ $product->name }}</h4>
-                                        @php
-                                            $showPrice = isset($settings['show_price']) ? $settings['show_price'] : '1';
-                                        @endphp
-                                        <div class="pricing-card-price">
-                                            @if($showPrice == '1')
+                                        <div class="pricing-card-price" style="{{ !($product->show_price ?? true) ? 'display: none;' : '' }}">
                                             <span class="price-amount">{{ $product->formatted_price }}</span>
-                                            @else
-                                            <span class="price-amount" style="visibility: hidden;">&nbsp;</span>
-                                            @endif
                                         </div>
                                     </div>
                                     
@@ -409,13 +402,54 @@
                                         @endif
                                         
                                         <div class="pricing-features">
-                                            @php $features = $product->features ?? []; @endphp
-                                            @forelse($features as $feature)
+                                            @php 
+                                                $features = $product->features ?? [];
+                                                // Handle backward compatibility: convert old string format to new array format
+                                                if (!empty($features) && is_string($features[0] ?? null)) {
+                                                    $convertedFeatures = [];
+                                                    foreach ($features as $feature) {
+                                                        $convertedFeatures[] = ['name' => $feature, 'description' => ''];
+                                                    }
+                                                    $features = $convertedFeatures;
+                                                }
+                                            @endphp
+                                            @forelse($features as $index => $feature)
+                                            @php
+                                                $featureName = is_array($feature) ? ($feature['name'] ?? '') : $feature;
+                                                $featureDesc = is_array($feature) ? ($feature['description'] ?? '') : '';
+                                                $featureId = 'feature-' . $service->id . '-' . $productIndex . '-' . $index;
+                                                $hasDescription = !empty($featureDesc);
+                                                $descLength = strlen($featureDesc);
+                                                $maxLength = 80;
+                                                $isLong = $descLength > $maxLength;
+                                            @endphp
                                             <div class="feature-item">
-                                                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                                 </svg>
-                                                <span>{{ $feature }}</span>
+                                                <div class="flex-1">
+                                                    <span class="font-medium">{{ $featureName }}</span>
+                                                    @if($hasDescription)
+                                                        <div class="mt-1">
+                                                            @if($isLong)
+                                                                <p id="{{ $featureId }}-short" class="text-sm text-gray-600">
+                                                                    {{ Str::limit($featureDesc, $maxLength) }}
+                                                                    <button type="button" onclick="toggleFeatureDesc('{{ $featureId }}')" class="text-primary hover:underline ml-1 font-medium">
+                                                                        Baca selengkapnya
+                                                                    </button>
+                                                                </p>
+                                                                <p id="{{ $featureId }}-full" class="text-sm text-gray-600 hidden">
+                                                                    {{ $featureDesc }}
+                                                                    <button type="button" onclick="toggleFeatureDesc('{{ $featureId }}')" class="text-primary hover:underline ml-1 font-medium">
+                                                                        Tampilkan lebih sedikit
+                                                                    </button>
+                                                                </p>
+                                                            @else
+                                                                <p class="text-sm text-gray-600">{{ $featureDesc }}</p>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                             @empty
                                             <div class="feature-item">
@@ -984,24 +1018,30 @@ function equalizeCardHeights() {
         const cards = grid.querySelectorAll('.pricing-card');
         if (cards.length === 0) return;
         
-        // Reset heights first
+        // Reset heights first to allow natural expansion
         cards.forEach(card => {
             card.style.height = 'auto';
         });
         
-        // Find the tallest card
-        let maxHeight = 0;
-        cards.forEach(card => {
-            const height = card.offsetHeight;
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-        });
-        
-        // Set all cards to the same height
-        cards.forEach(card => {
-            card.style.height = maxHeight + 'px';
-        });
+        // Wait for layout to update
+        setTimeout(() => {
+            // Find the tallest card
+            let maxHeight = 0;
+            cards.forEach(card => {
+                const height = card.offsetHeight;
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+            });
+            
+            // Set all cards to the same height only if there's a significant difference
+            // This allows cards to expand naturally
+            cards.forEach(card => {
+                if (card.offsetHeight < maxHeight) {
+                    card.style.height = maxHeight + 'px';
+                }
+            });
+        }, 10);
     });
 }
 
@@ -1073,6 +1113,22 @@ function updateTestimonial() {
     track.style.transform = `translateX(${-testimonialCurrent * slideWidth}px)`;
     const indicators = Array.from(document.querySelectorAll('.testimonial-indicator'));
     indicators.forEach((el, idx) => el.classList.toggle('active', idx === testimonialCurrent));
+}
+
+// Toggle feature description (read more/less)
+function toggleFeatureDesc(featureId) {
+    const shortEl = document.getElementById(featureId + '-short');
+    const fullEl = document.getElementById(featureId + '-full');
+    
+    if (shortEl && fullEl) {
+        shortEl.classList.toggle('hidden');
+        fullEl.classList.toggle('hidden');
+        
+        // Re-equalize card heights after toggle to allow card to expand
+        setTimeout(() => {
+            equalizeCardHeights();
+        }, 50);
+    }
 }
 </script>
 @endsection

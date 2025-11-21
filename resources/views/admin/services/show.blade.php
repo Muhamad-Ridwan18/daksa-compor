@@ -86,23 +86,38 @@
                             <div class="flex-1">
                                 <div class="flex items-start justify-between mb-2">
                                     <h4 class="text-lg font-bold text-gray-900">{{ $product->name }}</h4>
-                                    <span class="text-xl font-bold text-primary">{{ $product->formatted_price }}</span>
+                                    @if($product->show_price ?? true)
+                                        <span class="text-xl font-bold text-primary">{{ $product->formatted_price }}</span>
+                                    @else
+                                        <span class="text-sm text-gray-500 italic">Harga disembunyikan</span>
+                                    @endif
                                 </div>
                                 <p class="text-gray-600 text-sm leading-relaxed">{{ Str::limit($product->description, 100) }}</p>
                             </div>
                         </div>
                         
-                        @if(is_array($product->features) && count($product->features))
+                        @php 
+                            $features = $product->features ?? [];
+                            // Handle backward compatibility: convert old string format to new array format
+                            if (!empty($features) && is_string($features[0] ?? null)) {
+                                $convertedFeatures = [];
+                                foreach ($features as $feature) {
+                                    $convertedFeatures[] = ['name' => $feature, 'description' => ''];
+                                }
+                                $features = $convertedFeatures;
+                            }
+                        @endphp
+                        @if(is_array($features) && count($features))
                         <div class="mb-4">
                             <h5 class="text-sm font-semibold text-gray-700 mb-2">Fitur:</h5>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($product->features as $feat)
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    {{ $feat }}
-                                </span>
+                            <div class="space-y-2">
+                                @foreach($features as $feat)
+                                <div class="border-l-4 border-green-500 pl-3 py-1">
+                                    <div class="font-medium text-gray-900 text-sm">{{ is_array($feat) ? ($feat['name'] ?? '') : $feat }}</div>
+                                    @if(is_array($feat) && !empty($feat['description'] ?? ''))
+                                        <div class="text-xs text-gray-600 mt-1">{{ $feat['description'] }}</div>
+                                    @endif
+                                </div>
                                 @endforeach
                             </div>
                         </div>

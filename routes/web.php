@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
@@ -103,6 +104,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     
     // Gallery Management
     Route::resource('galleries', GalleryController::class);
+    
+    // Users Management
+    Route::resource('users', UserController::class);
 });
 
 // Profile Routes

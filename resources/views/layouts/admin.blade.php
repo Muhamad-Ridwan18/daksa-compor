@@ -179,6 +179,14 @@
                     Pesanan
                 </a>
                 
+                <a href="{{ route('admin.users.index') }}" 
+                   class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.users.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    User
+                </a>
+                
                 <a href="{{ route('admin.settings.index') }}" 
                    class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.settings.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

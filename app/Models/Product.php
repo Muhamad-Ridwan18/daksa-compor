@@ -18,6 +18,7 @@ class Product extends Model
         'description',
         'features',
         'price',
+        'show_price',
         'image',
         'is_active',
         'sort_order',
@@ -25,6 +26,7 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'show_price' => 'boolean',
         'is_active' => 'boolean',
         'features' => 'array',
     ];
