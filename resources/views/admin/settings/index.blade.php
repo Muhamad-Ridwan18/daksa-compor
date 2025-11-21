@@ -530,6 +530,97 @@
             </div>
         </div>
 
+        <!-- Statistics Section -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistik (Ditampilkan di Homepage)</h3>
+            <p class="text-sm text-gray-600 mb-6">Atur angka dan label untuk 4 statistik yang ditampilkan di atas section Galeri</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Stat 1 -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Statistik 1</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="stat_1" class="block text-sm font-medium text-gray-700 mb-2">Angka</label>
+                            <input type="number" id="stat_1" name="settings[stat_1][value]" 
+                                   value="{{ $settings->where('key', 'stat_1')->first()->value ?? '250' }}"
+                                   min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="stat_1_label" class="block text-sm font-medium text-gray-700 mb-2">Label</label>
+                            <input type="text" id="stat_1_label" name="settings[stat_1_label][value]" 
+                                   value="{{ $settings->where('key', 'stat_1_label')->first()->value ?? 'Klien' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                   placeholder="Contoh: Klien, Proyek, dll">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat 2 -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Statistik 2</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="stat_2" class="block text-sm font-medium text-gray-700 mb-2">Angka</label>
+                            <input type="number" id="stat_2" name="settings[stat_2][value]" 
+                                   value="{{ $settings->where('key', 'stat_2')->first()->value ?? '100' }}"
+                                   min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="stat_2_label" class="block text-sm font-medium text-gray-700 mb-2">Label</label>
+                            <input type="text" id="stat_2_label" name="settings[stat_2_label][value]" 
+                                   value="{{ $settings->where('key', 'stat_2_label')->first()->value ?? 'Proyek' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                   placeholder="Contoh: Klien, Proyek, dll">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat 3 -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Statistik 3</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="stat_3" class="block text-sm font-medium text-gray-700 mb-2">Angka</label>
+                            <input type="number" id="stat_3" name="settings[stat_3][value]" 
+                                   value="{{ $settings->where('key', 'stat_3')->first()->value ?? '20' }}"
+                                   min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="stat_3_label" class="block text-sm font-medium text-gray-700 mb-2">Label</label>
+                            <input type="text" id="stat_3_label" name="settings[stat_3_label][value]" 
+                                   value="{{ $settings->where('key', 'stat_3_label')->first()->value ?? 'Tahun' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                   placeholder="Contoh: Klien, Proyek, dll">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat 4 -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Statistik 4</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="stat_4" class="block text-sm font-medium text-gray-700 mb-2">Angka</label>
+                            <input type="number" id="stat_4" name="settings[stat_4][value]" 
+                                   value="{{ $settings->where('key', 'stat_4')->first()->value ?? '8' }}"
+                                   min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="stat_4_label" class="block text-sm font-medium text-gray-700 mb-2">Label</label>
+                            <input type="text" id="stat_4_label" name="settings[stat_4_label][value]" 
+                                   value="{{ $settings->where('key', 'stat_4_label')->first()->value ?? 'Award' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                   placeholder="Contoh: Klien, Proyek, dll">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Social Media -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Media Sosial</h3>

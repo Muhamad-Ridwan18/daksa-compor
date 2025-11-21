@@ -647,6 +647,38 @@
 </section>
 @endif
 
+<!-- Statistics Section -->
+<section class="py-12 md:py-16 bg-primary relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-row items-center justify-between w-full gap-4 md:gap-6">
+            <!-- Stat 1 -->
+            <div class="text-center" data-animate="fadeInUp" data-delay="0ms">
+                <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2" data-count="{{ $settings['stat_1'] ?? '250' }}">0</div>
+                <div class="text-sm md:text-base text-white/90 font-medium">{{ $settings['stat_1_label'] ?? 'Klien' }}</div>
+            </div>
+            <!-- Stat 2 -->
+            <div class="text-center" data-animate="fadeInUp" data-delay="100ms">
+                <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2" data-count="{{ $settings['stat_2'] ?? '100' }}">0</div>
+                <div class="text-sm md:text-base text-white/90 font-medium">{{ $settings['stat_2_label'] ?? 'Proyek' }}</div>
+            </div>
+            <!-- Stat 3 -->
+            <div class="text-center" data-animate="fadeInUp" data-delay="200ms">
+                <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2" data-count="{{ $settings['stat_3'] ?? '20' }}">0</div>
+                <div class="text-sm md:text-base text-white/90 font-medium">{{ $settings['stat_3_label'] ?? 'Tahun' }}</div>
+            </div>
+            <!-- Stat 4 -->
+            <div class="text-center" data-animate="fadeInUp" data-delay="300ms">
+                <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2" data-count="{{ $settings['stat_4'] ?? '8' }}">0</div>
+                <div class="text-sm md:text-base text-white/90 font-medium">{{ $settings['stat_4_label'] ?? 'Award' }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Gallery Section -->
 @if(isset($galleries) && $galleries->count() > 0)
 <section class="py-16 bg-white relative overflow-hidden">
@@ -1188,5 +1220,41 @@ function toggleFeatureDesc(featureId) {
         }, 50);
     }
 }
+
+// Statistics Counter Animation
+function animateCounter(element, target, duration = 2000) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target + '+';
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current) + '+';
+        }
+    }, 16);
+}
+
+// Initialize counter animation when element is visible
+document.addEventListener('DOMContentLoaded', function() {
+    const statElements = document.querySelectorAll('[data-count]');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                entry.target.classList.add('counted');
+                const target = parseInt(entry.target.getAttribute('data-count'));
+                animateCounter(entry.target, target);
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+    
+    statElements.forEach(el => observer.observe(el));
+});
 </script>
 @endsection
