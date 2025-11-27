@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
@@ -30,6 +31,7 @@ Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 
