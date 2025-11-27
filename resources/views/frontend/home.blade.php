@@ -354,34 +354,56 @@
             </p>
         </div>
 
-        <!-- Services Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <!-- Services List -->
+        <div class="space-y-6 max-w-7xl mx-auto">
             @foreach($services as $index => $service)
-            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group" data-animate="fadeInUp">
-                <a href="{{ route('services.show', $service) }}" class="block">
-                    @if($service->image)
-                    <div class="h-48 overflow-hidden">
-                        <img src="{{ Storage::url($service->image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    @endif
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">{{ $service->name }}</h3>
-                            @if($service->products->count() > 0)
-                                <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full whitespace-nowrap ml-2">
-                                    {{ $service->products->count() }} Paket
-                                </span>
+            <div class="bg-primary rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group" data-animate="fadeInUp" data-animate-delay="{{ $index * 100 }}">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Image Section -->
+                    <div class="md:w-1/3 flex-shrink-0 flex items-stretch p-4">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full flex items-center justify-center mx-auto" style="width: 240px; height: 240px;">
+                            @if($service->image)
+                                <img 
+                                    src="{{ Storage::url($service->image) }}" 
+                                    alt="{{ $service->name }}" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
+                                >
+                            @else
+                                <div class="w-full h-full bg-gray-800 flex items-center justify-center" style="width: 100%; height: 100%;">
+                                    <svg class="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
                             @endif
                         </div>
-                        <p class="text-gray-600 mb-4 line-clamp-3">{{ Str::limit($service->description, 120) }}</p>
-                        <div class="flex items-center text-primary font-semibold group-hover:gap-2 transition-all">
-                            <span>Lihat Detail</span>
-                            <svg class="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
+                    </div>
+                    <!-- Content Section -->
+                    <div class="flex-1 p-8 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">{{ $service->name }}</h3>
+                            <p class="text-white leading-relaxed mb-6">{{ $service->description }}</p>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            @if($service->products->count() > 0)
+                            <span class="px-4 py-2 bg-primary/20 text-primary text-sm font-semibold rounded-full">
+                                {{ $service->products->count() }} Paket Tersedia
+                            </span>
+                            @else
+                            <div></div>
+                            @endif
+                            
+                            <a href="{{ route('services.show', $service) }}" 
+                               class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 group/btn">
+                                <span>Selengkapnya</span>
+                                <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
             @endforeach
         </div>

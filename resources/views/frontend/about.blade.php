@@ -357,7 +357,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-16 section-heading" data-aos="fade-up">
             <div class="section-eyebrow">Kontak</div>
-            <h2 class="section-title" style="color: white;">Hubungi Kami</h2>
+            <h2 class="section-title" style="color: white;hom">Hubungi Kami</h2>
             <div class="section-underline"></div>
             <p class="text-xl max-w-3xl mx-auto mt-4">
                 Siap membantu mewujudkan impian bisnis Anda. Hubungi kami sekarang!
