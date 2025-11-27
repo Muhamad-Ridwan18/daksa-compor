@@ -21,6 +21,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OrderController;
+use App\Http\Controllers\Frontend\ServiceController as FrontendServiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,9 @@ Route::post('/careers/{job}/apply', [CareerController::class, 'apply'])->name('c
 
 // Gallery Routes (Frontend)
 Route::get('/gallery', [App\Http\Controllers\Frontend\GalleryController::class, 'index'])->name('gallery.index');
+
+// Service Routes (Frontend)
+Route::get('/services/{service}', [FrontendServiceController::class, 'show'])->name('services.show');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->group(function () {

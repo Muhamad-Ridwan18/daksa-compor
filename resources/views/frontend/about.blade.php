@@ -2,13 +2,86 @@
 
 @section('content')
 <!-- About Section -->
-<section class="py-20 bg-white relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-5">
-        <div class="pattern-dots"></div>
-    </div>
+<section class="bg-white relative overflow-hidden">
     
+    <div class="text-center mb-16 bg-primary min-h-[300px] flex items-center justify-center w-full" style="min-height:300px;" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl font-bold text-white w-full">Tentang Kami</h1>
+    </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Page Title -->
+
+        <!-- Visi dan Misi Section -->
+        {{-- <div class="mb-20" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Visi dan Misi Kami</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-8">
+                {{ $settings['company_description'] ?? 'Kami adalah perusahaan yang berkomitmen untuk memberikan solusi terbaik bagi klien kami dengan pengalaman bertahun-tahun di industri ini.' }}
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Misi Kami -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Misi Kami</h3>
+                    <div class="space-y-4">
+                        @php
+                            $misi = $settings['company_mission'] ?? [];
+                            if (is_string($misi)) {
+                                $misi = explode("\n", $misi);
+                            }
+                            if (empty($misi)) {
+                                $misi = [
+                                    'Berkomitmen penuh, menghasilkan sumber daya manusia berkualitas tinggi dalam bekerja (pelatihan, implementasi, dan pelayanan setelah penjualan).',
+                                    'Memberikan konsultasi berdasarkan pengalaman dan metode analisis dalam memecahkan permasalahan yang dihadapi klien. Pengoperasian program secara efektif dan efisien sesuai bidang usaha klien.'
+                                ];
+                            }
+                        @endphp
+                        @foreach($misi as $item)
+                            @if(trim($item))
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0 mt-1">
+                                    <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed">{{ trim($item) }}</p>
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Visi Kami -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Visi Kami</h3>
+                    <div class="space-y-4">
+                        @php
+                            $visi = $settings['company_vision'] ?? [];
+                            if (is_string($visi)) {
+                                $visi = explode("\n", $visi);
+                            }
+                            if (empty($visi)) {
+                                $visi = [
+                                    'Memberikan pelayanan dengan professionalisme, integritas, dan akuntabilitas tinggi juga hasil jangka panjang dalam jasa konsultasi.'
+                                ];
+                            }
+                        @endphp
+                        @foreach($visi as $item)
+                            @if(trim($item))
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0 mt-1">
+                                    <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed">{{ trim($item) }}</p>
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
+        <!-- Profil Section -->
         <div class="text-center mb-16 section-heading" data-aos="fade-up">
             <div class="section-eyebrow">Profil</div>
             <div class="section-underline"></div>
@@ -174,7 +247,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-16 section-heading" data-aos="fade-up">
             <div class="section-eyebrow">Lokasi</div>
-            <h2 class="section-title">Lokasi Kami</h2>
+            <h2 class="section-title" style="color: {{ $settings['primary_color'] ?? '#D89B30' }};">Lokasi Kami</h2>
             <div class="section-underline"></div>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto mt-4">
                 Kunjungi kantor kami atau hubungi kami untuk konsultasi.
@@ -284,7 +357,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-16 section-heading" data-aos="fade-up">
             <div class="section-eyebrow">Kontak</div>
-            <h2 class="section-title">Hubungi Kami</h2>
+            <h2 class="section-title" style="color: white;">Hubungi Kami</h2>
             <div class="section-underline"></div>
             <p class="text-xl max-w-3xl mx-auto mt-4">
                 Siap membantu mewujudkan impian bisnis Anda. Hubungi kami sekarang!

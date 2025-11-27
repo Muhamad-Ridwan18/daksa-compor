@@ -354,174 +354,34 @@
             </p>
         </div>
 
-        <!-- Services Accordion -->
-        <div class="services-accordion max-w-5xl mx-auto">
+        <!-- Services Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             @foreach($services as $index => $service)
-            <div class="accordion-item" data-animate="fadeInUp">
-                <!-- Accordion Header -->
-                <div class="accordion-header">
-                    <div class="flex items-center gap-4 flex-1">
-                        @if($service->image)
-                        <div class="accordion-image">
-                            <img src="{{ Storage::url($service->image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
-                        </div>
-                        @endif
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
-                                <h3 class="accordion-title" id="service-{{ $service->id }}-title">{{ $service->name }}</h3>
-                                @if($service->products->count() > 0)
-                                    <span class="product-badge">{{ $service->products->count() }} Produk</span>
-                                @endif
-                            </div>
-                            <p class="accordion-description">{{ $service->description }}</p>
-                        </div>
+            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group" data-animate="fadeInUp">
+                <a href="{{ route('services.show', $service) }}" class="block">
+                    @if($service->image)
+                    <div class="h-48 overflow-hidden">
+                        <img src="{{ Storage::url($service->image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                     </div>
-                    @if($service->products->count() > 0)
-                    <button onclick="toggleAccordion('{{ $service->id }}')" 
-                            class="accordion-button min-w-[44px] min-h-[44px]"
-                            aria-expanded="false"
-                            aria-controls="accordion-{{ $service->id }}"
-                            aria-labelledby="service-{{ $service->id }}-title"
-                            type="button">
-                        <span class="accordion-button-text">Lihat</span>
-                        <div class="accordion-icon" aria-hidden="true">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    @endif
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">{{ $service->name }}</h3>
+                            @if($service->products->count() > 0)
+                                <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full whitespace-nowrap ml-2">
+                                    {{ $service->products->count() }} Paket
+                                </span>
+                            @endif
+                        </div>
+                        <p class="text-gray-600 mb-4 line-clamp-3">{{ Str::limit($service->description, 120) }}</p>
+                        <div class="flex items-center text-primary font-semibold group-hover:gap-2 transition-all">
+                            <span>Lihat Detail</span>
+                            <svg class="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </button>
-                    @endif
-                </div>
-                
-                <!-- Accordion Content -->
-                @if($service->products->count() > 0)
-                <div id="accordion-{{ $service->id }}" class="accordion-content">
-                    <div class="accordion-inner">
-                        <div class="products-scroll-wrapper" id="products-{{ $service->id }}">
-                            @if($service->products->count() > 1)
-                            <div class="scroll-hint">Geser →</div>
-                            @endif
-                            <div class="products-grid">
-                                @foreach($service->products as $productIndex => $product)
-                                <div class="pricing-card" data-service-id="{{ $service->id }}" data-product-idx="{{ $productIndex }}" @if(isset($product->image) && $product->image) data-image="{{ Storage::url($product->image) }}" @endif>
-                                    <div class="pricing-card-header">
-                                        <h4 class="pricing-card-title">{{ $product->name }}</h4>
-                                        <div class="pricing-card-price" style="{{ !($product->show_price ?? true) ? 'display: none;' : '' }}">
-                                            <span class="price-amount">{{ $product->formatted_price }}</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="pricing-card-body">
-                                        @if($product->description)
-                                            <p class="pricing-card-description">{{ $product->description }}</p>
-                                        @endif
-                                        
-                                        <div class="pricing-features">
-                                            @php 
-                                                $features = $product->features ?? [];
-                                                // Handle backward compatibility: convert old string format to new array format
-                                                if (!empty($features) && is_string($features[0] ?? null)) {
-                                                    $convertedFeatures = [];
-                                                    foreach ($features as $feature) {
-                                                        $convertedFeatures[] = ['name' => $feature, 'description' => ''];
-                                                    }
-                                                    $features = $convertedFeatures;
-                                                }
-                                            @endphp
-                                            @forelse($features as $index => $feature)
-                                            @php
-                                                $featureName = is_array($feature) ? ($feature['name'] ?? '') : $feature;
-                                                $featureDesc = is_array($feature) ? ($feature['description'] ?? '') : '';
-                                                $featureId = 'feature-' . $service->id . '-' . $productIndex . '-' . $index;
-                                                $hasDescription = !empty($featureDesc);
-                                                $descLength = strlen($featureDesc);
-                                                $maxLength = 80;
-                                                $isLong = $descLength > $maxLength;
-                                            @endphp
-                                            <div class="feature-item">
-                                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                </svg>
-                                                <div class="flex-1">
-                                                    <span class="font-medium">{{ $featureName }}</span>
-                                                    @if($hasDescription)
-                                                        <div class="mt-1">
-                                                            @if($isLong)
-                                                                <p id="{{ $featureId }}-short" class="text-sm text-gray-600">
-                                                                    {{ Str::limit($featureDesc, $maxLength) }}
-                                                                    <button type="button" 
-                                                                            onclick="toggleFeatureDesc('{{ $featureId }}')" 
-                                                                            class="text-primary hover:underline ml-1 font-medium"
-                                                                            aria-label="Baca selengkapnya tentang {{ $featureName ?? 'fitur' }}">
-                                                                        Baca selengkapnya
-                                                                    </button>
-                                                                </p>
-                                                                <p id="{{ $featureId }}-full" class="text-sm text-gray-600 hidden">
-                                                                    {{ $featureDesc }}
-                                                                    <button type="button" 
-                                                                            onclick="toggleFeatureDesc('{{ $featureId }}')" 
-                                                                            class="text-primary hover:underline ml-1 font-medium"
-                                                                            aria-label="Tampilkan lebih sedikit tentang {{ $featureName ?? 'fitur' }}">
-                                                                        Tampilkan lebih sedikit
-                                                                    </button>
-                                                                </p>
-                                                            @else
-                                                                <p class="text-sm text-gray-600">{{ $featureDesc }}</p>
-                                                            @endif
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            @empty
-                                            <div class="feature-item">
-                                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                                    <circle cx="10" cy="10" r="2" />
-                                                </svg>
-                                                <span class="text-gray-500">Fitur belum ditambahkan</span>
-                                            </div>
-                                            @endforelse
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="pricing-card-footer">
-                                        <button onclick="openOrderModal('{{ $service->id }}', '{{ $product->id }}')" class="pricing-card-button">
-                                            Pilih Paket
-                                        </button>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        
-                        <!-- Desktop Carousel Navigation - Small buttons below carousel, only when accordion is open -->
-                        @if($service->products->count() > 1)
-                        <div class="desktop-carousel-nav" id="desktop-carousel-nav-{{ $service->id }}">
-                            <button class="carousel-nav-btn carousel-nav-prev" onclick="scrollProducts('{{ $service->id }}', 'left')" aria-label="Sebelumnya">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                </svg>
-                                <span>Sebelumnya</span>
-                            </button>
-                            <button class="carousel-nav-btn carousel-nav-next" onclick="scrollProducts('{{ $service->id }}', 'right')" aria-label="Selanjutnya">
-                                <span>Selanjutnya</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                        @endif
-                        
-                        @if($service->products->count() > 1)
-                        <div class="products-dots" data-service-id="{{ $service->id }}">
-                            @for($i = 0; $i < $service->products->count(); $i++)
-                                <button class="products-dot {{ $i === 0 ? 'active' : '' }}" data-idx="{{ $i }}" aria-label="Produk {{ $i + 1 }}"></button>
-                            @endfor
-                        </div>
-                        @endif
-                        
                     </div>
-                </div>
-                @endif
+                </a>
             </div>
             @endforeach
         </div>
@@ -1036,176 +896,6 @@ function closeOrderModal() {
 document.getElementById('orderModal').addEventListener('click', function(e) {
     if (e.target === this) closeOrderModal();
 });
-// Accordion and products scroll functions used by buttons
-function toggleAccordion(serviceId) {
-    const accordionContent = document.getElementById(`accordion-${serviceId}`);
-    const accordionItem = event.currentTarget.closest('.accordion-item');
-    const icon = accordionItem.querySelector('.accordion-icon svg');
-    const buttonText = accordionItem.querySelector('.accordion-button-text');
-    document.querySelectorAll('.accordion-item').forEach(item => {
-        if (item !== accordionItem) {
-            const content = item.querySelector('.accordion-content');
-            const otherIcon = item.querySelector('.accordion-icon svg');
-            const otherButtonText = item.querySelector('.accordion-button-text');
-            if (content && content.classList.contains('active')) {
-                content.classList.remove('active');
-                item.classList.remove('active');
-                if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
-                if (otherButtonText) otherButtonText.textContent = 'Lihat';
-            }
-        }
-    });
-    if (accordionContent.classList.contains('active')) {
-        accordionContent.classList.remove('active');
-        accordionItem.classList.remove('active');
-        if (icon) icon.style.transform = 'rotate(0deg)';
-        if (buttonText) buttonText.textContent = 'Lihat';
-        // Hide carousel navigation when accordion closes
-        const carouselNav = document.getElementById(`desktop-carousel-nav-${serviceId}`);
-        if (carouselNav) {
-            carouselNav.style.opacity = '0';
-            setTimeout(() => {
-                carouselNav.style.display = 'none';
-            }, 300);
-        }
-    } else {
-        accordionContent.classList.add('active');
-        accordionItem.classList.add('active');
-        if (icon) icon.style.transform = 'rotate(180deg)';
-        if (buttonText) buttonText.textContent = 'Tutup';
-        setTimeout(() => { 
-            accordionItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
-            // Update carousel navigation buttons after accordion opens
-            setTimeout(() => {
-                updateCarouselNav(serviceId);
-                equalizeCardHeights();
-            }, 400);
-        }, 300);
-    }
-}
-
-// Function to update carousel navigation buttons based on scroll state
-function updateCarouselNav(serviceId) {
-    const productsWrapper = document.querySelector(`#accordion-${serviceId} .products-scroll-wrapper`);
-    const carouselNav = document.getElementById(`desktop-carousel-nav-${serviceId}`);
-    const accordionContent = document.getElementById(`accordion-${serviceId}`);
-    
-    if (!productsWrapper || !carouselNav || !accordionContent) return;
-    
-    // Only check on desktop and when accordion is active
-    if (window.innerWidth < 769 || !accordionContent.classList.contains('active')) {
-        carouselNav.style.display = 'none';
-        carouselNav.style.opacity = '0';
-        return;
-    }
-    
-    // Check if scrolling is needed
-    const isScrollable = productsWrapper.scrollWidth > productsWrapper.clientWidth;
-    const scrollLeft = productsWrapper.scrollLeft;
-    const maxScroll = productsWrapper.scrollWidth - productsWrapper.clientWidth;
-    const isAtStart = scrollLeft <= 10;
-    const isAtEnd = scrollLeft >= maxScroll - 10;
-    
-    // Show navigation buttons on desktop if scrollable
-    if (isScrollable) {
-        carouselNav.style.display = 'flex';
-        carouselNav.style.opacity = '1';
-        
-        // Enable/disable buttons based on scroll position
-        const prevBtn = carouselNav.querySelector('.carousel-nav-prev');
-        const nextBtn = carouselNav.querySelector('.carousel-nav-next');
-        
-        if (prevBtn) {
-            prevBtn.disabled = isAtStart;
-        }
-        if (nextBtn) {
-            nextBtn.disabled = isAtEnd;
-        }
-    } else {
-        carouselNav.style.opacity = '0';
-        setTimeout(() => {
-            if (carouselNav.style.opacity === '0') {
-                carouselNav.style.display = 'none';
-            }
-        }, 300);
-    }
-}
-
-function scrollProducts(serviceId, direction) {
-    const productsWrapper = document.querySelector(`#accordion-${serviceId} .products-scroll-wrapper`);
-    const scrollAmount = 350;
-    if (!productsWrapper) return;
-    productsWrapper.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-    
-    // Update carousel navigation buttons after scrolling
-    setTimeout(() => updateCarouselNav(serviceId), 300);
-}
-
-// Function to equalize card heights
-function equalizeCardHeights() {
-    document.querySelectorAll('.products-grid').forEach(grid => {
-        const cards = grid.querySelectorAll('.pricing-card');
-        if (cards.length === 0) return;
-        
-        // Reset heights first to allow natural expansion
-        cards.forEach(card => {
-            card.style.height = 'auto';
-        });
-        
-        // Wait for layout to update
-        setTimeout(() => {
-            // Find the tallest card
-            let maxHeight = 0;
-            cards.forEach(card => {
-                const height = card.offsetHeight;
-                if (height > maxHeight) {
-                    maxHeight = height;
-                }
-            });
-            
-            // Set all cards to the same height only if there's a significant difference
-            // This allows cards to expand naturally
-            cards.forEach(card => {
-                if (card.offsetHeight < maxHeight) {
-                    card.style.height = maxHeight + 'px';
-                }
-            });
-        }, 10);
-    });
-}
-
-// Add scroll event listeners to all product wrappers when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Equalize card heights
-    equalizeCardHeights();
-    
-    // Re-equalize when accordions open
-    const observer = new MutationObserver(() => {
-        setTimeout(equalizeCardHeights, 100);
-    });
-    
-    document.querySelectorAll('.accordion-content').forEach(content => {
-        observer.observe(content, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-    });
-    
-    document.querySelectorAll('.products-scroll-wrapper').forEach(wrapper => {
-        const serviceId = wrapper.id.replace('products-', '');
-        wrapper.addEventListener('scroll', () => updateCarouselNav(serviceId));
-        
-        // Also check on resize
-        window.addEventListener('resize', () => {
-            const accordionContent = wrapper.closest('.accordion-content');
-            if (accordionContent && accordionContent.classList.contains('active')) {
-                updateCarouselNav(serviceId);
-                equalizeCardHeights();
-            }
-        });
-    });
-});
-
 // Testimonial carousel functions (global scope)
 let testimonialCurrent = 0;
 let testimonialMaxSlides = 1;
@@ -1252,11 +942,6 @@ function toggleFeatureDesc(featureId) {
     if (shortEl && fullEl) {
         shortEl.classList.toggle('hidden');
         fullEl.classList.toggle('hidden');
-        
-        // Re-equalize card heights after toggle to allow card to expand
-        setTimeout(() => {
-            equalizeCardHeights();
-        }, 50);
     }
 }
 
