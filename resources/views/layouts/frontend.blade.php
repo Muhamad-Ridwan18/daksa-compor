@@ -146,6 +146,32 @@
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('blog.*') ? 'text-primary bg-primary/10' : '' }}">
                         Blog
                     </a>
+                    <!-- Kalkulator Dropdown (Desktop) -->
+                    <div class="relative group">
+                        <button
+                            type="button"
+                            class="inline-flex items-center text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') || request()->routeIs('pph21-masa-terakhir.*') ? 'text-primary bg-primary/10' : '' }}"
+                        >
+                            Kalkulator
+                            <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.24 4.5a.75.75 0 01-1.08 0l-4.24-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-150 z-50"
+                        >
+                            <div class="py-1">
+                                <a href="{{ route('pph21-calculator.index') }}"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
+                                    Kalkulator PPh21
+                                </a>
+                                <a href="{{ route('pph21-masa-terakhir.index') }}"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
+                                    Kalkulator PPh21 Masa Terakhir
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="{{ route('gallery.index') }}" 
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
                         Gallery
@@ -210,6 +236,20 @@
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('careers.*') ? 'text-primary bg-primary/10' : '' }}">
                     Karier
                 </a>
+                <!-- Kalkulator Links (Mobile) -->
+                <div class="pt-1 border-t border-gray-100 mt-2">
+                    <p class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                        Kalkulator
+                    </p>
+                    <a href="{{ route('pph21-calculator.index') }}"
+                       class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') ? 'text-primary bg-primary/10' : '' }}">
+                        Kalkulator PPh21
+                    </a>
+                    <a href="{{ route('pph21-masa-terakhir.index') }}"
+                       class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-masa-terakhir.*') ? 'text-primary bg-primary/10' : '' }}">
+                        Kalkulator PPh21 Masa Terakhir
+                    </a>
+                </div>
                 <a href="{{ $waUrl }}"
                    @if($waNumber) target="_blank" rel="noopener" @endif
                    class="block bg-primary text-white text-center hover:bg-opacity-90 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2">
@@ -256,7 +296,7 @@
                 </div>
             </div>
             <div class="mt-8 pt-8 border-t border-gray-600 text-center text-gray-300">
-                <p>&copy; {{ date('Y') }} {{ $settings['company_name'] ?? 'Daksa' }}. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} {{ $settings['company_name'] ?? 'Daksa' }}. All rights reserved. Developed by <a href="https://www.webyouneed.id" class="text-gray-300 hover:text-white">WebYouNeed</a></p>
             </div>
         </div>
     </footer>
@@ -424,5 +464,6 @@
             }
         });
     </script>
+    @stack('scripts')
 </body>
 </html>

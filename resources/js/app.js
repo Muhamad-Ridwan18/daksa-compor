@@ -9,3 +9,6 @@ Alpine.start();
 // Landing interactions (carousels, scroll animations, a11y)
 import './landing';
 import 'animate.css';
+
+// PPh21 Calculator utilities (auto-format currency)
+import './pph21-calculator';

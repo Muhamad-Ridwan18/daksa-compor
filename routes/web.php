@@ -14,14 +14,19 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\PPh21SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OrderController;
+use App\Http\Controllers\Frontend\PPh21CalculatorController;
+use App\Http\Controllers\Frontend\PPh21MasaTerakhirController;
 use App\Http\Controllers\Frontend\ServiceController as FrontendServiceController;
+use App\Http\Controllers\Frontend\DocumentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +56,19 @@ Route::get('/gallery', [App\Http\Controllers\Frontend\GalleryController::class, 
 
 // Service Routes (Frontend)
 Route::get('/services/{service}', [FrontendServiceController::class, 'show'])->name('services.show');
+
+// PPh 21 Calculator Routes
+Route::get('/kalkulator-pph21', [PPh21CalculatorController::class, 'index'])->name('pph21-calculator.index');
+Route::post('/kalkulator-pph21/hitung', [PPh21CalculatorController::class, 'calculate'])->name('pph21-calculator.calculate');
+
+// PPh 21 Masa Terakhir Calculator Routes
+Route::get('/kalkulator-pph21-masa-terakhir', [PPh21MasaTerakhirController::class, 'index'])->name('pph21-masa-terakhir.index');
+Route::post('/kalkulator-pph21-masa-terakhir/hitung', [PPh21MasaTerakhirController::class, 'calculate'])->name('pph21-masa-terakhir.calculate');
+
+// Documents Routes (Frontend)
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('documents.show');
+Route::get('/documents/{slug}/download-pdf', [DocumentController::class, 'downloadPdf'])->name('documents.download-pdf');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->group(function () {
@@ -85,6 +103,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     Route::patch('/settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('/settings/upload-image', [SettingController::class, 'uploadImage'])->name('settings.upload-image');
     
+    // PPh 21 Settings Management
+    Route::get('/pph21-settings', [PPh21SettingController::class, 'index'])->name('pph21-settings.index');
+    Route::patch('/pph21-settings', [PPh21SettingController::class, 'update'])->name('pph21-settings.update');
+    Route::post('/pph21-settings/reset', [PPh21SettingController::class, 'reset'])->name('pph21-settings.reset');
+    
     // Articles Management
     Route::resource('articles', ArticleController::class);
     Route::post('/upload-image', [ArticleController::class, 'uploadImage'])->name('upload-image');
@@ -113,6 +136,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     
     // Users Management
     Route::resource('users', UserController::class);
+    
+    // Documents Management
+    Route::resource('documents', AdminDocumentController::class);
 });
 
 // Profile Routes

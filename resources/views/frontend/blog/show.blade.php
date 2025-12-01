@@ -507,80 +507,85 @@
         margin-bottom: 1.25rem;
     }
     
-    .prose ul, .prose ol {
-        margin-top: 1.25rem;
-        margin-bottom: 1.25rem;
-        padding-left: 1.75rem;
+    /* List styling - Ensure lists are displayed correctly */
+    .prose ul,
+    .prose ol {
+        list-style-position: outside !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: 1.25rem !important;
+        margin-left: 1.5rem !important;
+        padding-left: 1.5rem !important;
     }
     
-    /* Fix nested lists - remove extra padding when ul/ol is inside li */
-    .prose li > ul,
-    .prose li > ol {
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        padding-left: 1.5rem;
+    .prose ul {
+        list-style-type: disc !important;
+    }
+    
+    .prose ol {
+        list-style-type: decimal !important;
     }
     
     .prose li {
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        padding-left: 0.5rem;
+        display: list-item !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding-left: 0.5rem !important;
+        line-height: 1.75 !important;
     }
     
-    /* Fix improper nested structure: ul > li > ol (should be flattened - remove parent li styling) */
-    .prose ul > li:only-child {
-        padding-left: 0;
-        margin-left: 0;
-        list-style: none;
+    /* Nested lists */
+    .prose li > ul,
+    .prose li > ol {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding-left: 1.5rem !important;
     }
     
-    /* Make ol inside ul > li display as normal ordered list */
-    .prose ul > li > ol {
-        padding-left: 1.5rem;
-        margin-left: 0;
-        margin-top: 0;
-        margin-bottom: 0;
+    .prose ul ul {
+        list-style-type: circle !important;
     }
     
-    .prose ul > li > ol > li {
-        padding-left: 0.5rem;
-        list-style: decimal;
-        margin-left: 0;
+    .prose ul ul ul {
+        list-style-type: square !important;
     }
     
-    /* Remove extra indentation from pagelayer elements */
-    .prose .pagelayer-text ul,
-    .prose .pagelayer-text ol {
-        padding-left: 1.5rem;
+    .prose ol ol {
+        list-style-type: lower-alpha !important;
     }
     
-    .prose .pagelayer-text ul > li {
-        padding-left: 0.5rem;
-    }
-    
-    /* Fix improper nested structure in pagelayer: ul > li > ol */
-    .prose .pagelayer-text ul > li > ol {
-        padding-left: 1.5rem;
-        margin-left: 0;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    
-    /* Remove padding and list style from parent li in pagelayer when it only contains ol */
-    .prose .pagelayer-text ul > li:only-child {
-        padding-left: 0;
-        margin-left: 0;
-        list-style: none;
-    }
-    
-    .prose .pagelayer-text ul > li > ol > li {
-        padding-left: 0.5rem;
-        list-style: decimal;
-        margin-left: 0;
+    .prose ol ol ol {
+        list-style-type: lower-roman !important;
     }
     
     .prose ul li::marker {
         color: var(--primary-color);
+    }
+    
+    /* Responsive list styling */
+    @media (max-width: 640px) {
+        .prose ul,
+        .prose ol {
+            margin-left: 1rem !important;
+            padding-left: 1rem !important;
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+        .prose li {
+            padding-left: 0.75rem !important;
+            font-size: 0.9rem !important;
+        }
+        .prose li > ul,
+        .prose li > ol {
+            padding-left: 1rem !important;
+        }
+    }
+    
+    @media (min-width: 641px) and (max-width: 1024px) {
+        .prose ul,
+        .prose ol {
+            margin-left: 1.25rem !important;
+            padding-left: 1.25rem !important;
+        }
     }
     
     .prose strong {
@@ -723,43 +728,10 @@
 </style>
 
 <script>
-    // Clean improper nested list structure (ul > li > ol)
-    function cleanNestedListsInContent() {
-        const contentEl = document.getElementById('article-content');
-        if (!contentEl) return;
-        
-        // Find all ul > li > ol structures
-        const ulElements = contentEl.querySelectorAll('ul');
-        ulElements.forEach(ul => {
-            const liElements = ul.querySelectorAll(':scope > li');
-            
-            // Check if ul has only one li
-            if (liElements.length === 1) {
-                const li = liElements[0];
-                const olElements = li.querySelectorAll(':scope > ol');
-                const otherElements = Array.from(li.childNodes).filter(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        return node.tagName !== 'OL';
-                    }
-                    return node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '';
-                });
-                
-                // If li contains only ol and no other content, replace ul with ol
-                if (olElements.length === 1 && otherElements.length === 0) {
-                    const ol = olElements[0].cloneNode(true);
-                    ul.parentNode.replaceChild(ol, ul);
-                }
-            }
-        });
-    }
-
     // Enhanced reading time and TOC generator
     (function() {
         const contentEl = document.getElementById('article-content');
         if (!contentEl) return;
-
-        // Clean improper nested lists first
-        cleanNestedListsInContent();
 
         // Reading time calculation
         const text = contentEl.innerText || '';
