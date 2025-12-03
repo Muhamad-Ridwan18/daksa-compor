@@ -130,5 +130,64 @@ class PPh21MasaTerakhirController extends Controller
             'settings' => $settings,
         ]);
     }
+
+    /**
+     * PPh Tahunan - Simple version (sesuai format Excel)
+     */
+    public function indexTahunan()
+    {
+        $settings = Setting::getAllAsArray();
+        
+        // Generate SEO data
+        $seoData = SeoService::getSeoData(null, 'pph21-tahunan', [
+            'meta_title' => 'Kalkulator PPh 21 Tahunan - Hitung Pajak Penghasilan Tahunan | ' . ($settings['company_name'] ?? 'Daksa'),
+            'meta_description' => 'Kalkulator PPh 21 Tahunan untuk menghitung Pajak Penghasilan Pasal 21 tahunan dengan format sederhana sesuai ketentuan perpajakan.',
+            'meta_keywords' => 'kalkulator pph 21 tahunan, hitung pph 21 tahunan, kalkulator pajak tahunan, pph 21 tahunan online',
+        ]);
+
+        return view('frontend.pph21-tahunan.index', compact('settings', 'seoData'));
+    }
+
+    public function calculateTahunan(Request $request)
+    {
+        $request->validate([
+            'penghasilan_bruto' => 'required|numeric|min:0',
+            'iuran_pensiun' => 'nullable|numeric|min:0',
+            'zakat' => 'nullable|numeric|min:0',
+            'status_kawin' => 'required|in:TK,K',
+            'tanggungan' => 'required|integer|min:0|max:10',
+            'pph_sudah_disetor' => 'nullable|numeric|min:0',
+            'ketentuan_ptkp_tahun' => 'nullable|integer|min:2020|max:2100',
+            'ketentuan_pasal17_tahun' => 'nullable|integer|min:2020|max:2100',
+        ]);
+
+        $data = [
+            'penghasilan_bruto' => (float) $request->penghasilan_bruto,
+            'iuran_pensiun' => (float) ($request->iuran_pensiun ?? 0),
+            'zakat' => (float) ($request->zakat ?? 0),
+            'status_kawin' => $request->status_kawin,
+            'tanggungan' => (int) $request->tanggungan,
+            'pph_sudah_disetor' => (float) ($request->pph_sudah_disetor ?? 0),
+            'ketentuan_ptkp_tahun' => (int) ($request->ketentuan_ptkp_tahun ?? 2024),
+            'ketentuan_pasal17_tahun' => (int) ($request->ketentuan_pasal17_tahun ?? 2024),
+        ];
+
+        $result = PPh21MasaTerakhirService::calculateTahunanSimple($data);
+        $settings = Setting::getAllAsArray();
+
+        // If AJAX request, return JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'result' => $result,
+            ]);
+        }
+
+        return view('frontend.pph21-tahunan.result', [
+            'input' => $data,
+            'result' => $result,
+            'settings' => $settings,
+        ]);
+    }
 }
 

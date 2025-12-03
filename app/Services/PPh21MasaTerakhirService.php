@@ -29,6 +29,105 @@ class PPh21MasaTerakhirService
     }
 
     /**
+     * Hitung PPh 21 Tahunan (Masa Terakhir) dengan struktur input/output sederhana
+     *
+     * Spesifikasi (sesuai deskripsi user):
+     * A. Penghasilan
+     *   1. Penghasilan Bruto = penjumlahan dari semua tunjangan pada poin A (di sini langsung 1 angka)
+     *
+     * B. Pengurang
+     *   1. Biaya Jabatan = Penghasilan Bruto * 5% (maksimal 6 juta setahun)
+     *   2. Iuran Pensiun = inputan
+     *   3. Zakat/Sumbangan = inputan
+     *
+     * C. Penghitungan PPh Pasal 21
+     *   1. Jumlah Pengurang = hasil penjumlahan poin B
+     *   2. Penghasilan Netto = Penghasilan Bruto - Pengurang
+     *   3. Penghasilan Neto Setahun/Disetahunkan = Penghasilan Bruto - Pengurang (mengikuti rumus user)
+     *   4. PTKP = berdasarkan status kawin & tanggungan
+     *   5. PKP Setahun/Disetahunkan = Penghasilan Neto Setahun - PTKP
+     *   6. PPh 21 atas PKP = PKP * tarif progresif (Pasal 17)
+     *   7. PPh 21 Dipotong Masa Sebelumnya = sama dengan poin 6 (sesuai rumus user)
+     *   8. PPh 21 Yang Sudah Disetor = inputan
+     *   9. PPh 21 Terutang Bulan Ini = PPh 21 atas PKP - poin 8
+     *
+     * @param array $data
+     *   - penghasilan_bruto : float (wajib)
+     *   - iuran_pensiun     : float (optional)
+     *   - zakat             : float (optional)
+     *   - status_kawin      : string TK/K (optional, default TK)
+     *   - tanggungan        : int (optional, default 0)
+     *   - ketentuan_ptkp_tahun : int (optional, default 2024)
+     *   - ketentuan_pasal17_tahun : int (optional, default 2024)
+     *   - pph_sudah_disetor : float (optional, default 0)
+     *
+     * @return array
+     */
+    public static function calculateTahunanSimple(array $data)
+    {
+        // A. Penghasilan
+        $penghasilanBruto = (float) ($data['penghasilan_bruto'] ?? 0);
+
+        // B. Pengurang
+        // B.1 Biaya Jabatan = 5% dari Penghasilan Bruto, maksimal 6 juta per tahun
+        $biayaJabatan = min($penghasilanBruto * 0.05, 6000000);
+        $iuranPensiun = (float) ($data['iuran_pensiun'] ?? 0);
+        $zakat = (float) ($data['zakat'] ?? 0);
+        $jumlahPengurang = $biayaJabatan + $iuranPensiun + $zakat;
+
+        // C. Penghitungan
+        // 2. Penghasilan Netto
+        $penghasilanNeto = max(0, $penghasilanBruto - $jumlahPengurang);
+
+        // 3. Penghasilan Neto Setahun/Disetahunkan
+        // Sesuai spesifikasi user: Penghasilan Bruto - Pengurangan (tanpa prorata)
+        $penghasilanNetoSetahun = $penghasilanNeto;
+
+        // 4. PTKP
+        $tahunKetentuanPTKP = (int) ($data['ketentuan_ptkp_tahun'] ?? 2024);
+        // tahunKetentuanPTKP disiapkan untuk masa depan, saat ini masih 1 tabel yang sama
+        $ptkp = self::getPTKP($data['status_kawin'] ?? 'TK', $data['tanggungan'] ?? 0, $tahunKetentuanPTKP);
+
+        // 5. PKP Setahun/Disetahunkan
+        $pkpSetahun = max(0, $penghasilanNetoSetahun - $ptkp);
+
+        // 6. PPh 21 atas PKP
+        $tahunKetentuanPasal17 = (int) ($data['ketentuan_pasal17_tahun'] ?? 2024);
+        $pphAtasPKP = self::calculatePPhTerutang($pkpSetahun, $tahunKetentuanPasal17);
+
+        // 7. PPh 21 Dipotong Masa Sebelumnya = PPh 21 atas PKP (sesuai spesifikasi)
+        $pphDipotongMasaSebelumnya = $pphAtasPKP;
+
+        // 8. PPh 21 Yang Sudah Disetor = input
+        $pphSudahDisetor = (float) ($data['pph_sudah_disetor'] ?? 0);
+
+        // 9. PPh 21 Terutang Bulan Ini
+        $pphTerutangBulanIni = max(0, $pphAtasPKP - $pphSudahDisetor);
+
+        return [
+            // A. Penghasilan
+            'a_penghasilan_bruto' => $penghasilanBruto,
+
+            // B. Pengurang
+            'b_biaya_jabatan' => $biayaJabatan,
+            'b_iuran_pensiun' => $iuranPensiun,
+            'b_zakat' => $zakat,
+            'b_jumlah_pengurang' => $jumlahPengurang,
+
+            // C. Penghitungan PPh 21
+            'c1_jumlah_pengurang' => $jumlahPengurang,
+            'c2_penghasilan_neto' => $penghasilanNeto,
+            'c3_penghasilan_neto_setahun' => $penghasilanNetoSetahun,
+            'c4_ptkp' => $ptkp,
+            'c5_pkp_setahun' => $pkpSetahun,
+            'c6_pph_atas_pkp' => $pphAtasPKP,
+            'c7_pph_dipotong_masa_sebelumnya' => $pphDipotongMasaSebelumnya,
+            'c8_pph_sudah_disetor' => $pphSudahDisetor,
+            'c9_pph_terutang_bulan_ini' => $pphTerutangBulanIni,
+        ];
+    }
+
+    /**
      * Hitung Biaya Jabatan (5% dari Penghasilan Bruto, maksimal 6 juta per tahun atau 500rb per bulan)
      */
     public static function calculateBiayaJabatan($penghasilanBruto, $jumlahBulan = 1)

@@ -25,6 +25,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\PPh21CalculatorController;
 use App\Http\Controllers\Frontend\PPh21MasaTerakhirController;
+use App\Http\Controllers\Frontend\PPhBadanCalculatorController;
 use App\Http\Controllers\Frontend\ServiceController as FrontendServiceController;
 use App\Http\Controllers\Frontend\DocumentController;
 use App\Http\Controllers\ProfileController;
@@ -64,6 +65,14 @@ Route::post('/kalkulator-pph21/hitung', [PPh21CalculatorController::class, 'calc
 // PPh 21 Masa Terakhir Calculator Routes
 Route::get('/kalkulator-pph21-masa-terakhir', [PPh21MasaTerakhirController::class, 'index'])->name('pph21-masa-terakhir.index');
 Route::post('/kalkulator-pph21-masa-terakhir/hitung', [PPh21MasaTerakhirController::class, 'calculate'])->name('pph21-masa-terakhir.calculate');
+
+// PPh 21 Tahunan Calculator Routes (Simple version)
+Route::get('/kalkulator-pph21-tahunan', [PPh21MasaTerakhirController::class, 'indexTahunan'])->name('pph21-tahunan.index');
+Route::post('/kalkulator-pph21-tahunan/hitung', [PPh21MasaTerakhirController::class, 'calculateTahunan'])->name('pph21-tahunan.calculate');
+
+// PPh Badan Calculator Routes
+Route::get('/kalkulator-pph-badan', [PPhBadanCalculatorController::class, 'index'])->name('pph-badan-calculator.index');
+Route::post('/kalkulator-pph-badan/hitung', [PPhBadanCalculatorController::class, 'calculate'])->name('pph-badan-calculator.calculate');
 
 // Documents Routes (Frontend)
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
