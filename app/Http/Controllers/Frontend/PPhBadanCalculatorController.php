@@ -30,6 +30,12 @@ class PPhBadanCalculatorController extends Controller
             $request->validate([
                 'jenis' => 'required|in:umum,umkm',
                 'omzet' => 'required|numeric|min:0',
+                'laba_komersial' => 'required_if:jenis,umum|nullable|numeric',
+                'koreksi_positif' => 'nullable|numeric|min:0',
+                'koreksi_negatif' => 'nullable|numeric|min:0',
+                'beban' => 'nullable|numeric|min:0',
+                'biaya_operasional' => 'nullable|numeric|min:0',
+                'pendapatan_lain' => 'nullable|numeric|min:0',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax()) {
@@ -42,7 +48,6 @@ class PPhBadanCalculatorController extends Controller
             throw $e;
         }
 
-        // Prepare data
         $jenis = $request->input('jenis');
         $omzet = (float) $request->input('omzet');
         
@@ -121,15 +126,30 @@ class PPhBadanCalculatorController extends Controller
         }
         
         // Jika Umum, gunakan perhitungan zona fasilitas
-        // Untuk perhitungan PPh Badan, kita perlu estimasi laba
-        // Asumsi: Laba = 10% dari omzet (default, bisa disesuaikan)
-        $estimasiLaba = $omzet * 0.10; // 10% dari omzet sebagai estimasi laba
+        $labaKomersial = (float) $request->input('laba_komersial');
+        $koreksiPositif = (float) ($request->input('koreksi_positif') ?? 0);
+        $koreksiNegatif = (float) ($request->input('koreksi_negatif') ?? 0);
+        
+        // Detail koreksi
+        $beban = (float) ($request->input('beban') ?? 0);
+        $biayaOperasional = (float) ($request->input('biaya_operasional') ?? 0);
+        $pendapatanLain = (float) ($request->input('pendapatan_lain') ?? 0);
+        
+        // Jika koreksi positif tidak diisi, hitung dari detail
+        if ($koreksiPositif == 0) {
+            $koreksiPositif = $beban + $biayaOperasional;
+        }
+        
+        // Jika koreksi negatif tidak diisi, ambil dari pendapatan lain
+        if ($koreksiNegatif == 0) {
+            $koreksiNegatif = $pendapatanLain;
+        }
         
         $data = [
             'omzet' => $omzet,
-            'laba_komersial' => $estimasiLaba,
-            'koreksi_positif' => 0,
-            'koreksi_negatif' => 0,
+            'laba_komersial' => $labaKomersial,
+            'koreksi_positif' => $koreksiPositif,
+            'koreksi_negatif' => $koreksiNegatif,
             'tarif_pph' => null, // Default 22%
             'kredit_pph22' => 0,
             'kredit_pph23' => 0,
@@ -141,6 +161,9 @@ class PPhBadanCalculatorController extends Controller
         try {
             $result = PPhBadanCalculatorService::calculate($data);
             $result['jenis'] = 'umum'; // Tandai sebagai perhitungan umum
+            $result['input']['beban'] = $beban;
+            $result['input']['biaya_operasional'] = $biayaOperasional;
+            $result['input']['pendapatan_lain'] = $pendapatanLain;
             $settings = Setting::getAllAsArray();
 
             // If AJAX request, return JSON with result data

@@ -150,7 +150,7 @@
                     <div class="relative group">
                         <button
                             type="button"
-                            class="inline-flex items-center text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') || request()->routeIs('pph21-masa-terakhir.*') ? 'text-primary bg-primary/10' : '' }}"
+                            class="inline-flex items-center text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') || request()->routeIs('pph21-masa-terakhir.*') || request()->routeIs('pph-badan-calculator.*') ? 'text-primary bg-primary/10' : '' }}"
                         >
                             Kalkulator
                             <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -168,6 +168,10 @@
                                 <a href="{{ route('pph21-masa-terakhir.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
                                     Kalkulator PPh21 Masa Terakhir
+                                </a>
+                                <a href="{{ route('pph-badan-calculator.index') }}"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
+                                    Kalkulator PPh Badan
                                 </a>
                             </div>
                         </div>
@@ -245,9 +249,13 @@
                        class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') ? 'text-primary bg-primary/10' : '' }}">
                         Kalkulator PPh21
                     </a>
-                    <a href="{{ route('pph21-masa-terakhir.index') }}"
+                    <a href="{{ route('pph21-tahunan.index') }}"
                        class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-masa-terakhir.*') ? 'text-primary bg-primary/10' : '' }}">
                         Kalkulator PPh21 Masa Terakhir
+                    </a>
+                    <a href="{{ route('pph-badan-calculator.index') }}"
+                       class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph-badan-calculator.*') ? 'text-primary bg-primary/10' : '' }}">
+                        Kalkulator PPh Badan
                     </a>
                 </div>
                 <a href="{{ $waUrl }}"

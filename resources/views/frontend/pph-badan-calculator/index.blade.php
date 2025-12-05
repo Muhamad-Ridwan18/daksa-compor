@@ -36,15 +36,15 @@
                             <option value="umkm">UMKM (Omzet × 0,50%)</option>
                         </select>
                         <p class="mt-2 text-sm text-gray-500">
-                            <span x-show="formData.jenis === 'umum'">Perhitungan dengan zona fasilitas berdasarkan omzet</span>
+                            <span x-show="formData.jenis === 'umum'">Perhitungan dengan zona fasilitas berdasarkan omzet dan laba fiskal</span>
                             <span x-show="formData.jenis === 'umkm'">Perhitungan sederhana: Omzet × 0,50%</span>
                         </p>
                     </div>
 
-                    <!-- Omzet / Peredaran Bruto -->
+                    <!-- 1. Omzet / Peredaran Bruto -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Total Omzet / Peredaran Bruto Setahun <span class="text-red-500">*</span>
+                            1. Omzet / Peredaran Bruto Setahun <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
@@ -59,30 +59,119 @@
                             >
                         </div>
                         <p class="mt-2 text-sm text-gray-500">
-                            Masukkan total omzet atau peredaran bruto dalam satu tahun pajak
+                            <span x-show="formData.jenis === 'umum'">Untuk perhitungan zonasi fasilitas</span>
+                            <span x-show="formData.jenis === 'umkm'">Untuk perhitungan PPh UMKM</span>
                         </p>
-                        
-                        <!-- Info Box -->
-                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" x-show="formData.jenis === 'umum'">
-                            <div class="flex items-start">
-                                <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                                </svg>
-                                <div class="text-sm text-blue-700">
-                                    <p class="font-semibold mb-1">Catatan:</p>
-                                    <p class="text-xs">Sistem akan menghitung estimasi laba sebesar 10% dari omzet untuk perhitungan PPh Badan.</p>
+                    </div>
+
+                    <!-- Input Detail untuk Umum -->
+                    <div x-show="formData.jenis === 'umum'">
+                        <!-- 2. Saldo Laba (Rugi) Komersial -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                2. Saldo Laba (Rugi) Komersial <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
+                                <input 
+                                    type="text" 
+                                    name="laba_komersial"
+                                    x-model="formData.laba_komersial"
+                                    class="currency-input w-full pl-10 pr-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                                    placeholder="0"
+                                    @input="debouncedCalculate()"
+                                    :required="formData.jenis === 'umum'"
+                                >
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Masukkan saldo laba atau rugi komersial (bisa negatif untuk rugi)
+                            </p>
+                        </div>
+
+                        <!-- 3. Koreksi Fiskal Positif -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                3. Koreksi Fiskal Positif
+                            </label>
+                            
+                            <!-- 3a. Beban -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-medium text-gray-600 mb-2">
+                                    a. Beban
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input 
+                                        type="text" 
+                                        name="beban"
+                                        x-model="formData.beban"
+                                        class="currency-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                                        placeholder="0"
+                                        @input="debouncedCalculate()"
+                                    >
                                 </div>
                             </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg" x-show="formData.jenis === 'umkm'">
-                            <div class="flex items-start">
-                                <svg class="w-5 h-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                                </svg>
-                                <div class="text-sm text-green-700">
-                                    <p class="font-semibold mb-1">Rumus UMKM:</p>
-                                    <p class="text-xs">PPh Terutang = Omzet × 0,50%</p>
+
+                            <!-- 3b. Biaya Operasional -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-2">
+                                    b. Biaya Operasional
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input 
+                                        type="text" 
+                                        name="biaya_operasional"
+                                        x-model="formData.biaya_operasional"
+                                        class="currency-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                                        placeholder="0"
+                                        @input="debouncedCalculate()"
+                                    >
                                 </div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Total Koreksi Positif: <span class="font-semibold" x-text="formatCurrency(getTotalKoreksiPositif())"></span>
+                            </p>
+                        </div>
+
+                        <!-- 4. Koreksi Fiskal Negatif -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                4. Koreksi Fiskal Negatif
+                            </label>
+                            
+                            <!-- 4a. Pendapatan Lain-lain -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-2">
+                                    a. Pendapatan Lain-lain
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input 
+                                        type="text" 
+                                        name="pendapatan_lain"
+                                        x-model="formData.pendapatan_lain"
+                                        class="currency-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                                        placeholder="0"
+                                        @input="debouncedCalculate()"
+                                    >
+                                </div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Total Koreksi Negatif: <span class="font-semibold" x-text="formatCurrency(getTotalKoreksiNegatif())"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Info Box untuk UMKM -->
+                    <div class="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg" x-show="formData.jenis === 'umkm'">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            <div class="text-sm text-green-700">
+                                <p class="font-semibold mb-1">Rumus UMKM:</p>
+                                <p class="text-xs">PPh Terutang = Omzet × 0,50%</p>
                             </div>
                         </div>
                     </div>
@@ -157,6 +246,10 @@ function pphBadanCalculator() {
         formData: {
             jenis: '',
             omzet: '',
+            laba_komersial: '',
+            beban: '',
+            biaya_operasional: '',
+            pendapatan_lain: '',
         },
         result: null,
         loading: false,
@@ -185,7 +278,20 @@ function pphBadanCalculator() {
         },
 
         hasFormData() {
-            return this.formData.jenis && this.formData.omzet;
+            if (this.formData.jenis === 'umkm') {
+                return this.formData.omzet && this.formData.omzet > 0;
+            }
+            return this.formData.jenis === 'umum' && this.formData.omzet && this.formData.laba_komersial;
+        },
+
+        getTotalKoreksiPositif() {
+            const beban = this.parseCurrency(this.formData.beban || 0);
+            const biayaOperasional = this.parseCurrency(this.formData.biaya_operasional || 0);
+            return beban + biayaOperasional;
+        },
+
+        getTotalKoreksiNegatif() {
+            return this.parseCurrency(this.formData.pendapatan_lain || 0);
         },
 
         parseCurrency(value) {
@@ -213,10 +319,21 @@ function pphBadanCalculator() {
         },
 
         getFormData() {
-            return {
+            const data = {
                 jenis: this.formData.jenis,
                 omzet: this.parseCurrency(this.formData.omzet),
             };
+            
+            if (this.formData.jenis === 'umum') {
+                data.laba_komersial = this.parseCurrency(this.formData.laba_komersial);
+                data.koreksi_positif = this.getTotalKoreksiPositif();
+                data.koreksi_negatif = this.getTotalKoreksiNegatif();
+                data.beban = this.parseCurrency(this.formData.beban || 0);
+                data.biaya_operasional = this.parseCurrency(this.formData.biaya_operasional || 0);
+                data.pendapatan_lain = this.parseCurrency(this.formData.pendapatan_lain || 0);
+            }
+            
+            return data;
         },
 
         debouncedCalculate() {
@@ -231,6 +348,11 @@ function pphBadanCalculator() {
             
             // Validate required fields
             if (!data.jenis || !data.omzet || data.omzet <= 0) {
+                return;
+            }
+            
+            // For umum, also validate laba_komersial
+            if (data.jenis === 'umum' && !data.laba_komersial && data.laba_komersial !== 0) {
                 return;
             }
 
@@ -273,6 +395,10 @@ function pphBadanCalculator() {
             this.formData = {
                 jenis: '',
                 omzet: '',
+                laba_komersial: '',
+                beban: '',
+                biaya_operasional: '',
+                pendapatan_lain: '',
             };
             this.result = null;
             this.error = null;

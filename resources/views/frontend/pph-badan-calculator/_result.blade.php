@@ -16,7 +16,7 @@
                 <div class="border-t border-primary/20 pt-4">
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-semibold text-gray-900">PPh Terutang</span>
-                        <span class="text-2xl font-bold text-primary" x-text="formatCurrency(result.pph_terutang)"></span>
+                        <span class="text-2xl font-bold text-primary" x-text="formatCurrency(result.pajak_terutang)"></span>
                     </div>
                 </div>
                 <div class="border-t border-primary/20 pt-4">
@@ -92,28 +92,69 @@
             <h4 class="font-semibold text-gray-900 mb-2">Data Input</h4>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Omzet</span>
+                    <span class="text-gray-600">Omzet / Peredaran Bruto</span>
                     <span class="font-medium text-gray-900" x-text="formatCurrency(result.input.omzet || result.input?.omzet || 0)"></span>
                 </div>
+                
                 <!-- Untuk Umum -->
                 <template x-if="result.jenis === 'umum' || !result.jenis">
                     <div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Estimasi Laba (10% dari Omzet)</span>
+                            <span class="text-gray-600">Saldo Laba (Rugi) Komersial</span>
                             <span class="font-medium text-gray-900" x-text="formatCurrency(result.input.laba_komersial)"></span>
                         </div>
-                        <div class="flex justify-between">
+                        
+                        <!-- Koreksi Fiskal Positif -->
+                        <div class="mt-3 pt-3 border-t border-gray-100">
+                            <div class="text-xs font-semibold text-gray-700 mb-2">Koreksi Fiskal Positif</div>
+                            <div class="pl-3 space-y-1">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600">a. Beban</span>
+                                    <span class="font-medium text-gray-900" x-text="formatCurrency(result.input.beban || 0)"></span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600">b. Biaya Operasional</span>
+                                    <span class="font-medium text-gray-900" x-text="formatCurrency(result.input.biaya_operasional || 0)"></span>
+                                </div>
+                                <div class="flex justify-between pt-1 border-t border-gray-100">
+                                    <span class="text-gray-700 font-semibold">Total Koreksi Positif</span>
+                                    <span class="font-bold text-gray-900" x-text="formatCurrency(result.input.koreksi_positif || 0)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Koreksi Fiskal Negatif -->
+                        <div class="mt-3 pt-3 border-t border-gray-100">
+                            <div class="text-xs font-semibold text-gray-700 mb-2">Koreksi Fiskal Negatif</div>
+                            <div class="pl-3 space-y-1">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600">a. Pendapatan Lain-lain</span>
+                                    <span class="font-medium text-gray-900" x-text="formatCurrency(result.input.pendapatan_lain || 0)"></span>
+                                </div>
+                                <div class="flex justify-between pt-1 border-t border-gray-100">
+                                    <span class="text-gray-700 font-semibold">Total Koreksi Negatif</span>
+                                    <span class="font-bold text-gray-900" x-text="formatCurrency(result.input.koreksi_negatif || 0)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between pt-2 border-t border-gray-200">
                             <span class="text-gray-600">Tarif PPh</span>
                             <span class="font-medium text-gray-900" x-text="formatPercent(result.input.tarif_pph * 100) + '%'"></span>
                         </div>
                     </div>
                 </template>
+                
                 <!-- Untuk UMKM -->
                 <template x-if="result.jenis === 'umkm'">
                     <div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Rumus</span>
                             <span class="font-medium text-gray-900" x-text="result.formula || 'Omzet × 0,50%'"></span>
+                        </div>
+                        <div class="flex justify-between pt-2 border-t border-gray-200">
+                            <span class="text-gray-600">Tarif PPh</span>
+                            <span class="font-medium text-gray-900">0,50%</span>
                         </div>
                     </div>
                 </template>
@@ -179,14 +220,14 @@
                     </div>
                     <div class="flex justify-between pt-2 border-t border-gray-200">
                         <span class="font-semibold text-gray-900">PPh Terutang</span>
-                        <span class="font-bold text-primary" x-text="formatCurrency(result.pph_terutang)"></span>
+                        <span class="font-bold text-primary" x-text="formatCurrency(result.pajak_terutang)"></span>
                     </div>
                 </div>
             </div>
         </template>
 
         <!-- PPh Pasal 29 -->
-        <div class="pt-3 border-t border-gray-200">
+        <div class="pt-3">
             <div class="flex justify-between items-center">
                 <span class="font-semibold text-gray-900">PPh Pasal 29 (Harus Disetor)</span>
                 <span class="text-xl font-bold text-green-600" x-text="formatCurrency(result.pph_pasal_29)"></span>
@@ -213,7 +254,7 @@
                 </template>
                 <template x-if="result.jenis === 'umum' || !result.jenis">
                     <div>
-                        <li>Estimasi laba dihitung sebesar 10% dari total omzet</li>
+                        <li>Laba Fiskal = Saldo Laba (Rugi) Komersial + Koreksi Positif - Koreksi Negatif</li>
                         <li>Fasilitas pengurangan tarif 50% berlaku untuk omzet ≤ Rp 4,8 Miliar</li>
                         <li>Untuk omzet antara 4,8 M - 50 M, fasilitas diberikan secara proporsional</li>
                         <li>Omzet ≥ Rp 50 Miliar tidak mendapat fasilitas</li>
