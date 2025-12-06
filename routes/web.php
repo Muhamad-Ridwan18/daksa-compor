@@ -77,7 +77,7 @@ Route::post('/kalkulator-pph-badan/hitung', [PPhBadanCalculatorController::class
 // Documents Routes (Frontend)
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('documents.show');
-Route::get('/documents/{slug}/download-pdf', [DocumentController::class, 'downloadPdf'])->name('documents.download-pdf');
+Route::match(['get', 'post'], '/documents/{slug}/download-pdf', [DocumentController::class, 'downloadPdf'])->name('documents.download-pdf');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->group(function () {

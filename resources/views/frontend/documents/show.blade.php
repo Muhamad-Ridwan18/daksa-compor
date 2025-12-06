@@ -62,14 +62,14 @@
                     
                     <!-- Download -->
                     @if($document->document_file)
-                        <a href="{{ route('documents.download-pdf', $document->slug) }}" 
-                           class="inline-flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-medium"
-                           title="Download">
+                        <button onclick="openDownloadModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')" 
+                                class="inline-flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-medium"
+                                title="Download">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                             </svg>
                             <span class="hidden sm:inline">Download</span>
-                        </a>
+                        </button>
                     @endif
                     
                     <!-- Share -->
@@ -160,8 +160,18 @@
     <!-- Document Content -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="max-w-4xl mx-auto">
-            <!-- HTML Content -->
-            <div id="documentContent" class="bg-white rounded-lg shadow-sm p-6 sm:p-8 lg:p-12 prose prose-lg max-w-none">
+            <!-- HTML Content with Blur Effect -->
+            <div id="documentContentWrapper" class="relative overflow-hidden">
+                <style>
+                    /* Custom blur effect for stronger blur */
+                    #documentContent.blurred {
+                        filter: blur(20px) brightness(0.7);
+                        opacity: 0.25 !important;
+                        user-select: none;
+                        pointer-events: none;
+                    }
+                </style>
+                <div id="documentContent" class="bg-white rounded-lg shadow-sm p-6 sm:p-8 lg:p-12 prose prose-lg max-w-none blurred">
                 <style>
                     /* Text alignment */
                     #documentContent p.text-center {
@@ -260,6 +270,32 @@
                         @endif
                     </div>
                 @endif
+                </div>
+                <!-- Overlay with action buttons -->
+                <div id="blurOverlay" class="absolute inset-0 bg-gradient-to-b from-white/85 via-white/90 to-white flex items-center justify-center rounded-lg z-10 backdrop-blur-md">
+                    <div class="text-center p-6 max-w-md bg-white/95 rounded-xl shadow-xl border border-gray-200">
+                        <p class="text-gray-800 mb-6 font-semibold text-base">Untuk melihat atau mengunduh dokumen, pilih aksi di bawah ini</p>
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            <button onclick="removeBlur()" 
+                                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-opacity-90 text-white font-semibold rounded-lg transition shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Lihat Dokumen
+                            </button>
+                            @if($document->document_file)
+                            <button onclick="openDownloadModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')" 
+                                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download
+                            </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- Related Documents -->
@@ -476,6 +512,259 @@
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert('Link berhasil disalin ke clipboard!');
             });
+        }
+    });
+    
+    // Blur removal function
+    function removeBlur() {
+        const wrapper = document.getElementById('documentContentWrapper');
+        const content = document.getElementById('documentContent');
+        const overlay = document.getElementById('blurOverlay');
+        
+        // Remove blur, opacity, and brightness effects, enable interaction
+        content.classList.remove('blurred');
+        content.style.filter = 'none';
+        content.style.opacity = '1';
+        content.classList.add('select-text');
+        
+        // Hide overlay
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+        
+        // Store in localStorage that user has viewed
+        localStorage.setItem('document_viewed_{{ $document->id }}', 'true');
+    }
+    
+    // Check if user has already viewed this document
+    if (localStorage.getItem('document_viewed_{{ $document->id }}') === 'true') {
+        removeBlur();
+    }
+</script>
+@endpush
+
+<!-- Download Modal -->
+<div id="downloadModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div id="modalBackdrop" class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeDownloadModal()"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <form id="downloadForm" method="POST">
+                @csrf
+                <input type="hidden" id="downloadDocumentId" name="document_id" value="">
+                
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-bold text-gray-900 mb-4" id="modalTitle">
+                                Download Dokumen
+                            </h3>
+                            
+                            <p class="text-sm text-gray-500 mb-6">
+                                Silakan lengkapi data di bawah ini untuk mengunduh dokumen.
+                            </p>
+                            
+                            <div class="space-y-4">
+                                <!-- Nama Lengkap -->
+                                <div>
+                                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Lengkap <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="nama_lengkap" 
+                                           name="nama_lengkap" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="Masukkan nama lengkap">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="error_nama_lengkap"></p>
+                                </div>
+                                
+                                <!-- Email -->
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="email" 
+                                           id="email" 
+                                           name="email" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="nama@example.com">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="error_email"></p>
+                                </div>
+                                
+                                <!-- No Telpon -->
+                                <div>
+                                    <label for="no_telpon" class="block text-sm font-medium text-gray-700 mb-1">
+                                        No. Telepon <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="tel" 
+                                           id="no_telpon" 
+                                           name="no_telpon" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="081234567890">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="error_no_telpon"></p>
+                                </div>
+                                
+                                <!-- Nama Perusahaan -->
+                                <div>
+                                    <label for="nama_perusahaan" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Perusahaan <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="nama_perusahaan" 
+                                           name="nama_perusahaan" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="Masukkan nama perusahaan">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="error_nama_perusahaan"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="submit" 
+                            id="downloadSubmitBtn"
+                            class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                        Download
+                    </button>
+                    <button type="button" 
+                            onclick="closeDownloadModal()"
+                            class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openDownloadModal(documentId, slug, title) {
+        document.getElementById('downloadModal').classList.remove('hidden');
+        document.getElementById('downloadDocumentId').value = documentId;
+        document.getElementById('downloadForm').action = '{{ route("documents.download-pdf", ":slug") }}'.replace(':slug', slug);
+        document.getElementById('modalTitle').textContent = 'Download: ' + title;
+        document.body.style.overflow = 'hidden';
+        
+        // Reset form
+        document.getElementById('downloadForm').reset();
+        document.querySelectorAll('[id^="error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        // Remove error classes
+        document.querySelectorAll('#downloadForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+    }
+    
+    function closeDownloadModal() {
+        document.getElementById('downloadModal').classList.add('hidden');
+        document.body.style.overflow = '';
+        
+        // Reset form
+        document.getElementById('downloadForm').reset();
+        document.querySelectorAll('[id^="error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        // Remove error classes
+        document.querySelectorAll('#downloadForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+    }
+    
+    // Handle form submission
+    document.getElementById('downloadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = this;
+        const formData = new FormData(form);
+        const submitBtn = document.getElementById('downloadSubmitBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
+        
+        // Clear previous errors
+        document.querySelectorAll('[id^="error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        document.querySelectorAll('#downloadForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+        
+        // Submit form
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob().then(blob => {
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = formData.get('nama_lengkap') + '_' + new Date().getTime() + '.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    // Close modal and show success
+                    closeDownloadModal();
+                    alert('Dokumen berhasil diunduh!');
+                });
+            } else {
+                return response.json().then(data => {
+                    throw data;
+                });
+            }
+        })
+        .catch(error => {
+            if (error.errors) {
+                // Show validation errors
+                Object.keys(error.errors).forEach(field => {
+                    const errorElement = document.getElementById('error_' + field);
+                    const inputElement = document.getElementById(field);
+                    
+                    if (errorElement && inputElement) {
+                        errorElement.textContent = error.errors[field][0];
+                        errorElement.classList.remove('hidden');
+                        inputElement.classList.add('border-red-500');
+                    }
+                });
+            } else {
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+            }
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        });
+    });
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDownloadModal();
         }
     });
 </script>
