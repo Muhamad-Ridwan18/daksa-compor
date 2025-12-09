@@ -43,7 +43,7 @@
         <!-- General Tab Content -->
         <div id="tab-content-general" class="tab-content">
         <!-- Site Information -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Website</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Company Information -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Perusahaan</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -147,7 +147,7 @@
         </div>
 
         <!-- Logo & Branding -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Logo & Branding</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -203,7 +203,7 @@
         </div>
 
         <!-- Theme Colors -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Warna Tema</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
@@ -243,7 +243,7 @@
         </div>
 
         <!-- Hero Section -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Hero Section</h3>
             <div class="space-y-4">
                 <div>
@@ -458,7 +458,7 @@
         </div>
 
         <!-- Visi dan Misi Section -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Visi dan Misi</h3>
             <div class="space-y-4">
                 <div>
@@ -486,7 +486,7 @@
         </div>
 
         <!-- About Section -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Section Tentang Kami</h3>
             <div class="space-y-4">
                 <div>
@@ -535,7 +535,7 @@
         </div>
 
         <!-- Product Settings -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Pengaturan Produk</h3>
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
@@ -559,7 +559,7 @@
         </div>
 
         <!-- Statistics Section -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistik (Ditampilkan di Homepage)</h3>
             <p class="text-sm text-gray-600 mb-6">Atur angka dan label untuk 4 statistik yang ditampilkan di atas section Galeri</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -650,7 +650,7 @@
         </div>
 
         <!-- Social Media -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Media Sosial</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
