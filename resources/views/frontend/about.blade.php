@@ -81,14 +81,50 @@
             </div>
         </div> --}}
 
-        <!-- Profil Section -->
-        <div class="text-center mb-16 section-heading" data-aos="fade-up">
-            <div class="section-eyebrow">Profil</div>
-            <div class="section-underline"></div>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto mt-4">
-                {{ $settings['about_description'] ?? 'Kami adalah perusahaan yang berkomitmen untuk memberikan solusi terbaik bagi klien kami dengan pengalaman bertahun-tahun di industri ini.' }}
+        <!-- Visi dan Misi Section -->
+        <div class="mb-20 mt-8 mb-6" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Visi dan Misi Kami</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-12 text-left">
+                {{ $settings['vision_mission_intro'] ?? 'Kami merupakan pelopor Jasa Pelatihan Accurate Accounting Software pertama di Indonesia, yang secara resmi bekerja sama dengan pihak CPSSoft selaku pemilik Accurate Accounting Software.' }}
             </p>
+
+            <div class="space-y-12">
+                <!-- Misi Kami -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Misi Kami</h3>
+                    <div class="space-y-4">
+                        @php
+                            $misi = $settings['company_mission'] ?? '';
+                            if ($misi) {
+                                $misiArray = explode("\n", $misi);
+                                $misiArray = array_filter(array_map('trim', $misiArray));
+                            } else {
+                                $misiArray = [
+                                    'Berkomitmen penuh, menghasilkan sumber daya manusia berkualitas tinggi dalam bekerja (pelatihan, implementasi, dan pelayanan setelah penjualan).',
+                                    'Memberikan konsultasi berdasarkan pengalaman dan metode analisis dalam memecahkan permasalahan yang dihadapi klien. Pengoperasian program secara efektif dan efisien sesuai bidang usaha klien.'
+                                ];
+                            }
+                        @endphp
+                        @foreach($misiArray as $item)
+                            @if(trim($item))
+                            <p class="text-gray-700 leading-relaxed">
+                                {{ trim($item) }}
+                            </p>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Visi Kami -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 mt-6">Visi Kami</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        {{ $settings['company_vision'] ?? 'Memberikan pelayanan dengan professionalisme, integritas, dan akuntabilitas tinggi juga hasil jangka panjang dalam jasa konsultasi.' }}
+                    </p>
+                </div>
+            </div>
         </div>
+
         
         <!-- About Content with Image -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-center">
@@ -128,7 +164,7 @@
         </div>
         
         <!-- Features Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16 mb-8">
             <div class="text-center feature-card" data-aos="fade-up" data-aos-delay="0">
                 <div class="bg-primary text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">

@@ -457,6 +457,34 @@
             </div>
         </div>
 
+        <!-- Visi dan Misi Section -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Visi dan Misi</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="vision_mission_intro" class="block text-sm font-medium text-gray-700 mb-2">Teks Pengantar</label>
+                    <textarea id="vision_mission_intro" name="settings[vision_mission_intro][value]" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                              placeholder="Kami merupakan pelopor Jasa Pelatihan Accurate Accounting Software pertama di Indonesia...">{{ $settings->where('key', 'vision_mission_intro')->first()->value ?? '' }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Teks pengantar yang ditampilkan di bawah judul "Visi dan Misi Kami"</p>
+                </div>
+                <div>
+                    <label for="company_mission" class="block text-sm font-medium text-gray-700 mb-2">Misi Kami</label>
+                    <textarea id="company_mission" name="settings[company_mission][value]" rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                              placeholder="Masukkan misi perusahaan, setiap poin dipisahkan dengan baris baru">{{ $settings->where('key', 'company_mission')->first()->value ?? '' }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Masukkan setiap poin misi dalam baris terpisah</p>
+                </div>
+                <div>
+                    <label for="company_vision" class="block text-sm font-medium text-gray-700 mb-2">Visi Kami</label>
+                    <textarea id="company_vision" name="settings[company_vision][value]" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                              placeholder="Masukkan visi perusahaan">{{ $settings->where('key', 'company_vision')->first()->value ?? '' }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Masukkan visi perusahaan</p>
+                </div>
+            </div>
+        </div>
+
         <!-- About Section -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Section Tentang Kami</h3>
