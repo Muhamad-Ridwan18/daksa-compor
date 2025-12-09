@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PPh21Setting;
+use App\Models\TerTable;
 
 class PPh21CalculatorService
 {
@@ -295,9 +296,21 @@ class PPh21CalculatorService
     /**
      * Get tabel tarif TER sesuai PP No. 58 Tahun 2023
      * Format: [min, max, tarif_percent]
+     * Sekarang membaca dari database dengan fallback ke hardcode
      */
     private static function getTabelTarifTER($kategori)
     {
+        // Coba baca dari database dulu
+        try {
+            $terFromDb = TerTable::getByKategori($kategori);
+            if (!empty($terFromDb)) {
+                return $terFromDb;
+            }
+        } catch (\Exception $e) {
+            // Jika error, fallback ke hardcode
+        }
+
+        // Fallback ke hardcode (default values)
         // KATEGORI A: TK0/TK1/K0
         $tabelA = [
             [0, 5400000, 0.00],
@@ -343,7 +356,7 @@ class PPh21CalculatorService
             [550000001, 695000000, 31.00],
             [695000001, 910000000, 32.00],
             [910000001, 1400000000, 33.00],
-            [1400000001, PHP_INT_MAX, 34.00],
+            [1400000001, 999999999999, 34.00],
         ];
 
         // KATEGORI B: TK2/TK3/K1/K2
@@ -387,7 +400,7 @@ class PPh21CalculatorService
             [555000001, 704000000, 31.00],
             [704000001, 957000000, 32.00],
             [957000001, 1405000000, 33.00],
-            [1405000001, PHP_INT_MAX, 34.00],
+            [1405000001, 999999999999, 34.00],
         ];
 
         // KATEGORI C: K3
@@ -432,7 +445,7 @@ class PPh21CalculatorService
             [561000001, 709000000, 31.00],
             [709000001, 965000000, 32.00],
             [965000001, 1419000000, 33.00],
-            [1419000001, PHP_INT_MAX, 34.00],
+            [1419000001, 999999999999, 34.00],
         ];
 
         switch ($kategori) {

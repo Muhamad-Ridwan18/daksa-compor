@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PPh21SettingController;
+use App\Http\Controllers\Admin\TerTableController;
+use App\Http\Controllers\Admin\PPhBadanSettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\Admin\DocumentDownloadController;
@@ -118,6 +120,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     Route::get('/pph21-settings', [PPh21SettingController::class, 'index'])->name('pph21-settings.index');
     Route::patch('/pph21-settings', [PPh21SettingController::class, 'update'])->name('pph21-settings.update');
     Route::post('/pph21-settings/reset', [PPh21SettingController::class, 'reset'])->name('pph21-settings.reset');
+    
+    // TER Tables Management
+    Route::get('/ter-tables', [TerTableController::class, 'index'])->name('ter-tables.index');
+    Route::post('/ter-tables', [TerTableController::class, 'store'])->name('ter-tables.store');
+    Route::patch('/ter-tables/{id}', [TerTableController::class, 'update'])->name('ter-tables.update');
+    Route::delete('/ter-tables/{id}', [TerTableController::class, 'destroy'])->name('ter-tables.destroy');
+    Route::post('/ter-tables/reset', [TerTableController::class, 'reset'])->name('ter-tables.reset');
+    
+    // PPh Badan Settings Management
+    Route::get('/pph-badan-settings', [PPhBadanSettingController::class, 'index'])->name('pph-badan-settings.index');
+    Route::patch('/pph-badan-settings', [PPhBadanSettingController::class, 'update'])->name('pph-badan-settings.update');
+    Route::post('/pph-badan-settings/reset', [PPhBadanSettingController::class, 'reset'])->name('pph-badan-settings.reset');
     
     // Articles Management
     Route::resource('articles', ArticleController::class);

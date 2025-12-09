@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Hero Section with Modern Gradient -->
-<section class="relative min-h-[20vh] sm:min-h-[30vh] flex items-center justify-center bg-gradient-to-br from-primary via-secondary to-primary overflow-hidden">
+<section class="relative min-h-[20vh] sm:min-h-[30vh] flex items-center justify-center bg-primary overflow-hidden">
     {{-- <!-- Animated Background Pattern -->
     <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0 pattern-dots"></div>

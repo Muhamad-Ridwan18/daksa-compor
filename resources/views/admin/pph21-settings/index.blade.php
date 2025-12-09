@@ -65,6 +65,15 @@
                     Batas Lapisan
                 </span>
             </button>
+            <a href="{{ route('admin.ter-tables.index') }}" 
+               class="tab-button py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                <span class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    Tabel TER
+                </span>
+            </a>
         </nav>
     </div>
     
@@ -86,13 +95,12 @@
                                     <label for="setting_{{ $setting->key }}" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ $setting->label }}
                                     </label>
-                                    <input type="number" 
+                                    <input type="text" 
                                            id="setting_{{ $setting->key }}" 
                                            name="settings[{{ $setting->key }}][value]" 
-                                           value="{{ number_format($setting->value, 0, '', '') }}"
-                                           step="1000"
-                                           min="0"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                           data-original-value="{{ $setting->value }}"
+                                           value="{{ number_format($setting->value, 0, ',', '.') }}"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary number-input">
                                     @if($setting->description)
                                     <p class="text-xs text-gray-500 mt-1">{{ $setting->description }}</p>
                                     @endif
@@ -112,13 +120,12 @@
                                     <label for="setting_{{ $setting->key }}" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ $setting->label }}
                                     </label>
-                                    <input type="number" 
+                                    <input type="text" 
                                            id="setting_{{ $setting->key }}" 
                                            name="settings[{{ $setting->key }}][value]" 
-                                           value="{{ number_format($setting->value, 0, '', '') }}"
-                                           step="1000"
-                                           min="0"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                           data-original-value="{{ $setting->value }}"
+                                           value="{{ number_format($setting->value, 0, ',', '.') }}"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary number-input">
                                     @if($setting->description)
                                     <p class="text-xs text-gray-500 mt-1">{{ $setting->description }}</p>
                                     @endif
@@ -138,13 +145,12 @@
                                     <label for="setting_{{ $setting->key }}" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ $setting->label }}
                                     </label>
-                                    <input type="number" 
+                                    <input type="text" 
                                            id="setting_{{ $setting->key }}" 
                                            name="settings[{{ $setting->key }}][value]" 
-                                           value="{{ number_format($setting->value, 0, '', '') }}"
-                                           step="1000"
-                                           min="0"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                           data-original-value="{{ $setting->value }}"
+                                           value="{{ number_format($setting->value, 0, ',', '.') }}"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary number-input">
                                     @if($setting->description)
                                     <p class="text-xs text-gray-500 mt-1">{{ $setting->description }}</p>
                                     @endif
@@ -183,7 +189,7 @@
                         @if($setting->description)
                         <p class="text-xs text-gray-500 mt-1">{{ $setting->description }}</p>
                         @endif
-                        <p class="text-xs text-blue-600 mt-1">Nilai: {{ number_format($setting->value * 100, 2) }}%</p>
+                        <p class="text-xs text-blue-600 mt-1">Nilai: {{ number_format($setting->value * 100, 2, ',', '.') }}%</p>
                     </div>
                     @endforeach
                 </div>
@@ -202,13 +208,12 @@
                         <label for="setting_{{ $setting->key }}" class="block text-sm font-medium text-gray-700 mb-2">
                             {{ $setting->label }}
                         </label>
-                        <input type="number" 
+                        <input type="text" 
                                id="setting_{{ $setting->key }}" 
                                name="settings[{{ $setting->key }}][value]" 
-                               value="{{ number_format($setting->value, 0, '', '') }}"
-                               step="1000000"
-                               min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                               data-original-value="{{ $setting->value }}"
+                               value="{{ number_format($setting->value, 0, ',', '.') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary number-input">
                         @if($setting->description)
                         <p class="text-xs text-gray-500 mt-1">{{ $setting->description }}</p>
                         @endif
@@ -248,18 +253,81 @@
         }
     }
 
-    // Format number inputs on blur
-    document.querySelectorAll('input[type="number"]').forEach(input => {
+    // Format number dengan titik pemisah ribuan
+    function formatNumberWithDots(value) {
+        if (!value && value !== 0) return '';
+        
+        // Hapus semua karakter non-digit
+        let numStr = value.toString().replace(/[^\d]/g, '');
+        
+        // Jika kosong, return empty
+        if (!numStr) return '';
+        
+        // Parse sebagai integer
+        const num = parseInt(numStr);
+        if (isNaN(num)) return '';
+        
+        // Format dengan titik pemisah ribuan (format Indonesia)
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Hapus format (titik) untuk submit
+    function removeFormat(value) {
+        if (!value) return '';
+        return value.toString().replace(/\./g, '');
+    }
+
+    // Format semua input number saat load
+    document.querySelectorAll('.number-input').forEach(input => {
+        // Format saat input (real-time)
+        input.addEventListener('input', function(e) {
+            let value = e.target.value;
+            
+            // Simpan cursor position
+            const cursorPos = e.target.selectionStart;
+            
+            // Hapus semua karakter non-digit
+            value = value.replace(/[^\d]/g, '');
+            
+            if (value) {
+                const formatted = formatNumberWithDots(value);
+                e.target.value = formatted;
+                
+                // Restore cursor position (adjust for added dots)
+                const newCursorPos = cursorPos + (formatted.length - value.length);
+                e.target.setSelectionRange(newCursorPos, newCursorPos);
+            } else {
+                e.target.value = '';
+            }
+        });
+
+        // Format saat blur (final format)
         input.addEventListener('blur', function() {
-            if (this.value && !isNaN(this.value)) {
-                // For percentage inputs (tarif), keep decimal
-                if (this.name.includes('tarif')) {
-                    this.value = parseFloat(this.value).toFixed(2);
+            if (this.value) {
+                const num = removeFormat(this.value);
+                if (num && !isNaN(num)) {
+                    this.value = formatNumberWithDots(parseInt(num));
                 } else {
-                    // For other inputs, format as integer
-                    this.value = Math.round(parseFloat(this.value));
+                    this.value = '';
                 }
             }
+        });
+
+        // Format saat focus (jika kosong, set ke 0)
+        input.addEventListener('focus', function() {
+            if (!this.value) {
+                this.value = '';
+            }
+        });
+    });
+
+    // Konversi nilai sebelum submit (hapus semua titik)
+    document.getElementById('pph21SettingsForm').addEventListener('submit', function(e) {
+        document.querySelectorAll('.number-input').forEach(input => {
+            const formattedValue = input.value;
+            const numericValue = removeFormat(formattedValue);
+            // Set nilai tanpa format untuk submit
+            input.value = numericValue || '0';
         });
     });
 </script>

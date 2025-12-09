@@ -202,6 +202,35 @@
                     </svg>
                     User
                 </a>
+
+                <!-- Kalkulator Pajak Section -->
+                <div class="px-6 py-2 mt-2">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kalkulator Pajak</h3>
+                </div>
+                
+                <a href="{{ route('admin.pph21-settings.index') }}" 
+                   class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.pph21-settings.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    PPh 21 Settings
+                </a>
+                
+                <a href="{{ route('admin.ter-tables.index') }}" 
+                   class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.ter-tables.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    Tabel TER
+                </a>
+                
+                <a href="{{ route('admin.pph-badan-settings.index') }}" 
+                   class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.pph-badan-settings.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    PPh Badan Settings
+                </a>
                 
                 <a href="{{ route('admin.settings.index') }}" 
                    class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary {{ request()->routeIs('admin.settings.*') ? 'bg-primary text-white border-r-4 border-white' : '' }}">

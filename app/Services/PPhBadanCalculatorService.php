@@ -2,17 +2,33 @@
 
 namespace App\Services;
 
+use App\Models\PPhBadanSetting;
+
 class PPhBadanCalculatorService
 {
-    // Konstanta untuk batas omzet fasilitas
+    // Konstanta untuk batas omzet fasilitas (fallback)
     const BATAS_FASILITAS_MIN = 4800000000; // 4,8 M
     const BATAS_FASILITAS_MAX = 50000000000; // 50 M
     
-    // Tarif PPh Badan (default 22%)
+    // Tarif PPh Badan (default 22%) (fallback)
     const TARIF_PPH_BADAN = 0.22;
     
-    // Persentase pengurangan tarif untuk fasilitas (50%)
+    // Persentase pengurangan tarif untuk fasilitas (50%) (fallback)
     const PERSENTASE_FASILITAS = 0.50;
+
+    /**
+     * Get setting value from database or fallback to constant
+     */
+    private static function getSetting($key, $constant)
+    {
+        try {
+            $value = PPhBadanSetting::getValue($key);
+            return $value !== null ? $value : $constant;
+        } catch (\Exception $e) {
+            // If database error, use constant
+            return $constant;
+        }
+    }
 
     /**
      * Hitung Laba Fiskal (Laba Kena Pajak)
@@ -36,9 +52,12 @@ class PPhBadanCalculatorService
      */
     public static function getZonaFasilitas($omzet)
     {
-        if ($omzet <= self::BATAS_FASILITAS_MIN) {
+        $batasMin = self::getSetting('batas_fasilitas_min', self::BATAS_FASILITAS_MIN);
+        $batasMax = self::getSetting('batas_fasilitas_max', self::BATAS_FASILITAS_MAX);
+        
+        if ($omzet <= $batasMin) {
             return 'zona1'; // Omzet ≤ 4,8 M
-        } elseif ($omzet < self::BATAS_FASILITAS_MAX) {
+        } elseif ($omzet < $batasMax) {
             return 'zona2'; // 4,8 M < Omzet < 50 M
         } else {
             return 'zona3'; // Omzet ≥ 50 M
@@ -55,6 +74,7 @@ class PPhBadanCalculatorService
     public static function calculateLKP($omzet, $labaFiskal)
     {
         $zona = self::getZonaFasilitas($omzet);
+        $batasMin = self::getSetting('batas_fasilitas_min', self::BATAS_FASILITAS_MIN);
         
         $lkpFasilitas = 0;
         $lkpNonFasilitas = 0;
@@ -69,7 +89,7 @@ class PPhBadanCalculatorService
             case 'zona2':
                 // 4,8 M < Omzet < 50 M: Proporsional
                 // LKP Fasilitas = LKP × (4,8 M / Omzet)
-                $lkpFasilitas = $labaFiskal * (self::BATAS_FASILITAS_MIN / $omzet);
+                $lkpFasilitas = $labaFiskal * ($batasMin / $omzet);
                 $lkpNonFasilitas = $labaFiskal - $lkpFasilitas;
                 break;
                 
@@ -97,10 +117,11 @@ class PPhBadanCalculatorService
      */
     public static function calculatePajakTerutang($lkpFasilitas, $lkpNonFasilitas, $tarifPPh = null)
     {
-        $tarifPPh = $tarifPPh ?? self::TARIF_PPH_BADAN;
+        $tarifPPh = $tarifPPh ?? self::getSetting('tarif_pph_badan', self::TARIF_PPH_BADAN);
+        $persentaseFasilitas = self::getSetting('persentase_fasilitas', self::PERSENTASE_FASILITAS);
         
         // Pajak atas LKP Fasilitas: 22% × 50% = 11%
-        $pajakFasilitas = $lkpFasilitas * $tarifPPh * self::PERSENTASE_FASILITAS;
+        $pajakFasilitas = $lkpFasilitas * $tarifPPh * $persentaseFasilitas;
         
         // Pajak atas LKP Non Fasilitas: 22% × 100% = 22%
         $pajakNonFasilitas = $lkpNonFasilitas * $tarifPPh;
@@ -198,7 +219,7 @@ class PPhBadanCalculatorService
                 'laba_komersial' => $labaKomersial,
                 'koreksi_positif' => $koreksiPositif,
                 'koreksi_negatif' => $koreksiNegatif,
-                'tarif_pph' => $tarifPPh ?? self::TARIF_PPH_BADAN,
+                'tarif_pph' => $tarifPPh ?? self::getSetting('tarif_pph_badan', self::TARIF_PPH_BADAN),
                 'kredit_pph22' => $kreditPPh22,
                 'kredit_pph23' => $kreditPPh23,
                 'kredit_pph25' => $kreditPPh25,
