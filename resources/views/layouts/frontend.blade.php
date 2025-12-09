@@ -167,7 +167,7 @@
                                 </a>
                                 <a href="{{ route('pph21-tahunan.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
-                                    Kalkulator PPh21 Masa Terakhir
+                                    Kalkulator PPh21 Tahunan
                                 </a>
                                 <a href="{{ route('pph-badan-calculator.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
