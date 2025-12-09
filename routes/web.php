@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PPh21SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
+use App\Http\Controllers\Admin\DocumentDownloadController;
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\BlogController;
@@ -77,6 +78,7 @@ Route::post('/kalkulator-pph-badan/hitung', [PPhBadanCalculatorController::class
 // Documents Routes (Frontend)
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('documents.show');
+Route::post('/documents/{slug}/view', [DocumentController::class, 'viewDocument'])->name('documents.view');
 Route::match(['get', 'post'], '/documents/{slug}/download-pdf', [DocumentController::class, 'downloadPdf'])->name('documents.download-pdf');
 
 // Admin Routes
@@ -148,6 +150,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     
     // Documents Management
     Route::resource('documents', AdminDocumentController::class);
+    
+    // Document Downloads Tracking
+    Route::resource('document-downloads', DocumentDownloadController::class)->only(['index', 'show', 'destroy']);
 });
 
 // Profile Routes

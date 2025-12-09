@@ -274,9 +274,9 @@
                 <!-- Overlay with action buttons -->
                 <div id="blurOverlay" class="absolute inset-0 bg-gradient-to-b from-white/85 via-white/90 to-white flex items-center justify-center rounded-lg z-10 backdrop-blur-md">
                     <div class="text-center p-6 max-w-md bg-white/95 rounded-xl shadow-xl border border-gray-200">
-                        <p class="text-gray-800 mb-6 font-semibold text-base">Untuk melihat atau mengunduh dokumen, pilih aksi di bawah ini</p>
-                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                            <button onclick="removeBlur()" 
+                        <p class="text-gray-800 mb-6 font-semibold text-base">Untuk melihat atau mengunduh dokumen, silakan lengkapi data di bawah ini</p>
+                        <div class="flex flex-col gap-3 justify-center">
+                            <button onclick="openViewDocumentModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')" 
                                     class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-opacity-90 text-white font-semibold rounded-lg transition shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -290,7 +290,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                 </svg>
-                                Download
+                                Download PDF
                             </button>
                             @endif
                         </div>
@@ -536,12 +536,151 @@
         localStorage.setItem('document_viewed_{{ $document->id }}', 'true');
     }
     
+    // Open view document modal
+    function openViewDocumentModal(documentId, slug, title) {
+        document.getElementById('viewDocumentModal').classList.remove('hidden');
+        document.getElementById('viewDocumentId').value = documentId;
+        document.getElementById('viewDocumentForm').action = '{{ route("documents.view", ":slug") }}'.replace(':slug', slug);
+        document.getElementById('viewModalTitle').textContent = 'Lihat Dokumen: ' + title;
+        document.body.style.overflow = 'hidden';
+        
+        // Reset form
+        document.getElementById('viewDocumentForm').reset();
+        document.querySelectorAll('[id^="view_error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        // Remove error classes
+        document.querySelectorAll('#viewDocumentForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+    }
+    
+    function closeViewDocumentModal() {
+        document.getElementById('viewDocumentModal').classList.add('hidden');
+        document.body.style.overflow = '';
+        
+        // Reset form
+        document.getElementById('viewDocumentForm').reset();
+        document.querySelectorAll('[id^="view_error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        // Remove error classes
+        document.querySelectorAll('#viewDocumentForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+    }
+    
     // Check if user has already viewed this document
     if (localStorage.getItem('document_viewed_{{ $document->id }}') === 'true') {
         removeBlur();
     }
 </script>
 @endpush
+
+<!-- View Document Modal -->
+<div id="viewDocumentModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div id="viewModalBackdrop" class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeViewDocumentModal()"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <form id="viewDocumentForm" method="POST">
+                @csrf
+                <input type="hidden" id="viewDocumentId" name="document_id" value="">
+                
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-bold text-gray-900 mb-4" id="viewModalTitle">
+                                Lihat Dokumen
+                            </h3>
+                            
+                            <p class="text-sm text-gray-500 mb-6">
+                                Silakan lengkapi data di bawah ini untuk melihat dokumen.
+                            </p>
+                            
+                            <div class="space-y-4">
+                                <!-- Nama Lengkap -->
+                                <div>
+                                    <label for="view_nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Lengkap <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="view_nama_lengkap" 
+                                           name="nama_lengkap" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="Masukkan nama lengkap">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="view_error_nama_lengkap"></p>
+                                </div>
+                                
+                                <!-- Email -->
+                                <div>
+                                    <label for="view_email" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="email" 
+                                           id="view_email" 
+                                           name="email" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="nama@example.com">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="view_error_email"></p>
+                                </div>
+                                
+                                <!-- No Telpon -->
+                                <div>
+                                    <label for="view_no_telpon" class="block text-sm font-medium text-gray-700 mb-1">
+                                        No. Telepon <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="tel" 
+                                           id="view_no_telpon" 
+                                           name="no_telpon" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="081234567890">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="view_error_no_telpon"></p>
+                                </div>
+                                
+                                <!-- Nama Perusahaan -->
+                                <div>
+                                    <label for="view_nama_perusahaan" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Perusahaan <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="view_nama_perusahaan" 
+                                           name="nama_perusahaan" 
+                                           required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                                           placeholder="Masukkan nama perusahaan">
+                                    <p class="mt-1 text-xs text-red-600 hidden" id="view_error_nama_perusahaan"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="submit" 
+                            id="viewDocumentSubmitBtn"
+                            class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                        Lihat Dokumen
+                    </button>
+                    <button type="button" 
+                            onclick="closeViewDocumentModal()"
+                            class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Download Modal -->
 <div id="downloadModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
@@ -765,7 +904,90 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDownloadModal();
+            closeViewDocumentModal();
         }
+    });
+    
+    // Handle view document form submission
+    document.getElementById('viewDocumentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = this;
+        const formData = new FormData(form);
+        const submitBtn = document.getElementById('viewDocumentSubmitBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...';
+        
+        // Clear previous errors
+        document.querySelectorAll('[id^="view_error_"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        
+        document.querySelectorAll('#viewDocumentForm input').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+        
+        // Submit form
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/pdf'
+            }
+        })
+        .then(response => {
+            if (response.ok && response.headers.get('content-type')?.includes('application/pdf')) {
+                // Download PDF file
+                return response.blob().then(blob => {
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = formData.get('nama_lengkap') + '_' + new Date().getTime() + '.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    // Close modal and show success
+                    closeViewDocumentModal();
+                    alert('Dokumen berhasil diunduh!');
+                });
+            } else if (response.status === 422) {
+                // Validation errors
+                return response.json().then(data => {
+                    throw data;
+                });
+            } else {
+                throw new Error('Terjadi kesalahan saat mengunduh dokumen.');
+            }
+        })
+        .catch(error => {
+            if (error.errors) {
+                // Show validation errors
+                Object.keys(error.errors).forEach(field => {
+                    const errorElement = document.getElementById('view_error_' + field);
+                    const inputElement = document.getElementById('view_' + field);
+                    
+                    if (errorElement && inputElement) {
+                        errorElement.textContent = error.errors[field][0];
+                        errorElement.classList.remove('hidden');
+                        inputElement.classList.add('border-red-500');
+                    }
+                });
+            } else {
+                alert(error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+            }
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        });
     });
 </script>
 @endpush
