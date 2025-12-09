@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -98,6 +99,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'inactivity'])->grou
     
     // Clients Management
     Route::resource('clients', ClientController::class);
+    
+    // Branches Management
+    Route::resource('branches', BranchController::class);
     
     // Contact Messages Management
     Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
