@@ -190,7 +190,7 @@
                 <div>
                     <p class="text-sm text-gray-600">Hari Ini</p>
                     <p class="text-2xl font-bold text-gray-900 mt-1">
-                        {{ DocumentDownload::whereDate('created_at', today())->count() }}
+                        {{ \App\Models\DocumentDownload::whereDate('created_at', today())->count() }}
                     </p>
                 </div>
                 <div class="bg-green-100 rounded-full p-3">
@@ -206,7 +206,7 @@
                 <div>
                     <p class="text-sm text-gray-600">Minggu Ini</p>
                     <p class="text-2xl font-bold text-gray-900 mt-1">
-                        {{ DocumentDownload::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count() }}
+                        {{ \App\Models\DocumentDownload::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count() }}
                     </p>
                 </div>
                 <div class="bg-purple-100 rounded-full p-3">
