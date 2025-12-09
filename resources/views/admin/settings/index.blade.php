@@ -679,6 +679,80 @@
                 </div>
             </div>
         </div>
+
+        <!-- Hero Text Pages -->
+        <div class="bg-white rounded-lg shadow p-6 mb-2">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Teks Hero Halaman</h3>
+            <p class="text-sm text-gray-600 mb-6">Atur teks yang ditampilkan di hero section halaman Blog dan Gallery</p>
+            
+            <!-- Blog Hero Text -->
+            <div class="mb-6 pb-6 border-b border-gray-200">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">Blog & Artikel</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="blog_hero_badge" class="block text-sm font-medium text-gray-700 mb-2">Badge Text</label>
+                        <input type="text" id="blog_hero_badge" name="settings[blog_hero_badge][value]" 
+                               value="{{ $settings->where('key', 'blog_hero_badge')->first()->value ?? 'Blog & Artikel' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Blog & Artikel">
+                    </div>
+                    <div>
+                        <label for="blog_hero_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Utama</label>
+                        <input type="text" id="blog_hero_title" name="settings[blog_hero_title][value]" 
+                               value="{{ $settings->where('key', 'blog_hero_title')->first()->value ?? 'Inspirasi & Wawasan' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Inspirasi & Wawasan">
+                    </div>
+                    <div>
+                        <label for="blog_hero_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                        <input type="text" id="blog_hero_subtitle" name="settings[blog_hero_subtitle][value]" 
+                               value="{{ $settings->where('key', 'blog_hero_subtitle')->first()->value ?? 'untuk Bisnis Digital' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="untuk Bisnis Digital">
+                    </div>
+                    <div>
+                        <label for="blog_hero_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                        <textarea id="blog_hero_description" name="settings[blog_hero_description][value]" rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                  placeholder="Temukan tips, tren terkini, dan panduan lengkap seputar digital marketing, teknologi, dan strategi bisnis">{{ $settings->where('key', 'blog_hero_description')->first()->value ?? 'Temukan tips, tren terkini, dan panduan lengkap seputar digital marketing, teknologi, dan strategi bisnis' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Hero Text -->
+            <div>
+                <h4 class="text-md font-semibold text-gray-800 mb-4">Gallery & Portfolio</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="gallery_hero_badge" class="block text-sm font-medium text-gray-700 mb-2">Badge Text</label>
+                        <input type="text" id="gallery_hero_badge" name="settings[gallery_hero_badge][value]" 
+                               value="{{ $settings->where('key', 'gallery_hero_badge')->first()->value ?? 'Gallery & Portfolio' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Gallery & Portfolio">
+                    </div>
+                    <div>
+                        <label for="gallery_hero_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Utama</label>
+                        <input type="text" id="gallery_hero_title" name="settings[gallery_hero_title][value]" 
+                               value="{{ $settings->where('key', 'gallery_hero_title')->first()->value ?? 'Koleksi Karya Kami' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Koleksi Karya Kami">
+                    </div>
+                    <div>
+                        <label for="gallery_hero_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                        <input type="text" id="gallery_hero_subtitle" name="settings[gallery_hero_subtitle][value]" 
+                               value="{{ $settings->where('key', 'gallery_hero_subtitle')->first()->value ?? 'Portfolio & Gallery' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                               placeholder="Portfolio & Gallery">
+                    </div>
+                    <div>
+                        <label for="gallery_hero_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                        <textarea id="gallery_hero_description" name="settings[gallery_hero_description][value]" rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                                  placeholder="Jelajahi karya-karya terbaik kami dan lihat bagaimana kami membantu klien mencapai kesuksesan">{{ $settings->where('key', 'gallery_hero_description')->first()->value ?? 'Jelajahi karya-karya terbaik kami dan lihat bagaimana kami membantu klien mencapai kesuksesan' }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
         
         <!-- SEO Tab Content -->

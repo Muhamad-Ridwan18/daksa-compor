@@ -21,18 +21,18 @@
                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
                 </svg>
-                Blog & Artikel
+                {{ \App\Models\Setting::getValue('blog_hero_badge', 'Blog & Artikel') }}
             </div>
             
             <!-- Main Heading -->
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2">
-                Inspirasi & Wawasan
-                <span class="block text-white/90 mt-1 sm:mt-2">untuk Bisnis Digital</span>
+                {{ \App\Models\Setting::getValue('blog_hero_title', 'Inspirasi & Wawasan') }}
+                <span class="block text-white/90 mt-1 sm:mt-2">{{ \App\Models\Setting::getValue('blog_hero_subtitle', 'untuk Bisnis Digital') }}</span>
             </h1>
             
             <!-- Subtitle -->
             <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 text-white/90 max-w-3xl mx-auto px-4">
-                Temukan tips, tren terkini, dan panduan lengkap seputar digital marketing, teknologi, dan strategi bisnis
+                {{ \App\Models\Setting::getValue('blog_hero_description', 'Temukan tips, tren terkini, dan panduan lengkap seputar digital marketing, teknologi, dan strategi bisnis') }}
             </p>
             
             <!-- Search Bar with Modern Design -->

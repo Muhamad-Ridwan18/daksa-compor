@@ -21,18 +21,18 @@
                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
                 </svg>
-                Gallery & Portfolio
+                {{ \App\Models\Setting::getValue('gallery_hero_badge', 'Gallery & Portfolio') }}
             </div>
             
             <!-- Main Heading -->
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Koleksi Karya Kami
-                <span class="block text-white/90 mt-2">Portfolio & Gallery</span>
+                {{ \App\Models\Setting::getValue('gallery_hero_title', 'Koleksi Karya Kami') }}
+                <span class="block text-white/90 mt-2">{{ \App\Models\Setting::getValue('gallery_hero_subtitle', 'Portfolio & Gallery') }}</span>
             </h1>
             
             <!-- Subtitle -->
             <p class="text-lg sm:text-xl lg:text-2xl mb-10 text-white/90 max-w-3xl mx-auto">
-                Jelajahi karya-karya terbaik kami dan lihat bagaimana kami membantu klien mencapai kesuksesan
+                {{ \App\Models\Setting::getValue('gallery_hero_description', 'Jelajahi karya-karya terbaik kami dan lihat bagaimana kami membantu klien mencapai kesuksesan') }}
             </p>
             
             <!-- Category Filter with Animation -->
