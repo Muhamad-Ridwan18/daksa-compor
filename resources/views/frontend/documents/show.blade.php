@@ -160,104 +160,17 @@
     <!-- Document Content -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="max-w-4xl mx-auto">
-            <!-- HTML Content with Blur Effect -->
-            <div id="documentContentWrapper" class="relative overflow-hidden">
-                <style>
-                    /* Custom blur effect for stronger blur */
-                    #documentContent.blurred {
-                        filter: blur(20px) brightness(0.7);
-                        opacity: 0.25 !important;
-                        user-select: none;
-                        pointer-events: none;
-                    }
-                </style>
-                <div id="documentContent" class="bg-white rounded-lg shadow-sm p-6 sm:p-8 lg:p-12 prose prose-lg max-w-none blurred">
-                <style>
-                    /* Text alignment */
-                    #documentContent p.text-center {
-                        text-align: center !important;
-                    }
-                    #documentContent p.text-right {
-                        text-align: right !important;
-                    }
-                    #documentContent h2.text-center {
-                        text-align: center !important;
-                    }
-                    #documentContent h2.text-right {
-                        text-align: right !important;
-                    }
-                    /* List styling - Ensure lists are displayed correctly */
-                    #documentContent ul,
-                    #documentContent ol {
-                        list-style-position: outside !important;
-                        margin-top: 1.25rem !important;
-                        margin-bottom: 1.25rem !important;
-                        margin-left: 1.5rem !important;
-                        padding-left: 1.5rem !important;
-                    }
-                    #documentContent ul {
-                        list-style-type: disc !important;
-                    }
-                    #documentContent ol {
-                        list-style-type: decimal !important;
-                    }
-                    #documentContent li {
-                        display: list-item !important;
-                        margin-top: 0.5rem !important;
-                        margin-bottom: 0.5rem !important;
-                        padding-left: 0.5rem !important;
-                        line-height: 1.75 !important;
-                    }
-                    /* Nested lists */
-                    #documentContent li > ul,
-                    #documentContent li > ol {
-                        margin-top: 0.5rem !important;
-                        margin-bottom: 0.5rem !important;
-                        padding-left: 1.5rem !important;
-                    }
-                    #documentContent ul ul {
-                        list-style-type: circle !important;
-                    }
-                    #documentContent ul ul ul {
-                        list-style-type: square !important;
-                    }
-                    #documentContent ol ol {
-                        list-style-type: lower-alpha !important;
-                    }
-                    #documentContent ol ol ol {
-                        list-style-type: lower-roman !important;
-                    }
-                    
-                    /* Responsive list styling */
-                    @media (max-width: 640px) {
-                        #documentContent ul,
-                        #documentContent ol {
-                            margin-left: 1rem !important;
-                            padding-left: 1rem !important;
-                            margin-top: 1rem !important;
-                            margin-bottom: 1rem !important;
-                        }
-                        #documentContent li {
-                            padding-left: 0.75rem !important;
-                            font-size: 0.9rem !important;
-                        }
-                        #documentContent li > ul,
-                        #documentContent li > ol {
-                            padding-left: 1rem !important;
-                        }
-                    }
-                    
-                    @media (min-width: 641px) and (max-width: 1024px) {
-                        #documentContent ul,
-                        #documentContent ol {
-                            margin-left: 1.25rem !important;
-                            padding-left: 1.25rem !important;
-                        }
-                    }
-                </style>
-                @if($document->content_html)
-                    {!! $document->content_html !!}
-                @else
+            <!-- HTML Content with Scribd-like Preview Component -->
+            @if($document->content_html)
+                <x-document-preview 
+                    :visibleHeight="'25%'"
+                    :content="$document->content_html"
+                    onCTAClick="openViewDocumentModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')"
+                    ctaText="Lihat Dokumen"
+                    promoText="Dokumen ini hanya tersedia dan bisa di download jika ada klik lihat dokumen"
+                />
+            @else
+                <div class="bg-white rounded-lg shadow-sm p-6 sm:p-8 lg:p-12">
                     <div class="text-center py-12">
                         <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -269,34 +182,8 @@
                             </div>
                         @endif
                     </div>
-                @endif
                 </div>
-                <!-- Overlay with action buttons -->
-                <div id="blurOverlay" class="absolute inset-0 bg-gradient-to-b from-white/85 via-white/90 to-white flex items-center justify-center rounded-lg z-10 backdrop-blur-md">
-                    <div class="text-center p-6 max-w-md bg-white/95 rounded-xl shadow-xl border border-gray-200">
-                        <p class="text-gray-800 mb-6 font-semibold text-base">Untuk melihat atau mengunduh dokumen, silakan lengkapi data di bawah ini</p>
-                        <div class="flex flex-col gap-3 justify-center">
-                            <button onclick="openViewDocumentModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')" 
-                                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-opacity-90 text-white font-semibold rounded-lg transition shadow-lg hover:shadow-xl">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                                Lihat Dokumen
-                            </button>
-                            @if($document->document_file)
-                            <button onclick="openDownloadModal('{{ $document->id }}', '{{ $document->slug }}', '{{ addslashes($document->title) }}')" 
-                                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition shadow-lg hover:shadow-xl">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
-                                Download PDF
-                            </button>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
             
             <!-- Related Documents -->
             @if($relatedDocuments->count() > 0)
@@ -320,6 +207,77 @@
                     </div>
                 </div>
             @endif
+        </div>
+    </div>
+</section>
+<section class="py-20 bg-primary relative overflow-hidden" data-aos="fade-up">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center">
+            <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-semibold mb-6" data-aos="fade-up" data-aos-delay="100">
+                Siap Memulai?
+            </div>
+            <h5 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight" data-aos="fade-up" data-aos-delay="200">
+                Mari Wujudkan Proyek Anda Bersama Kami
+            </h5>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+                Hubungi kami sekarang untuk konsultasi gratis dan dapatkan solusi terbaik untuk kebutuhan bisnis Anda
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" data-aos="fade-up" data-aos-delay="400">
+                @php
+                    $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '') ?: null;
+                    $waText = 'Halo, saya tertarik dengan layanan *' . $service->name . '* dari ' . ($settings['company_name'] ?? 'Daksa') . '. Mohon informasi lebih lanjut mengenai paket yang tersedia.';
+                    $waUrl = $waNumber ? ('https://wa.me/' . $waNumber . '?text=' . urlencode($waText)) : '#';
+                @endphp
+                @if($waNumber)
+                <a href="{{ $waUrl }}" 
+                   target="_blank" 
+                   rel="noopener"
+                   class="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary rounded-xl font-bold text-lg hover:bg-white/90 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105 group min-w-[200px] justify-center"
+                   style="background-color: #ffffff; color: {{ $settings['primary_color'] ?? '#D89B30' }};">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span>Hubungi via WhatsApp</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                @endif
+            </div>
+            
+            {{-- <!-- Additional Info -->
+            <div class="mt-12 flex flex-wrap justify-center gap-8 text-white/80" data-aos="fade-up" data-aos-delay="500">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Respon Cepat</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Konsultasi Gratis</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Harga Terjangkau</span>
+                </div>
+            </div> --}}
         </div>
     </div>
 </section>
@@ -517,19 +475,43 @@
     
     // Blur removal function
     function removeBlur() {
-        const wrapper = document.getElementById('documentContentWrapper');
-        const content = document.getElementById('documentContent');
-        const overlay = document.getElementById('blurOverlay');
+        // Find document preview wrapper (new component)
+        const wrapper = document.querySelector('.document-preview-wrapper');
         
-        // Remove blur, opacity, and brightness effects, enable interaction
-        content.classList.remove('blurred');
-        content.style.filter = 'none';
-        content.style.opacity = '1';
-        content.classList.add('select-text');
-        
-        // Hide overlay
-        if (overlay) {
-            overlay.style.display = 'none';
+        if (wrapper) {
+            // Remove blur from blurred content
+            const blurredContent = wrapper.querySelector('.document-preview-blurred');
+            if (blurredContent) {
+                blurredContent.style.display = 'none';
+            }
+            
+            // Hide overlay
+            const overlay = wrapper.querySelector('.document-preview-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+            
+            // Show full content in visible area
+            const visibleContent = wrapper.querySelector('.document-preview-visible');
+            if (visibleContent) {
+                visibleContent.style.maxHeight = 'none';
+                visibleContent.style.overflow = 'visible';
+            }
+        } else {
+            // Fallback for old structure (if any)
+            const oldWrapper = document.getElementById('documentContentWrapper');
+            const oldContent = document.getElementById('documentContent');
+            const oldOverlay = document.getElementById('blurOverlay');
+            
+            if (oldContent) {
+                oldContent.classList.remove('blurred');
+                oldContent.style.filter = 'none';
+                oldContent.style.opacity = '1';
+            }
+            
+            if (oldOverlay) {
+                oldOverlay.style.display = 'none';
+            }
         }
         
         // Store in localStorage that user has viewed
@@ -595,19 +577,19 @@
                 
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                        <div class="mt-3 text-left w-full">
                             <h3 class="text-lg leading-6 font-bold text-gray-900 mb-4" id="viewModalTitle">
                                 Lihat Dokumen
                             </h3>
                             
-                            <p class="text-sm text-gray-500 mb-6">
+                            <p class="text-sm text-gray-500 mb-6 text-left">
                                 Silakan lengkapi data di bawah ini untuk melihat dokumen.
                             </p>
                             
                             <div class="space-y-4">
                                 <!-- Nama Lengkap -->
                                 <div>
-                                    <label for="view_nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="view_nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1 text-left">
                                         Nama Lengkap <span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" 
@@ -621,7 +603,7 @@
                                 
                                 <!-- Email -->
                                 <div>
-                                    <label for="view_email" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="view_email" class="block text-sm font-medium text-gray-700 mb-1 text-left">
                                         Email <span class="text-red-500">*</span>
                                     </label>
                                     <input type="email" 
@@ -635,7 +617,7 @@
                                 
                                 <!-- No Telpon -->
                                 <div>
-                                    <label for="view_no_telpon" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="view_no_telpon" class="block text-sm font-medium text-gray-700 mb-1 text-left">
                                         No. Telepon <span class="text-red-500">*</span>
                                     </label>
                                     <input type="tel" 
@@ -649,7 +631,7 @@
                                 
                                 <!-- Nama Perusahaan -->
                                 <div>
-                                    <label for="view_nama_perusahaan" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="view_nama_perusahaan" class="block text-sm font-medium text-gray-700 mb-1 text-left">
                                         Nama Perusahaan <span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" 
