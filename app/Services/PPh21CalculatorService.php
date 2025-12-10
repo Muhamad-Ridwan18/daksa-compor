@@ -296,168 +296,45 @@ class PPh21CalculatorService
     /**
      * Get tabel tarif TER sesuai PP No. 58 Tahun 2023
      * Format: [min, max, tarif_percent]
-     * Sekarang membaca dari database dengan fallback ke hardcode
+     * Membaca dari database
+     * 
+     * Catatan: Data dari database mungkin dalam format desimal (0.25 untuk 0.25%)
+     * Fungsi ini menormalisasi semua data menjadi format persen (24.00 untuk 24%)
      */
     private static function getTabelTarifTER($kategori)
     {
-        // Coba baca dari database dulu
-        try {
-            $terFromDb = TerTable::getByKategori($kategori);
-            if (!empty($terFromDb)) {
-                return $terFromDb;
+        // Baca dari database
+        $terFromDb = TerTable::getByKategori($kategori);
+        
+        if (empty($terFromDb)) {
+            // Jika database kosong, return empty array
+            // Seharusnya data sudah di-seed melalui TerTableSeeder
+            return [];  
+        }
+        
+        // Normalisasi data dari database ke format persen
+        // Deteksi format: cek tarif maksimal di tabel
+        // Tarif maksimal di tabel TER adalah 34.00 (34%)
+        // Jika tarif maksimal <= 1, berarti format desimal (0.25 = 0.25%), perlu dikali 100
+        // Jika tarif maksimal > 1, berarti sudah format persen (24.00 = 24%), tidak perlu konversi
+        $maxTarif = max(array_map(function($range) {
+            return (float) $range[2];
+        }, $terFromDb));
+        
+        // Jika tarif maksimal <= 1, berarti semua tarif dalam format desimal, konversi ke persen
+        // Contoh: 0.25 -> 25.00, 0.0025 -> 0.25
+        $needConversion = ($maxTarif <= 1 && $maxTarif > 0);
+        
+        return array_map(function($range) use ($needConversion) {
+            [$min, $max, $tarif] = $range;
+            $tarif = (float) $tarif;
+            // Jika perlu konversi, kalikan dengan 100
+            // Contoh: 0.25 (0.25%) -> 25.00 (25%), atau 0.0025 (0.0025%) -> 0.25 (0.25%)
+            if ($needConversion && $tarif > 0) {
+                $tarif = $tarif * 100;
             }
-        } catch (\Exception $e) {
-            // Jika error, fallback ke hardcode
-        }
-
-        // Fallback ke hardcode (default values)
-        // KATEGORI A: TK0/TK1/K0
-        $tabelA = [
-            [0, 5400000, 0.00],
-            [5400001, 5650000, 0.25],
-            [5650001, 5950000, 0.50],
-            [5950001, 6300000, 0.75],
-            [6300001, 6750000, 1.00],
-            [6750001, 7500000, 1.25],
-            [7500001, 8550000, 1.50],
-            [8550001, 9650000, 1.75],
-            [9650001, 10050000, 2.00],
-            [10050001, 10350000, 2.25],
-            [10350001, 10700000, 2.50],
-            [10700001, 11050000, 3.00],
-            [11050001, 11600000, 3.50],
-            [11600001, 12500000, 4.00],
-            [12500001, 13750000, 5.00],
-            [13750001, 15100000, 6.00],
-            [15100001, 16950000, 7.00],
-            [16950001, 19750000, 8.00],
-            [19750001, 24150000, 9.00],
-            [24150001, 26450000, 10.00],
-            [26450001, 28000000, 11.00],
-            [28000001, 30050000, 12.00],
-            [30050001, 32400000, 13.00],
-            [32400001, 35400000, 14.00],
-            [35400001, 39100000, 15.00],
-            [39100001, 43850000, 16.00],
-            [43850001, 47800000, 17.00],
-            [47800001, 51400000, 18.00],
-            [51400001, 56300000, 19.00],
-            [56300001, 62200000, 20.00],
-            [62200001, 68600000, 21.00],
-            [68600001, 77500000, 22.00],
-            [77500001, 89000000, 23.00],
-            [89000001, 103000000, 24.00],
-            [103000001, 125000000, 25.00],
-            [125000001, 157000000, 26.00],
-            [157000001, 206000000, 27.00],
-            [206000001, 337000000, 28.00],
-            [337000001, 454000000, 29.00],
-            [454000001, 550000000, 30.00],
-            [550000001, 695000000, 31.00],
-            [695000001, 910000000, 32.00],
-            [910000001, 1400000000, 33.00],
-            [1400000001, 999999999999, 34.00],
-        ];
-
-        // KATEGORI B: TK2/TK3/K1/K2
-        $tabelB = [
-            [0, 6200000, 0.00],
-            [6200001, 6500000, 0.25],
-            [6500001, 6850000, 0.50],
-            [6850001, 7300000, 0.75],
-            [7300001, 9200000, 1.00],
-            [9200001, 10750000, 1.50],
-            [10750001, 11250000, 2.00],
-            [11250001, 11600000, 2.50],
-            [11600001, 12600000, 3.00],
-            [12600001, 13600000, 4.00],
-            [13600001, 14950000, 5.00],
-            [14950001, 16400000, 6.00],
-            [16400001, 18450000, 7.00],
-            [18450001, 21850000, 8.00],
-            [21850001, 26000000, 9.00],
-            [26000001, 27700000, 10.00],
-            [27700001, 29350000, 11.00],
-            [29350001, 31450000, 12.00],
-            [31450001, 33950000, 13.00],
-            [33950001, 37100000, 14.00],
-            [37100001, 41100000, 15.00],
-            [41100001, 45800000, 16.00],
-            [45800001, 49500000, 17.00],
-            [49500001, 53800000, 18.00],
-            [53800001, 58500000, 19.00],
-            [58500001, 64000000, 20.00],
-            [64000001, 71000000, 21.00],
-            [71000001, 80000000, 22.00],
-            [80000001, 93000000, 23.00],
-            [93000001, 109000000, 24.00],
-            [109000001, 129000000, 25.00],
-            [129000001, 163000000, 26.00],
-            [163000001, 211000000, 27.00],
-            [211000001, 374000000, 28.00],
-            [374000001, 459000000, 29.00],
-            [459000001, 555000000, 30.00],
-            [555000001, 704000000, 31.00],
-            [704000001, 957000000, 32.00],
-            [957000001, 1405000000, 33.00],
-            [1405000001, 999999999999, 34.00],
-        ];
-
-        // KATEGORI C: K3
-        $tabelC = [
-            [0, 6600000, 0.00],
-            [6600001, 6950000, 0.25],
-            [6950001, 7350000, 0.50],
-            [7350001, 7800000, 0.75],
-            [7800001, 8850000, 1.00],
-            [8850001, 9800000, 1.25],
-            [9800001, 10950000, 1.50],
-            [10950001, 11200000, 1.75],
-            [11200001, 12050000, 2.00],
-            [12050001, 12950000, 3.00],
-            [12950001, 14150000, 4.00],
-            [14150001, 15550000, 5.00],
-            [15550001, 17050000, 6.00],
-            [17050001, 19500000, 7.00],
-            [19500001, 22700000, 8.00],
-            [22700001, 26600000, 9.00],
-            [26600001, 28100000, 10.00],
-            [28100001, 30100000, 11.00],
-            [30100001, 32600000, 12.00],
-            [32600001, 35400000, 13.00],
-            [35400001, 38900000, 14.00],
-            [38900001, 43000000, 15.00],
-            [43000001, 47400000, 16.00],
-            [47400001, 51200000, 17.00],
-            [51200001, 55800000, 18.00],
-            [55800001, 60400000, 19.00],
-            [60400001, 66700000, 20.00],
-            [66700001, 74500000, 21.00],
-            [74500001, 83200000, 22.00],
-            [83200001, 95600000, 23.00],
-            [95600001, 110000000, 24.00],
-            [110000001, 134000000, 25.00],
-            [134000001, 169000000, 26.00],
-            [169000001, 221000000, 27.00],
-            [221000001, 390000000, 28.00],
-            [390000001, 463000000, 29.00],
-            [463000001, 561000000, 30.00],
-            [561000001, 709000000, 31.00],
-            [709000001, 965000000, 32.00],
-            [965000001, 1419000000, 33.00],
-            [1419000001, 999999999999, 34.00],
-        ];
-
-        switch ($kategori) {
-            case 'TER A':
-                return $tabelA;
-            case 'TER B':
-                return $tabelB;
-            case 'TER C':
-                return $tabelC;
-            default:
-                return $tabelA; // Default ke TER A
-        }
+            return [$min, $max, $tarif];
+        }, $terFromDb);
     }
 
     /**
@@ -544,49 +421,79 @@ class PPh21CalculatorService
             // Mode Gross-Up: Penghasilan bruto awal TIDAK termasuk Tunjangan PPh
             $penghasilanBrutoAwal = self::calculatePenghasilanBruto($data, false);
             
-            // Iterasi untuk Gross-Up dengan TER dari tabel
-            // Tujuan: Tunjangan PPh = PPh Terutang (dihitung dari TER)
-            $tunjanganPPh = 0;
-            $iterasi = 0;
-            $maxIterasi = 100;
-            $tolerance = 0.01;
+            // Gross-Up dengan TER dari tabel
+            // Rumus: T = PB × TER / (1 - TER), dimana T = Tunjangan PPh, PB = Penghasilan Bruto Awal
+            // Tapi karena TER berubah tergantung Penghasilan Bruto Final, perlu iterasi
             
-            while ($iterasi < $maxIterasi) {
-                // Penghasilan Bruto dengan Tunjangan PPh
-                $penghasilanBrutoFinal = $penghasilanBrutoAwal + $tunjanganPPh;
-                
-                // Hitung TER dari tabel berdasarkan penghasilan bruto final
+            // Estimasi awal: hitung TER dari Penghasilan Bruto Awal
+            $terAwal = self::getTERFromTable($penghasilanBrutoAwal, $kategoriTER);
+            
+            if ($terAwal <= 0 || $terAwal >= 1) {
+                // Jika TER tidak valid, gunakan metode PKP
+                $grossUpResult = self::calculateGrossUp($penghasilanBrutoAwal, $ptkp);
+                $penghasilanBrutoFinal = $penghasilanBrutoAwal + $grossUpResult['tunjangan_pph'];
                 $terFromTable = self::getTERFromTable($penghasilanBrutoFinal, $kategoriTER);
+                $result = [
+                    'penghasilan_neto' => $grossUpResult['penghasilan_neto'],
+                    'pkp' => $grossUpResult['pkp'],
+                    'pph_terutang' => $grossUpResult['pph_terutang'],
+                    'tunjangan_pph' => $grossUpResult['tunjangan_pph'],
+                ];
+            } else {
+                // Hitung estimasi awal: T = PB × TER / (1 - TER)
+                $tunjanganPPh = ($penghasilanBrutoAwal * $terAwal) / (1 - $terAwal);
                 
-                // Hitung PPh Terutang menggunakan TER dari tabel
-                // Rumus: PPh Terutang = Penghasilan Bruto × TER dari tabel
-                $pphTerutang = $penghasilanBrutoFinal * $terFromTable;
+                // Iterasi untuk memperbaiki (maksimal 5 iterasi untuk stabilitas)
+                $iterasi = 0;
+                $maxIterasi = 5;
+                $tolerance = 0.01;
                 
-                // Dalam Gross-Up, Tunjangan PPh harus sama dengan PPh Terutang
-                if (abs($tunjanganPPh - $pphTerutang) < $tolerance) {
-                    break;
+                while ($iterasi < $maxIterasi) {
+                    $penghasilanBrutoFinal = $penghasilanBrutoAwal + $tunjanganPPh;
+                    $terFromTable = self::getTERFromTable($penghasilanBrutoFinal, $kategoriTER);
+                    
+                    if ($terFromTable <= 0 || $terFromTable >= 1) {
+                        break;
+                    }
+                    
+                    // Hitung Tunjangan PPh baru
+                    $tunjanganPPhBaru = ($penghasilanBrutoAwal * $terFromTable) / (1 - $terFromTable);
+                    
+                    // Cek konvergensi
+                    if (abs($tunjanganPPh - $tunjanganPPhBaru) < $tolerance) {
+                        $tunjanganPPh = $tunjanganPPhBaru;
+                        break;
+                    }
+                    
+                    // Update dengan damping (50% dari perubahan)
+                    $tunjanganPPh = $tunjanganPPh + ($tunjanganPPhBaru - $tunjanganPPh) * 0.5;
+                    $iterasi++;
                 }
                 
+                // Final calculation - pastikan konsistensi
+                $penghasilanBrutoFinal = $penghasilanBrutoAwal + $tunjanganPPh;
+                $terFromTable = self::getTERFromTable($penghasilanBrutoFinal, $kategoriTER);
+                
+                // Hitung PPh Terutang menggunakan TER
+                $pphTerutang = $penghasilanBrutoFinal * $terFromTable;
+                
+                // Pastikan Tunjangan PPh = PPh Terutang (konsistensi gross-up)
                 $tunjanganPPh = $pphTerutang;
-                $iterasi++;
+                
+                // Recalculate Penghasilan Bruto Final dengan Tunjangan PPh yang sudah disesuaikan
+                $penghasilanBrutoFinal = $penghasilanBrutoAwal + $tunjanganPPh;
+                
+                // Penghasilan Neto = Penghasilan Bruto final - Tunjangan PPh
+                $penghasilanNeto = $penghasilanBrutoFinal - $tunjanganPPh;
+                $pkp = max(0, $penghasilanNeto - $ptkp);
+                
+                $result = [
+                    'penghasilan_neto' => $penghasilanNeto,
+                    'pkp' => $pkp,
+                    'pph_terutang' => $pphTerutang,
+                    'tunjangan_pph' => $tunjanganPPh,
+                ];
             }
-            
-            // Final calculation
-            $penghasilanBrutoFinal = $penghasilanBrutoAwal + $tunjanganPPh;
-            $terFromTable = self::getTERFromTable($penghasilanBrutoFinal, $kategoriTER);
-            $pphTerutang = $penghasilanBrutoFinal * $terFromTable;
-            $tunjanganPPh = $pphTerutang;
-            
-            // Penghasilan Neto = Penghasilan Bruto final - Tunjangan PPh
-            $penghasilanNeto = $penghasilanBrutoFinal - $tunjanganPPh;
-            $pkp = max(0, $penghasilanNeto - $ptkp);
-            
-            $result = [
-                'penghasilan_neto' => $penghasilanNeto,
-                'pkp' => $pkp,
-                'pph_terutang' => $pphTerutang,
-                'tunjangan_pph' => $tunjanganPPh,
-            ];
         } else {
             // Mode Gross: Penghasilan bruto termasuk Tunjangan PPh (input manual)
             $penghasilanBruto = self::calculatePenghasilanBruto($data, true);
@@ -622,15 +529,16 @@ class PPh21CalculatorService
         // Catatan: PPh Terutang dihitung menggunakan TER dari tabel PP No. 58 Tahun 2023
         // Rumus: PPh Terutang = Penghasilan Bruto × TER dari tabel
         
+        // Pastikan semua nilai adalah float untuk menghindari masalah presisi
         return [
-            'penghasilan_bruto' => $penghasilanBrutoFinal,
-            'ptkp' => $ptkp,
-            'penghasilan_neto' => $result['penghasilan_neto'],
-            'pkp' => $result['pkp'],
-            'pph_terutang' => $result['pph_terutang'],
-            'tunjangan_pph' => $result['tunjangan_pph'],
-            'ter' => $ter,
-            'ter_from_table' => $terFromTable,
+            'penghasilan_bruto' => (float) round($penghasilanBrutoFinal, 2),
+            'ptkp' => (float) round($ptkp, 2),
+            'penghasilan_neto' => (float) round($result['penghasilan_neto'], 2),
+            'pkp' => (float) round($result['pkp'], 2),
+            'pph_terutang' => (float) round($result['pph_terutang'], 2),
+            'tunjangan_pph' => (float) round($result['tunjangan_pph'], 2),
+            'ter' => (float) round($ter, 4),
+            'ter_from_table' => (float) round($terFromTable, 4),
             'kategori_ter' => $kategoriTER,
         ];
     }

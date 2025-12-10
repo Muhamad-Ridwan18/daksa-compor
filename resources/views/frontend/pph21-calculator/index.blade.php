@@ -563,11 +563,35 @@ function pph21Calculator() {
         },
 
         formatCurrency(value) {
-            if (!value && value !== 0) return 'Rp 0';
-            const num = typeof value === 'string' ? parseFloat(value.replace(/\./g, '')) : value;
-            if (isNaN(num)) return 'Rp 0';
-            // Format dengan thousand separator (titik)
-            return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            if (value === null || value === undefined || value === '') return 'Rp 0';
+            
+            // Pastikan value adalah number
+            let num;
+            if (typeof value === 'string') {
+                // Hapus semua karakter non-digit kecuali titik desimal dan minus
+                const cleaned = value.replace(/[^\d.,-]/g, '').replace(',', '.');
+                num = parseFloat(cleaned);
+            } else {
+                num = parseFloat(value);
+            }
+            
+            if (isNaN(num) || !isFinite(num)) return 'Rp 0';
+            
+            // Bulatkan ke 2 desimal untuk menghindari floating point error
+            num = Math.round(num * 100) / 100;
+            
+            // Pisahkan bagian integer dan desimal
+            const parts = Math.abs(num).toFixed(2).split('.');
+            const integerPart = parts[0];
+            const decimalPart = parts[1];
+            
+            // Format integer part dengan thousand separator (titik)
+            const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            // Tambahkan tanda minus jika negatif
+            const sign = num < 0 ? '-' : '';
+            
+            return 'Rp ' + sign + formattedInteger + ',' + decimalPart;
         },
 
         formatTERPercent(value) {

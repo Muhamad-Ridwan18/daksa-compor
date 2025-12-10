@@ -16,6 +16,7 @@ class TerTableSeeder extends Seeder
         TerTable::truncate();
 
         // Insert default data TER A
+        // Format tarif_percent: dalam persen (24.00 untuk 24%, bukan 0.24)
         $terAData = [
             [0, 5400000, 0.00], [5400001, 5650000, 0.25], [5650001, 5950000, 0.50], [5950001, 6300000, 0.75],
             [6300001, 6750000, 1.00], [6750001, 7500000, 1.25], [7500001, 8550000, 1.50], [8550001, 9650000, 1.75],
@@ -31,6 +32,7 @@ class TerTableSeeder extends Seeder
         ];
 
         // Insert default data TER B
+        // Format tarif_percent: dalam persen (24.00 untuk 24%, bukan 0.24)
         $terBData = [
             [0, 6200000, 0.00], [6200001, 6500000, 0.25], [6500001, 6850000, 0.50], [6850001, 7300000, 0.75],
             [7300001, 9200000, 1.00], [9200001, 10750000, 1.50], [10750001, 11250000, 2.00], [11250001, 11600000, 2.50],
