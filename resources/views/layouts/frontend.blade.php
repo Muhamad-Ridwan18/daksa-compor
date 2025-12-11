@@ -152,7 +152,7 @@
                             type="button"
                             class="inline-flex items-center text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph21-calculator.*') || request()->routeIs('pph21-masa-terakhir.*') || request()->routeIs('pph-badan-calculator.*') ? 'text-primary bg-primary/10' : '' }}"
                         >
-                            Kalkulator
+                            Kalkulator Pajak
                             <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.24 4.5a.75.75 0 01-1.08 0l-4.24-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                             </svg>
@@ -163,19 +163,23 @@
                             <div class="py-1">
                                 <a href="{{ route('pph21-calculator.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
-                                    Kalkulator PPh21
+                                    Kalkulator Pajak PPh21
                                 </a>
                                 <a href="{{ route('pph21-tahunan.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
-                                    Kalkulator PPh21 Tahunan
+                                    Kalkulator Pajak PPh21 Tahunan
                                 </a>
                                 <a href="{{ route('pph-badan-calculator.index') }}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
-                                    Kalkulator PPh Badan
+                                    Kalkulator Pajak PPh Badan
                                 </a>
                             </div>
                         </div>
                     </div>
+                    <a href="{{ route('documents.index') }}" 
+                       class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
+                        Peraturan Pajak
+                    </a>
                     <a href="{{ route('gallery.index') }}" 
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
                         Gallery

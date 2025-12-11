@@ -26,7 +26,7 @@
             
             <!-- Main Heading -->
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2">
-                Kalkulator PPh 21 Tahunan
+                Kalkulator Pajak PPh 21 Tahunan
             </h1>
             
             <!-- Subtitle -->
