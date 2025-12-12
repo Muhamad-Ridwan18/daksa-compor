@@ -148,7 +148,7 @@
                     </a>
                     <a href="{{ route('branches.index') }}" 
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('blog.*') ? 'text-primary bg-primary/10' : '' }}">
-                        Brnach
+                        Branch
                     </a>
                     <!-- Kalkulator Dropdown (Desktop) -->
                     <div class="relative group">
@@ -282,7 +282,10 @@
     <!-- Footer -->
     <footer class="bg-secondary text-white">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @php
+                $footerBranches = \App\Models\Branch::active()->orderBy('sort_order')->limit(5)->get();
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-lg font-semibold mb-4">{{ $settings['company_name'] ?? 'Daksa' }}</h3>
                     <p class="text-gray-300">{{ $settings['company_description'] ?? 'Perusahaan terpercaya untuk solusi bisnis Anda.' }}</p>
@@ -293,16 +296,40 @@
                     <p class="text-gray-300">{{ $settings['company_email'] ?? 'info@daksa.com' }}</p>
                 </div>
                 <div>
+                    <h3 class="text-lg font-semibold mb-4">Cabang</h3>
+                    @if($footerBranches->count() > 0)
+                        <ul class="space-y-2">
+                            @foreach($footerBranches as $branch)
+                                <li>
+                                    <a href="{{ route('branches.index') }}" class="text-gray-300 hover:text-white transition-colors text-sm">
+                                        {{ $branch->name }}
+                                    </a>
+                                    <p class="text-gray-400 text-xs mt-0.5">{{ $branch->address }}</p>
+                                </li>
+                            @endforeach
+                            @if(\App\Models\Branch::active()->count() > 5)
+                                <li>
+                                    <a href="{{ route('branches.index') }}" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+                                        Lihat Semua Cabang →
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    @else
+                        <p class="text-gray-400 text-sm">Belum ada cabang tersedia</p>
+                    @endif
+                </div>
+                <div>
                     <h3 class="text-lg font-semibold mb-4">Media Sosial</h3>
                     <div class="flex space-x-4">
                         @if($settings['facebook_url'] ?? null)
-                            <a href="{{ $settings['facebook_url'] }}" class="text-gray-300 hover:text-white">Facebook</a>
+                            <a href="{{ $settings['facebook_url'] }}" class="text-gray-300 hover:text-white transition-colors">Facebook</a>
                         @endif
                         @if($settings['instagram_url'] ?? null)
-                            <a href="{{ $settings['instagram_url'] }}" class="text-gray-300 hover:text-white">Instagram</a>
+                            <a href="{{ $settings['instagram_url'] }}" class="text-gray-300 hover:text-white transition-colors">Instagram</a>
                         @endif
                         @if($settings['linkedin_url'] ?? null)
-                            <a href="{{ $settings['linkedin_url'] }}" class="text-gray-300 hover:text-white">LinkedIn</a>
+                            <a href="{{ $settings['linkedin_url'] }}" class="text-gray-300 hover:text-white transition-colors">LinkedIn</a>
                         @endif
                     </div>
                 </div>
