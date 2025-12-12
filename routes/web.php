@@ -32,6 +32,7 @@ use App\Http\Controllers\Frontend\PPh21MasaTerakhirController;
 use App\Http\Controllers\Frontend\PPhBadanCalculatorController;
 use App\Http\Controllers\Frontend\ServiceController as FrontendServiceController;
 use App\Http\Controllers\Frontend\DocumentController;
+use App\Http\Controllers\Frontend\BranchController as FrontendBranchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,9 @@ Route::post('/careers/{job}/apply', [CareerController::class, 'apply'])->name('c
 
 // Gallery Routes (Frontend)
 Route::get('/gallery', [App\Http\Controllers\Frontend\GalleryController::class, 'index'])->name('gallery.index');
+
+// Branch Routes (Frontend)
+Route::get('/branches', [FrontendBranchController::class, 'index'])->name('branches.index');
 
 // Service Routes (Frontend)
 Route::get('/services/{service}', [FrontendServiceController::class, 'show'])->name('services.show');
