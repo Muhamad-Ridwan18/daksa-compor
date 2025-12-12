@@ -50,15 +50,15 @@
             @if($branches->count() > 0)
 
                 <!-- Branches Grid - Always Centered -->
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 justify-items-center">
+                <div class="flex flex-wrap justify-center gap-6 lg:gap-8">
                     @foreach($branches as $index => $branch)
-                        <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden w-full max-w-md"
+                        <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden w-full sm:w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1.33rem)] xl:w-[400px] max-w-md"
                              data-aos="fade-up" 
                              data-aos-delay="{{ $index * 100 }}">
                             
                             <!-- Branch Header - Compact Maps -->
                             @if($branch->map_url || ($branch->latitude && $branch->longitude))
-                            <div class="h-[500px] lg:h-[600px] overflow-hidden">
+                            <div class="h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[500px] overflow-hidden relative">
                                 @php
                                     $lat = $branch->latitude;
                                     $lng = $branch->longitude;
@@ -102,7 +102,7 @@
                                         title="Lokasi {{ $branch->name }}">
                                     </iframe>
                                     <!-- Overlay with Branch Name -->
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end pointer-events-none">
                                         <div class="p-4 text-white w-full">
                                             <h3 class="text-xl font-bold mb-1">{{ $branch->name }}</h3>
                                             <p class="text-sm text-white/90">{{ $branch->city }}, {{ $branch->province }}</p>
