@@ -240,6 +240,10 @@
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('blog.*') ? 'text-primary bg-primary/10' : '' }}">
                     Blog
                 </a>
+                <a href="{{ route('branches.index') }}" 
+                   class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('branches.*') ? 'text-primary bg-primary/10' : '' }}">
+                    Branch
+                </a>
                 <a href="{{ route('gallery.index') }}" 
                    class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
                     Gallery
