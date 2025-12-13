@@ -269,6 +269,10 @@
                        class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph-badan-calculator.*') ? 'text-primary bg-primary/10' : '' }}">
                         Kalkulator PPh Badan
                     </a>
+                    <a href="{{ route('documents.index') }}"
+                       class="block text-gray-700 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('pph-badan-calculator.*') ? 'text-primary bg-primary/10' : '' }}">
+                       Peraturan Pajak
+                    </a>
                 </div>
                 <a href="{{ $waUrl }}"
                    @if($waNumber) target="_blank" rel="noopener" @endif
