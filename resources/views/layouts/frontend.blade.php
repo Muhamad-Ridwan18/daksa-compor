@@ -177,13 +177,13 @@
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
                                     Kalkulator Pajak PPh Badan
                                 </a>
+                                <a href="{{ route('documents.index') }}"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary">
+                                   Peraturan Pajak
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('documents.index') }}" 
-                       class="text-gray-700 hover:text-primary hover:bg-primary/5 px-2 py-2 rounded-lg text-sm font-medium transition-all duration-300 whitespace-nowrap {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
-                        Peraturan Pajak
-                    </a>
                     <a href="{{ route('gallery.index') }}" 
                        class="text-gray-700 hover:text-primary hover:bg-primary/5 px-2 py-2 rounded-lg text-sm font-medium transition-all duration-300 whitespace-nowrap {{ request()->routeIs('gallery.*') ? 'text-primary bg-primary/10' : '' }}">
                         Gallery
