@@ -298,10 +298,10 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto text-center text-white">
             <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-black px-2">
-                Ingin Mendapatkan Update Terbaru?
+                Kami siap bantu segala kebutuhan perpajakan dan akuntansi perusahaan anda
             </h2>
             <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-black/90 px-4">
-                Hubungi kami untuk konsultasi gratis tentang strategi digital marketing bisnis Anda
+                Hubungi kami untuk konsultasi gratis
             </p>
             <a href="{{ route('home') }}#contact" 
                class="inline-flex items-center gap-2 bg-primary text-white hover:bg-opacity-90 font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition shadow-2xl hover:shadow-3xl text-base sm:text-lg">
