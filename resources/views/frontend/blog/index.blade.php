@@ -303,7 +303,12 @@
             <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-black/90 px-4">
                 Hubungi kami untuk konsultasi gratis
             </p>
-            <a href="{{ route('home') }}#contact" 
+            @php
+                $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '') ?: null;
+                $waText = 'Halo, saya tertarik dengan layanan dari ' . ($settings['company_name'] ?? 'Daksa') . '. Mohon informasi lebih lanjut.';
+                $waUrl = $waNumber ? ('https://wa.me/' . $waNumber . '?text=' . urlencode($waText)) : '#';
+            @endphp
+            <a href="{{ $waUrl }}" 
                class="inline-flex items-center gap-2 bg-primary text-white hover:bg-opacity-90 font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition shadow-2xl hover:shadow-3xl text-base sm:text-lg">
                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
