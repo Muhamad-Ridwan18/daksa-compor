@@ -12,9 +12,11 @@ use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
-    public function show(Service $service)
+    public function show($slug)
     {
-        abort_unless($service->is_active, 404);
+        $service = Service::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
         
         $settings = Setting::getAllAsArray();
         

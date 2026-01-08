@@ -86,16 +86,17 @@ class SitemapController extends Controller
             'priority' => '0.6',
         ];
 
-        // Services (if you have service detail pages)
+        // Services
         $services = Service::where('is_active', true)->get();
         foreach ($services as $service) {
-            // Assuming you might have service detail pages in the future
-            // $urls[] = [
-            //     'loc' => route('services.show', $service->slug),
-            //     'lastmod' => $service->updated_at->toAtomString(),
-            //     'changefreq' => 'monthly',
-            //     'priority' => '0.6',
-            // ];
+            if ($service->slug) {
+                $urls[] = [
+                    'loc' => route('services.show', $service->slug),
+                    'lastmod' => $service->updated_at->toAtomString(),
+                    'changefreq' => 'monthly',
+                    'priority' => '0.6',
+                ];
+            }
         }
 
         return response()->view('sitemap', ['urls' => $urls])

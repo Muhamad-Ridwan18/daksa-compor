@@ -394,7 +394,7 @@
                             <div></div>
                             @endif
                             
-                            <a href="{{ route('services.show', $service) }}" 
+                            <a href="{{ route('services.show', $service->slug) }}" 
                                class="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 group/btn">
                                 <span>Selengkapnya</span>
                                 <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

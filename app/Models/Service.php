@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Service extends Model
 {
@@ -13,6 +14,7 @@ class Service extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'image',
         'is_active',
@@ -22,6 +24,26 @@ class Service extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($service) {
+            if (empty($service->slug)) {
+                $service->slug = Str::slug($service->name);
+            }
+        });
+
+        static::updating(function ($service) {
+            if ($service->isDirty('name') && empty($service->slug)) {
+                $service->slug = Str::slug($service->name);
+            }
+        });
+    }
 
     /**
      * Get the products for the service.

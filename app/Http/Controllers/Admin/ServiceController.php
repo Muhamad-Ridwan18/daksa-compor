@@ -33,13 +33,19 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:services,slug',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['name', 'description', 'is_active', 'sort_order']);
+        $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
+        
+        // Generate slug if not provided
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['name']);
+        }
         
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('services', 'public');
@@ -59,13 +65,19 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:services,slug,' . $service->id,
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['name', 'description', 'is_active', 'sort_order']);
+        $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
+        
+        // Generate slug if not provided and name changed
+        if (empty($data['slug']) && $data['name'] !== $service->name) {
+            $data['slug'] = Str::slug($data['name']);
+        }
         
         if ($request->hasFile('image')) {
             if ($service->image) {

@@ -64,7 +64,7 @@ Route::get('/gallery', [App\Http\Controllers\Frontend\GalleryController::class, 
 Route::get('/branches', [FrontendBranchController::class, 'index'])->name('branches.index');
 
 // Service Routes (Frontend)
-Route::get('/services/{service}', [FrontendServiceController::class, 'show'])->name('services.show');
+Route::get('/services/{slug}', [FrontendServiceController::class, 'show'])->name('services.show');
 
 // PPh 21 Calculator Routes
 Route::get('/kalkulator-pph21', [PPh21CalculatorController::class, 'index'])->name('pph21-calculator.index');
