@@ -21,6 +21,18 @@
                     @enderror
                 </div>
 
+                <!-- Slug -->
+                <div class="md:col-span-2">
+                    <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
+                    <input type="text" name="slug" id="slug" value="{{ old('slug') }}" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('slug') border-red-500 @enderror"
+                           placeholder="Akan di-generate otomatis dari nama produk">
+                    <p class="mt-1 text-sm text-gray-500">Slug akan digunakan di URL. Kosongkan untuk auto-generate dari nama produk.</p>
+                    @error('slug')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 @if(isset($service) && $service)
                     <input type="hidden" name="service_id" value="{{ $service->id }}">
                     <div class="md:col-span-2">

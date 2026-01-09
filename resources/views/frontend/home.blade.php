@@ -357,6 +357,7 @@
         <!-- Services List -->
         <div class="space-y-6 max-w-7xl mx-auto">
             @foreach($services as $index => $service)
+                @if($service->slug)
             <div class="bg-primary rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group" data-animate="fadeInUp" data-animate-delay="{{ $index * 100 }}">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
@@ -405,6 +406,7 @@
                     </div>
                 </div>
             </div>
+                @endif
             @endforeach
         </div>
         

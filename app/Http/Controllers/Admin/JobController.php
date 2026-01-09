@@ -41,9 +41,8 @@ class JobController extends Controller
         $data = $request->only([
             'title','slug','department','location','employment_type','salary_range','deadline','short_description','description','requirements','benefits','is_active','sort_order'
         ]);
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);
-        }
+        
+        // Slug will be auto-generated in model boot if empty
 
         Job::create($data);
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil dibuat.');
@@ -75,8 +74,10 @@ class JobController extends Controller
         $data = $request->only([
             'title','slug','department','location','employment_type','salary_range','deadline','short_description','description','requirements','benefits','is_active','sort_order'
         ]);
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);
+        
+        // Generate slug if not provided and name changed
+        if (empty($data['slug']) && isset($data['title']) && $data['title'] !== $job->title) {
+            // Slug will be auto-generated in model boot
         }
 
         $job->update($data);

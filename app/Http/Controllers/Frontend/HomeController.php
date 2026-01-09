@@ -16,7 +16,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $services = Service::active()->with('products')->orderBy('sort_order')->get();
+        $services = Service::active()
+            ->whereNotNull('slug')
+            ->where('slug', '!=', '')
+            ->with('products')
+            ->orderBy('sort_order')
+            ->get();
         $testimonials = Testimonial::active()->orderBy('sort_order')->get();
         $clients = Client::active()->orderBy('sort_order')->get();
         $teamMembers = TeamMember::active()->orderBy('sort_order')->get();

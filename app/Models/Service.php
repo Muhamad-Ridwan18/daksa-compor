@@ -34,13 +34,33 @@ class Service extends Model
 
         static::creating(function ($service) {
             if (empty($service->slug)) {
-                $service->slug = Str::slug($service->name);
+                $baseSlug = Str::slug($service->name);
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Ensure unique slug
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+
+                $service->slug = $slug;
             }
         });
 
         static::updating(function ($service) {
             if ($service->isDirty('name') && empty($service->slug)) {
-                $service->slug = Str::slug($service->name);
+                $baseSlug = Str::slug($service->name);
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Ensure unique slug
+                while (static::where('slug', $slug)->where('id', '!=', $service->id)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+
+                $service->slug = $slug;
             }
         });
     }

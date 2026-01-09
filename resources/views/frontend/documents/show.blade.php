@@ -231,7 +231,7 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" data-aos="fade-up" data-aos-delay="400">
                 @php
                     $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '') ?: null;
-                    $waText = 'Halo, saya tertarik dengan layanan *' . $service->name . '* dari ' . ($settings['company_name'] ?? 'Daksa') . '. Mohon informasi lebih lanjut mengenai paket yang tersedia.';
+                    $waText = 'Halo, saya tertarik dengan dokumen *' . $document->title . '* dari ' . ($settings['company_name'] ?? 'Daksa') . '. Mohon informasi lebih lanjut.';
                     $waUrl = $waNumber ? ('https://wa.me/' . $waNumber . '?text=' . urlencode($waText)) : '#';
                 @endphp
                 @if($waNumber)
