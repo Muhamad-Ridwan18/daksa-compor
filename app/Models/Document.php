@@ -21,6 +21,7 @@ class Document extends Model
         'description',
         'content_html',
         'excerpt',
+        'meta_description',
         'published_date',
         'is_new',
         'document_file',

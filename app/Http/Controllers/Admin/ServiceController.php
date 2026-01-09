@@ -35,12 +35,13 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:services,slug',
             'description' => 'required|string',
+            'meta_description' => 'nullable|string|max:500',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
+        $data = $request->only(['name', 'slug', 'description', 'meta_description', 'is_active', 'sort_order']);
         
         // Generate slug if not provided and ensure unique
         if (empty($data['slug'])) {
@@ -76,12 +77,13 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:services,slug,' . $service->id,
             'description' => 'required|string',
+            'meta_description' => 'nullable|string|max:500',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
+        $data = $request->only(['name', 'slug', 'description', 'meta_description', 'is_active', 'sort_order']);
         
         // Generate slug if not provided and name changed, ensure unique
         if (empty($data['slug']) && $data['name'] !== $service->name) {

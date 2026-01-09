@@ -70,7 +70,7 @@ class DocumentController extends Controller
         // Generate SEO data
         $seoData = SeoService::getSeoData(null, 'documents.show', [
             'meta_title' => $document->title . ' - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => $document->excerpt,
+            'meta_description' => $document->meta_description ?: ($document->excerpt ?? strip_tags(substr($document->description, 0, 160))),
         ]);
         
         return view('frontend.documents.show', compact('document', 'relatedDocuments', 'settings', 'seoData'));

@@ -28,12 +28,13 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:articles,slug',
             'excerpt' => 'nullable|string|max:500',
+            'meta_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10024',
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'slug', 'excerpt', 'content', 'is_published']);
+        $data = $request->only(['title', 'slug', 'excerpt', 'meta_description', 'content', 'is_published']);
         $data['author_id'] = Auth::id();
         
         // Generate slug if not provided and ensure unique
@@ -79,12 +80,13 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:articles,slug,' . $article->id,
             'excerpt' => 'nullable|string|max:500',
+            'meta_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10024',
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'slug', 'excerpt', 'content', 'is_published']);
+        $data = $request->only(['title', 'slug', 'excerpt', 'meta_description', 'content', 'is_published']);
         
         // Generate slug if not provided and title changed, ensure unique
         if (empty($data['slug']) && $data['title'] !== $article->title) {

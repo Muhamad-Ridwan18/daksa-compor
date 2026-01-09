@@ -34,6 +34,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:products,slug',
             'description' => 'required|string',
+            'meta_description' => 'nullable|string|max:500',
             'features' => 'nullable|array',
             'features.*.name' => 'nullable|string|max:255',
             'features.*.description' => 'nullable|string',
@@ -44,7 +45,7 @@ class ProductController extends Controller
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['service_id', 'name', 'slug', 'description', 'price', 'sort_order']);
+        $data = $request->only(['service_id', 'name', 'slug', 'description', 'meta_description', 'price', 'sort_order']);
         
         // Generate slug if not provided and ensure unique
         if (empty($data['slug'])) {
@@ -110,6 +111,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:products,slug,' . $product->id,
             'description' => 'required|string',
+            'meta_description' => 'nullable|string|max:500',
             'features' => 'nullable|array',
             'features.*.name' => 'nullable|string|max:255',
             'features.*.description' => 'nullable|string',
@@ -120,7 +122,7 @@ class ProductController extends Controller
             'sort_order' => 'integer|min:0',
         ]);
 
-        $data = $request->only(['service_id', 'name', 'slug', 'description', 'price', 'sort_order']);
+        $data = $request->only(['service_id', 'name', 'slug', 'description', 'meta_description', 'price', 'sort_order']);
         $data['show_price'] = $request->has('show_price') ? (bool)$request->show_price : false;
         $data['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
         

@@ -28,7 +28,7 @@ class ServiceController extends Controller
         // Generate SEO data
         $seoData = SeoService::getSeoData(null, 'service', [
             'meta_title' => $service->name . ' - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => Str::limit($service->description, 160),
+            'meta_description' => $service->meta_description ?: Str::limit($service->description, 160),
             'meta_keywords' => $service->name . ', layanan, ' . ($settings['company_name'] ?? 'Daksa'),
             'og_image' => $service->image ? Storage::url($service->image) : ($settings['logo'] ?? null),
         ]);

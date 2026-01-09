@@ -16,6 +16,7 @@ class Service extends Model
         'name',
         'slug',
         'description',
+        'meta_description',
         'image',
         'is_active',
         'sort_order',

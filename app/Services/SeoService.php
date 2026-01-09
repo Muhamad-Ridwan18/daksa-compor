@@ -126,7 +126,7 @@ class SeoService
     {
         $defaults = [
             'meta_title' => $article->title . ' - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => $article->excerpt ?? strip_tags(substr($article->content, 0, 160)),
+            'meta_description' => $article->meta_description ?: ($article->excerpt ?? strip_tags(substr($article->content, 0, 160))),
             'og_type' => 'article',
             'og_image' => $article->featured_image ?? null,
             'og_url' => route('blog.show', $article->slug),
@@ -167,7 +167,7 @@ class SeoService
     {
         $defaults = [
             'meta_title' => $product->name . ' - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => $product->description ?? strip_tags(substr($product->description, 0, 160)),
+            'meta_description' => $product->meta_description ?: strip_tags(substr($product->description, 0, 160)),
             'og_type' => 'product',
             'og_image' => $product->image ?? null,
         ];
@@ -260,7 +260,7 @@ class SeoService
     {
         $defaults = [
             'meta_title' => $job->title . ' - Karier - ' . ($settings['company_name'] ?? 'Daksa'),
-            'meta_description' => $job->short_description ?? strip_tags(substr($job->description, 0, 160)),
+            'meta_description' => $job->meta_description ?: ($job->short_description ?? strip_tags(substr($job->description, 0, 160))),
             'og_type' => 'article',
             'og_url' => route('careers.show', $job->slug),
         ];

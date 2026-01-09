@@ -25,6 +25,7 @@ class Job extends Model
         'is_active',
         'sort_order',
         'short_description',
+        'meta_description',
         'description',
         'requirements',
         'benefits',

@@ -61,6 +61,13 @@
         </div>
 
         <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Meta Description (SEO)</label>
+            <textarea name="meta_description" rows="3" maxlength="500" class="w-full px-4 py-2 border rounded-lg focus:ring-primary focus:border-primary" placeholder="Deskripsi singkat untuk SEO (maksimal 500 karakter)">{{ old('meta_description', $job->meta_description) }}</textarea>
+            <p class="mt-1 text-sm text-gray-500">Deskripsi yang akan muncul di hasil pencarian Google. Disarankan 150-160 karakter.</p>
+            @error('meta_description')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+        </div>
+
+        <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
             <textarea name="description" rows="5" class="w-full px-4 py-2 border rounded-lg focus:ring-primary focus:border-primary">{{ old('description', $job->description) }}</textarea>
             @error('description')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror

@@ -31,6 +31,7 @@ class JobController extends Controller
             'salary_range' => 'nullable|string|max:255',
             'deadline' => 'nullable|date',
             'short_description' => 'nullable|string',
+            'meta_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
             'requirements' => 'nullable|string',
             'benefits' => 'nullable|string',
@@ -39,7 +40,7 @@ class JobController extends Controller
         ]);
 
         $data = $request->only([
-            'title','slug','department','location','employment_type','salary_range','deadline','short_description','description','requirements','benefits','is_active','sort_order'
+            'title','slug','department','location','employment_type','salary_range','deadline','short_description','meta_description','description','requirements','benefits','is_active','sort_order'
         ]);
         
         // Slug will be auto-generated in model boot if empty
@@ -64,6 +65,7 @@ class JobController extends Controller
             'salary_range' => 'nullable|string|max:255',
             'deadline' => 'nullable|date',
             'short_description' => 'nullable|string',
+            'meta_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
             'requirements' => 'nullable|string',
             'benefits' => 'nullable|string',
@@ -72,7 +74,7 @@ class JobController extends Controller
         ]);
 
         $data = $request->only([
-            'title','slug','department','location','employment_type','salary_range','deadline','short_description','description','requirements','benefits','is_active','sort_order'
+            'title','slug','department','location','employment_type','salary_range','deadline','short_description','meta_description','description','requirements','benefits','is_active','sort_order'
         ]);
         
         // Generate slug if not provided and name changed
