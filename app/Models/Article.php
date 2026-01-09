@@ -54,7 +54,8 @@ class Article extends Model
         });
 
         static::updating(function ($article) {
-            if ($article->isDirty('title') && empty($article->slug)) {
+            // Auto-update slug if title changed and slug is not being manually edited
+            if ($article->isDirty('title') && !$article->isDirty('slug')) {
                 $baseSlug = Str::slug($article->title);
                 $slug = $baseSlug;
                 $counter = 1;

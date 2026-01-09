@@ -51,13 +51,34 @@ class Document extends Model
 
         static::creating(function ($document) {
             if (empty($document->slug)) {
-                $document->slug = Str::slug($document->title);
+                $baseSlug = Str::slug($document->title);
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Ensure unique slug
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+
+                $document->slug = $slug;
             }
         });
 
         static::updating(function ($document) {
-            if ($document->isDirty('title') && empty($document->slug)) {
-                $document->slug = Str::slug($document->title);
+            // Auto-update slug if title changed and slug is not being manually edited
+            if ($document->isDirty('title') && !$document->isDirty('slug')) {
+                $baseSlug = Str::slug($document->title);
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Ensure unique slug
+                while (static::where('slug', $slug)->where('id', '!=', $document->id)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+
+                $document->slug = $slug;
             }
         });
     }

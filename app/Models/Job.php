@@ -59,7 +59,8 @@ class Job extends Model
         });
 
         static::updating(function ($job) {
-            if ($job->isDirty('title') && empty($job->slug)) {
+            // Auto-update slug if title changed and slug is not being manually edited
+            if ($job->isDirty('title') && !$job->isDirty('slug')) {
                 $baseSlug = Str::slug($job->title);
                 $slug = $baseSlug;
                 $counter = 1;

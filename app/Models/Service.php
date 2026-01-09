@@ -49,7 +49,8 @@ class Service extends Model
         });
 
         static::updating(function ($service) {
-            if ($service->isDirty('name') && empty($service->slug)) {
+            // Auto-update slug if name changed and slug is not being manually edited
+            if ($service->isDirty('name') && !$service->isDirty('slug')) {
                 $baseSlug = Str::slug($service->name);
                 $slug = $baseSlug;
                 $counter = 1;

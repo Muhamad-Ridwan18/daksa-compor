@@ -57,7 +57,8 @@ class Product extends Model
         });
 
         static::updating(function ($product) {
-            if ($product->isDirty('name') && empty($product->slug)) {
+            // Auto-update slug if name changed and slug is not being manually edited
+            if ($product->isDirty('name') && !$product->isDirty('slug')) {
                 $baseSlug = Str::slug($product->name);
                 $slug = $baseSlug;
                 $counter = 1;
