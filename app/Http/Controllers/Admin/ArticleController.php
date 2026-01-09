@@ -26,15 +26,29 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:articles,slug',
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10024',
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'excerpt', 'content', 'is_published']);
+        $data = $request->only(['title', 'slug', 'excerpt', 'content', 'is_published']);
         $data['author_id'] = Auth::id();
-        $data['slug'] = Str::slug($request->title);
+        
+        // Generate slug if not provided and ensure unique
+        if (empty($data['slug'])) {
+            $baseSlug = Str::slug($data['title']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Article::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
+        }
         
         // Clean improper nested list structure from content
         if (isset($data['content'])) {
@@ -63,14 +77,28 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:articles,slug,' . $article->id,
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10024',
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'excerpt', 'content', 'is_published']);
-        $data['slug'] = Str::slug($request->title);
+        $data = $request->only(['title', 'slug', 'excerpt', 'content', 'is_published']);
+        
+        // Generate slug if not provided and title changed, ensure unique
+        if (empty($data['slug']) && $data['title'] !== $article->title) {
+            $baseSlug = Str::slug($data['title']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Article::where('slug', $slug)->where('id', '!=', $article->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
+        }
         
         // Clean improper nested list structure from content
         if (isset($data['content'])) {

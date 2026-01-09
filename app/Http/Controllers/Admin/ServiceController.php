@@ -42,9 +42,18 @@ class ServiceController extends Controller
 
         $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
         
-        // Generate slug if not provided
+        // Generate slug if not provided and ensure unique
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
+            $baseSlug = Str::slug($data['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Service::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
         }
         
         if ($request->hasFile('image')) {
@@ -74,9 +83,18 @@ class ServiceController extends Controller
 
         $data = $request->only(['name', 'slug', 'description', 'is_active', 'sort_order']);
         
-        // Generate slug if not provided and name changed
+        // Generate slug if not provided and name changed, ensure unique
         if (empty($data['slug']) && $data['name'] !== $service->name) {
-            $data['slug'] = Str::slug($data['name']);
+            $baseSlug = Str::slug($data['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Service::where('slug', $slug)->where('id', '!=', $service->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
         }
         
         if ($request->hasFile('image')) {

@@ -27,6 +27,7 @@ class DocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:documents,slug',
             'document_number' => 'nullable|string|max:255',
             'description' => 'required|string',
             'excerpt' => 'nullable|string|max:500',
@@ -45,6 +46,7 @@ class DocumentController extends Controller
 
         $data = $request->only([
             'title',
+            'slug',
             'document_number',
             'description',
             'excerpt',
@@ -58,7 +60,20 @@ class DocumentController extends Controller
         ]);
         
         $data['author_id'] = Auth::id();
-        $data['slug'] = Str::slug($request->title);
+        
+        // Generate slug if not provided and ensure unique
+        if (empty($data['slug'])) {
+            $baseSlug = Str::slug($data['title']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Document::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
+        }
         
         // Handle content based on source
         $contentSource = $request->input('content_source', 'pdf');
@@ -97,6 +112,7 @@ class DocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:documents,slug,' . $document->id,
             'document_number' => 'nullable|string|max:255',
             'description' => 'required|string',
             'excerpt' => 'nullable|string|max:500',
@@ -115,6 +131,7 @@ class DocumentController extends Controller
 
         $data = $request->only([
             'title',
+            'slug',
             'document_number',
             'description',
             'excerpt',
@@ -127,7 +144,19 @@ class DocumentController extends Controller
             'is_published',
         ]);
         
-        $data['slug'] = Str::slug($request->title);
+        // Generate slug if not provided and title changed, ensure unique
+        if (empty($data['slug']) && $data['title'] !== $document->title) {
+            $baseSlug = Str::slug($data['title']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Document::where('slug', $slug)->where('id', '!=', $document->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
+        }
         
         // Handle content based on source
         $contentSource = $request->input('content_source', $document->document_file ? 'pdf' : 'manual');

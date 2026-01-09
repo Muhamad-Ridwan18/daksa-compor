@@ -15,8 +15,11 @@
                 @error('title')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Slug (opsional)</label>
-                <input type="text" name="slug" value="{{ old('slug', $job->slug) }}" class="w-full px-4 py-2 border rounded-lg focus:ring-primary focus:border-primary">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
+                <input type="text" name="slug" value="{{ old('slug', $job->slug) }}" 
+                       class="w-full px-4 py-2 border rounded-lg focus:ring-primary focus:border-primary"
+                       placeholder="Akan di-generate otomatis dari judul">
+                <p class="mt-1 text-sm text-gray-500">Slug akan digunakan di URL. Kosongkan untuk auto-generate dari judul.</p>
                 @error('slug')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>

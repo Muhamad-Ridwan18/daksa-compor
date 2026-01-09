@@ -46,9 +46,18 @@ class ProductController extends Controller
 
         $data = $request->only(['service_id', 'name', 'slug', 'description', 'price', 'sort_order']);
         
-        // Generate slug if not provided
+        // Generate slug if not provided and ensure unique
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
+            $baseSlug = Str::slug($data['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Product::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
         }
         $data['show_price'] = $request->has('show_price') ? (bool)$request->show_price : false;
         $data['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
@@ -115,9 +124,18 @@ class ProductController extends Controller
         $data['show_price'] = $request->has('show_price') ? (bool)$request->show_price : false;
         $data['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
         
-        // Generate slug if not provided and name changed
+        // Generate slug if not provided and name changed, ensure unique
         if (empty($data['slug']) && $data['name'] !== $product->name) {
-            $data['slug'] = Str::slug($data['name']);
+            $baseSlug = Str::slug($data['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
         }
         
         // Process features: filter empty and ensure proper structure
